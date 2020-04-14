@@ -8,6 +8,8 @@ var userSchema = new Schema({
     password: String,
     email: String,
     idNum: String,
+    security_question: String,
+    security_answer: String,
     accountType: String,
     //lastLogin: String
 })
@@ -48,6 +50,15 @@ userSchema.statics.updateUserPassword = async function(userID, password) {
         _id: userID
     }, {
         password
+    });
+}
+
+userSchema.statics.updateSecurityQuestion = async function(userID, sec_quest, sec_ans) {
+    return await this.updateOne({
+        _id: userID
+    }, {
+        security_question: sec_quest,
+        security_answer: sec_ans,
     });
 }
 
