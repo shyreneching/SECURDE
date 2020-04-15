@@ -24,8 +24,8 @@ bookSchema.statics.getBookByID= async function(bookID){
     }); 
 };
 
-bookSchema.statics.getBookByTitle= async function(title){
-    return await this.findOne({
+bookSchema.statics.getBooksByTitle= async function(title){
+    return await this.find({
         'title': { $regex: ".*" + title + ".*"}
     }); 
 };

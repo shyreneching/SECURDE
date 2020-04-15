@@ -9,10 +9,27 @@ const urlencoder = bodyparser.urlencoded({
 });
 
 const { Author } = require("../model/author");
-const { BarrowHistory } = require("../model/barrowHistory");
+const { BarrowHistory } = require("../model/borrowHistory");
 const { Book } = require("../model/book");
 const { Review } = require("../model/review");
 const { User } = require("../model/user");
+
+router.post("/get_all", urlencoder, async function (request, result) {
+
+    let books = await Book.getAllBook();
+    res.send({
+        books
+    });
+});
+
+router.post("/search_bookTitle", urlencoder, async function (request, result) {
+
+    let title = req.body.title;
+    let books = await Book.getBooksByTitle(title);
+    res.send({
+        books
+    });
+});
 
 router.post("/addBook", urlencoder, (req, res) => {
 
@@ -78,6 +95,56 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
     let bookID = req.body.bookID;
 
     await Book.delete(bookID);
+
+    res.send("Success");
+})
+
+router.post("/borrowBook", urlencoder, async (req, res) => {
+    let bookID = req.body.bookID;
+    let userID = req.body.userID;
+
+    // let newTime = Date.parse(Date());
+    // let formattedTime = moment(newTime).format("HH:mm");
+
+    // let newDate = Date.parse(Date());
+    // let formattedDate = moment(newDate).format("YYYY-MM-DD");
+
+    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
+
+    // deadline to return the books is 14 days after borrowing
+    let return_time = datetime.getDate() + 14;
+    let actual_returned = '';
+    let status = 'borrowed';
+
+    let borrowHistory = new BarrowHistory({
+        bookID,
+        userID,
+        datetime,
+        return_time,
+        actual_returned,
+        status
+    });
+
+    BarrowHistory.addBarrowHistory(borrowHistory, function (borrowHistory) {
+        if (borrowHistory) {
+            res.redirect("/***********SUCCES PAGE***************");
+        } else {
+            res.redirect("/*************ERROR IN BARROWING BOOK PAGE************");
+        }
+    }, (error) => {
+        res.send(error);
+    })
+})
+
+router.post("/returnBook", urlencoder, async (req, res) => {
+    // let bookID = req.body.bookID;
+    // let userID = req.body.userID;
+
+    let hisID = req.body.hisID;
+
+    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
+
+    await BarrowHistory.updateTimeReturnedByID(hisID, datetime);
 
     res.send("Success");
 })
