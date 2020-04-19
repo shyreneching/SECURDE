@@ -11,6 +11,7 @@ var bookSchema = new Schema({
     year_of_publication: String,
     isbn: String,
     callNumber: String,
+    // Available, Reserved
     status: String,
     reviews: [{
         type: Schema.Types.ObjectId,
@@ -58,6 +59,16 @@ bookSchema.statics.delete = async function(bookID){
     });
 }
 
+bookSchema.statics.updateBookReview = async function(bookID, reviews){
+    return await this.updateOne({
+        _id: bookID
+    }, {
+        reviews: book.reviews
+    }, {
+        new: true
+    }); 
+};
+
 bookSchema.statics.updateBook = async function(bookID, book){
     return await this.updateOne({
         _id: bookID
@@ -83,17 +94,12 @@ bookSchema.statics.updateBookStatus = async function(bookID, status) {
     });
 }
 
-bookSchema.methods.populateAuthor = async function(){
+bookSchema.methods.populateAuthorandReviews = async function(){
     return await Book.findOne({
         _id: this._id
-    }).populate("author");
+    }).populate("author reviews");
 };
 
-bookSchema.methods.populateReviews = async function(){
-    return await Book.findOne({
-        _id: this._id
-    }).populate("reviews");
-};
 
 var Book = mongoose.model("Book", bookSchema)
 

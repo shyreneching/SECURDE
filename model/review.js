@@ -10,7 +10,8 @@ var reviewSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
-    review_text: String
+    review_text: String,
+    create_date: String
 })
 
 reviewSchema.statics.getReviewByID= async function(reviewID){
@@ -19,10 +20,23 @@ reviewSchema.statics.getReviewByID= async function(reviewID){
     }); 
 };
 
-reviewSchema.statics.getReviewByAuthor = async function(authorID){
+reviewSchema.statics.getSpecificReview= async function(bookID, userID, create_date){
+    return await this.findOne({
+        book:{
+            "$in": [bookID]
+        },
+        user:{
+            "$in": [userID]
+        },
+        'create_date': create_date
+    }); 
+};
+
+
+reviewSchema.statics.getReviewByUser = async function(userID){
     return await this.find({
-        author:{
-            "$in": [authorID]
+        user:{
+            "$in": [userID]
         }        
     });
 };
@@ -49,7 +63,7 @@ reviewSchema.statics.delete = async function(reviewID){
     });
 }
 
-reviewSchema.statics.updateBook = async function(reviewID, review_text){
+reviewSchema.statics.updateReview = async function(reviewID, review_text){
     return await this.updateOne({
         _id: reviewID
     }, {
