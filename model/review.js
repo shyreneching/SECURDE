@@ -54,7 +54,7 @@ reviewSchema.statics.addReview = function(review, callback){
 };
 
 reviewSchema.statics.getAllReview = async function(){
-    return await this.find({});
+    return await this.find({}).sort({'create_date': 1});
 }
 
 reviewSchema.statics.delete = async function(reviewID){

@@ -16,7 +16,8 @@ var bookSchema = new Schema({
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: "Review"
-    }]
+    }],
+    date_added: String
 })
 
 bookSchema.statics.getBookByID= async function(bookID){
@@ -51,6 +52,10 @@ bookSchema.statics.addBook = function(book, callback){
 
 bookSchema.statics.getAllBook = async function(){
     return await this.find({}).sort({'title': 1});
+}
+
+bookSchema.statics.getAllBookSortByDateAdded = async function(){
+    return await this.find({}).sort({'date_added': 1});
 }
 
 bookSchema.statics.delete = async function(bookID){

@@ -9,12 +9,13 @@ const urlencoder = bodyparser.urlencoded({
 });
 
 const { Author } = require("../model/author");
-const { BarrowHistory } = require("../model/borrowHistory");
+const { BorrowHistory } = require("../model/borrowHistory");
 const { Book } = require("../model/book");
 const { Review } = require("../model/review");
 const { User } = require("../model/user");
+const { SystemLogs } = require("../model/systemLogs");
 
-router.post("/get_all", urlencoder, async function (request, result) {
+router.post("/get_all", urlencoder, async function (req, res) {
 
     let bookslist = await Book.getAllBook();
     let books = [];
@@ -30,7 +31,7 @@ router.post("/get_all", urlencoder, async function (request, result) {
     });
 });
 
-router.post("/search_bookTitle", urlencoder, async function (request, result) {
+router.post("/search_bookTitle", urlencoder, async function (req, res) {
 
     let title = req.body.title;
     let bookslist = await Book.getBooksByTitle(title);
@@ -50,6 +51,7 @@ router.post("/search_bookTitle", urlencoder, async function (request, result) {
 
 router.post("/addBook", urlencoder, (req, res) => {
 
+    let userID = req.body.userID;
     let title = req.body.title;
     let author = req.body["author[]"];
     let publisher = req.body.publisher;
@@ -58,6 +60,8 @@ router.post("/addBook", urlencoder, (req, res) => {
     let callNumber = req.body.callNumber;
     let status = req.body.status;
     let reviews = req.body["reviews[]"];
+
+    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
 
     // let authorlist = [];
     // var arrayLength = author.length;
@@ -78,7 +82,20 @@ router.post("/addBook", urlencoder, (req, res) => {
     //     authorlist.push(temp._id);
 
     // }
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = title + " By " + author
+    let action = 'Added a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
     
+    await SystemLogs.addLogs(sysLogs);
+
     let book= new Book({
         title,
         author,
@@ -87,7 +104,8 @@ router.post("/addBook", urlencoder, (req, res) => {
         isbn,
         callNumber,
         status,
-        reviews
+        reviews,
+        datetime
     });
 
     Book.addBook(book, function (book) {
@@ -102,6 +120,7 @@ router.post("/addBook", urlencoder, (req, res) => {
 })
 
 router.post("/editBook", urlencoder, async (req, res) => {
+    let userID = req.body.userID;
     let bookID = req.body.bookID;
     let title = req.body.title;
     let author = req.body["author[]"];
@@ -109,10 +128,26 @@ router.post("/editBook", urlencoder, async (req, res) => {
     let year_of_publication = req.body.year_of_publication;
     let isbn = req.body.isbn;
     let callNumber = req.body.callNumber;
-    let status = req.body.status;
+    //let status = req.body.status;
+    let status = "Available";
     let reviews = req.body["reviews[]"];
 
-    let book= new Book({
+    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = title + " By " + author
+    let action = 'Edited a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
+
+    let updateBook= new Book({
         title,
         author,
         publisher,
@@ -129,6 +164,7 @@ router.post("/editBook", urlencoder, async (req, res) => {
 })
 
 router.post("/deleteBook", urlencoder, async (req, res) => {
+    let userID = req.body.userID;
     let bookID = req.body.bookID;
 
     let book = await Book.getBookByID(bookID);
@@ -136,6 +172,22 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
     for (var l = 0; l < reviews.length; l++) {
         await Reiview.delete(reviews[l]);
     }
+
+    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = book.title + " By " + book.author
+    let action = 'Deleted a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
+
 
     let authors = book.reviews;
     for (var l = 0; l < authors.length; l++) {
@@ -167,7 +219,23 @@ router.post("/borrowBook", urlencoder, async (req, res) => {
     let actual_returned = '';
     let status = 'borrowed';
 
-    let borrowHistory = new BarrowHistory({
+    let book = await Book.getBookByID(bookID);
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = book.title + " By " + book.author
+    let action = 'Borrowed a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await Book.updateBookStatus(bookID, "Reserved, Available at :" + return_time)
+    await SystemLogs.addLogs(sysLogs);
+
+    let borrowHistory = new BorrowHistory({
         bookID,
         userID,
         datetime,
@@ -176,11 +244,11 @@ router.post("/borrowBook", urlencoder, async (req, res) => {
         status
     });
 
-    BarrowHistory.addBarrowHistory(borrowHistory, function (borrowHistory) {
+    BorrowHistory.addBorrowHistory(borrowHistory, function (borrowHistory) {
         if (borrowHistory) {
             res.redirect("/***********SUCCES PAGE***************");
         } else {
-            res.redirect("/*************ERROR IN BARROWING BOOK PAGE************");
+            res.redirect("/*************ERROR IN BORROWING BOOK PAGE************");
         }
     }, (error) => {
         res.send(error);
@@ -188,13 +256,29 @@ router.post("/borrowBook", urlencoder, async (req, res) => {
 })
 
 router.post("/returnBook", urlencoder, async (req, res) => {
-    // let bookID = req.body.bookID;
-    // let userID = req.body.userID;
+    let bookID = req.body.bookID;
+    let userID = req.body.userID;
 
     let hisID = req.body.hisID;
 
     let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
 
+    let book = await Book.getBookByID(bookID);
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = book.title + " By " + book.author
+    let action = 'Returned a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
+
+    await Book.updateBookStatus(bookID, "Available")
     await BarrowHistory.updateTimeReturnedByID(hisID, datetime);
 
     res.send("Success");
@@ -207,39 +291,65 @@ router.post("/addReview", urlencoder, async (req, res) => {
     
     let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
 
-    // deadline to return the books is 14 days after borrowing
-    let create_date = datetime.getDate() + 14;
+    let book = await Book.getBookByID(bookID);
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = book.title + " By " + book.author
+    let action = 'Added Review to a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
     
     let review = new Review({
         bookID,
         userID,
         review,
-        create_date
+        datetime
         
     });
 
     Review.addReview(review);
     let rev = await Review.getSpecificReview(bookID, userID, create_date);
-    let temp = await Book.getBookByID(bookID);
-    let reviews = temp.reviews;
+    
+    let reviews = book.reviews;
     reviews.push(rev._id);
-    await Book.$where.updateBookReview(bookID, reviews);
+    await Book.updateBookReview(bookID, reviews);
 })
 
 router.post("/editReview", urlencoder, async (req, res) => {
     let reviewID = req.body.reviewID;
+    let bookID = req.body.bookID;
+    let userID = req.body.userID;
     let review = req.body.review;
     
     let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
 
-    // deadline to return the books is 14 days after borrowing
-    let create_date = datetime.getDate() + 14;
+    let book = await Book.getBookByID(bookID);
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = book.title + " By " + book.author
+    let action = 'Edited Review to a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
     
     let review = new Review({
         bookID,
         userID,
         review,
-        create_date  
+        datetime  
     });
 
     let newReview = await Review.updateReview(reviewID, review);
@@ -250,8 +360,23 @@ router.post("/deleteReview", urlencoder, async (req, res) => {
     let reviewID = req.body.reviewID;
     let rev = await Review.getReviewByID(reviewID);
 
-    let Book = await Book.getBookByID(rev.bookID);
-    var ary = Book.reviews;
+    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
+    let book = await Book.getBookByID(rev.bookID);
+    let user = await User.getUserByID(rev.userID);
+    let username = user.username;
+    let item = book.title + " By " + book.author
+    let action = 'Deleted Review to a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
+
+    var ary = book.reviews;
     ary.pull(reviewID);    
     await Reiview.delete(reviewID);
 

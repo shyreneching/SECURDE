@@ -11,12 +11,31 @@ var userSchema = new Schema({
     security_question: String,
     security_answer: String,
     accountType: String,
-    //lastLogin: String
+    lastLogin: String
 })
 
 userSchema.statics.getUserByID = async function(userID){
     return await this.findOne({
         _id: userID
+    }); 
+};
+
+userSchema.statics.getUserByName = async function(firstname, lastname){
+    return await this.findOne({
+        firstname,
+        lastname
+    }); 
+};
+
+userSchema.statics.getUserByFirstName = async function(firstname){
+    return await this.findOne({
+        firstname
+    }); 
+};
+
+userSchema.statics.getUserByLastName = async function(lastname){
+    return await this.findOne({
+        lastname
     }); 
 };
 
@@ -63,13 +82,13 @@ userSchema.statics.updateSecurityQuestion = async function(userID, sec_quest, se
 }
 
 
-// userSchema.statics.updateLogin = async function(doctorID, lastLogin) {
-//     return await this.updateOne({
-//         _id: doctorID
-//     }, { $set: {
-//         lastLogin
-//     }})
-// }
+userSchema.statics.updateLogin = async function(userID, lastLogin) {
+    return await this.updateOne({
+        _id: userID
+    }, { $set: {
+        lastLogin
+    }})
+}
 
 var User = mongoose.model("User", userSchema)
 

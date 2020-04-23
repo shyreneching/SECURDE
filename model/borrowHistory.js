@@ -28,7 +28,7 @@ borrowHistorySchema.statics.addBarrowHistory = function(barrowHistory, callback)
 };
 
 borrowHistorySchema.statics.getAllHistory = async function(){
-    return await this.find({});
+    return await this.find({}).sort({'time_barrow': 1});
 }
 
 borrowHistorySchema.statics.delete = async function(hisID){
