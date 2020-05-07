@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavier's School For Gifted Youngsters Libarary | Sign Up </title>
+    <link rel="icon" href="/public/logo_gold.png">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/reset.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/container.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/site.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/header.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/button.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/list.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/image.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/form.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="/node_modules/semantic-ui/dist/components/form.js"></script>
+    <script src="/node_modules/semantic-ui/dist/components/transition.js"></script>
+    <script src="/node_modules/semantic-ui/dist/semantic.min.js"></script>
+    <style type="text/css">
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track-piece {
+            background-color: rgb(0, 0, 0);
+        }
+
+        ::-webkit-scrollbar-thumb:vertical {
+            /* height: 10px; */
+            background-color: rgba(184, 165, 56, 0.507);
+            border-radius: 10px;
+        }
+
+        body {
+            background-image: linear-gradient(0deg, rgba(56, 56, 56, 0.72), rgba(56, 56, 56, 0.72)),
+                url("/public/backdrop_2.jpeg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        body>.grid {
+            height: 100%;
+            width: 100%;
+        }
+
+        .image {
+            margin-top: 2%;
+        }
+
+        .column {
+            max-width: 2000px;
+            margin-top: 5%;
+        }
+
+    </style>
+    <script>
+        $(document)
+            .ready(function () {
+                $('.ui.form')
+                    .form({
+                        fields: {
+                            firstname: {
+                                identifier: 'firstname',
+                                rules: [{
+                                        type: 'empty',
+                                        prompt: 'Please enter your first name'
+                                    },
+                                    {
+                                        type: 'regExp',
+                                        value: /^[A-Za-z\s]+$/,
+                                        prompt: 'Please enter a valid first name'
+                                    }
+                                ]
+                            },
+                            lastname: {
+                                identifier: 'lastname',
+                                rules: [{
+                                        type: 'empty',
+                                        prompt: 'Please enter your last name'
+                                    },
+                                    {
+                                        type: 'regExp',
+                                        value: /^[A-Za-z\s]+$/,
+                                        prompt: 'Please enter a valid last name'
+                                    }
+                                ]
+                            },
+                            username:{
+                                identifier: 'username',
+                                rules: [{
+                                type: 'empty',
+                                prompt: 'Please enter your username'
+                                    }
+                                    //checking for valid username here
+                                ]
+                            },
+                            email: {
+                                identifier: 'email',
+                                rules: [{
+                                        type: 'empty',
+                                        prompt: 'Please enter your e-mail'
+                                    },
+                                    {
+                                        type: 'email',
+                                        prompt: 'Please enter a valid e-mail'
+                                    }
+                                ]
+                            },
+                            password: {
+                                identifier: 'password',
+                                rules: [{
+                                        type: 'empty',
+                                        prompt: 'Please enter your password'
+                                    },
+                                    {
+                                        type: 'length[6]',
+                                        prompt: 'Your password must be at least 6 characters'
+                                    },
+                                    {
+                                        type: 'regExp',
+                                        value: /.*[A-Z]/,
+                                        prompt: 'Your password must contain at least one uppercase letter [A-Z]'
+                                    },
+                                    {
+                                        type: 'regExp',
+                                        value: /.*[0-9]/,
+                                        prompt: 'Your password must contain at least one number [0-9]'
+                                    },
+                                    {
+                                        type: 'regExp',
+                                        value: /.*[!@#\$%\^<>\&*\)\(+=._-]/,
+                                        prompt: 'Your password must contain at least one special character [!@#$%^<>&*()+=._-]'
+                                    }
+                                ]
+                            },
+                            confirm_password: {
+                                identifier: 'confirm_password',
+                                rules: [{
+                                        type: 'empty',
+                                        prompt: 'Please confirm your password'
+                                    },
+                                    {
+                                        type: 'match[password]',
+                                        prompt: 'Your password does not match'
+                                    }
+                                ]
+                            },
+                            security_answer: {
+                                identifier: 'security_answer',
+                                rules: [{
+                                    type: 'empty',
+                                    prompt: 'Please answer a security question'
+                                    }
+                                ]
+                            }
+                        }
+                    });
+
+                $('.ui.dropdown')
+                    .dropdown()
+                    ;
+            });
+    </script>
+</head>
+
+<body>
+    <div id="login-container" class="ui divided two column center aligned stackable grid">
+        <div class="six wide center aligned column">
+            <div class="ui center aligned page image">
+                <img class="center" src="/public/logo_gold_big.png" alt="Logo Failed To Load"
+                    style="width: 24em; height: 24em; margin-bottom: 1em;">
+            </div>
+        </div>
+        <div class="six wide column" style="margin-top: 2em;">
+            <div class="ui center aligned yellow large header">
+                Sign Up
+            </div>
+            <form class="ui large form error">
+                <div class="ui stacked segment">
+                    <div class="ui two column grid" style="margin-bottom: 0.1em; margin-top: -2em;">
+                        <div class="column">
+                            <div class="field">
+                                <div class="ui left icon input">
+                                    <i class="id card icon"></i>
+                                    <input id="first-name" type="text" name="firstname" placeholder="First Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <div class="ui left icon input">
+                                    <i class="id card icon"></i>
+                                    <input id="last-name" type="text" name="lastname" placeholder="Last Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input id="user-name" type="text" name="username" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="mail icon"></i>
+                            <input id="email-address" type="text" name="email" placeholder="E-mail address">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input id="password" type="password" name="password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input id="confirm-password" type="password" name="confirm_password"
+                                placeholder="Confirm Password">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="security_question">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Please answer one of the following security questions.</div>
+                            <div class="menu">
+                                <div class="item" data-value="question_one">In what city did you have your first
+                                    ever birthday party?</div>
+                                <div class="item" data-value="question_two">What is the last name of your Science
+                                    class teacher in high school?</div>
+                                <div class="item" data-value="question_three">Which company manufactured your first
+                                    mobile phone?</div>
+                                <div class="item" data-value="question_four">Who was your childhood hero?</div>
+                                <div class="item" data-value="question_five">Where was your best family vacation?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="answer">
+                            <input type="text" name="security_answer" id="security-answer" placeholder="Answer">
+                        </div>
+                    </div>
+                    <div class="ui fluid large yellow submit button field" id="button-signup" style="background: rgb(184, 164, 56);">Sign
+                        Up</div>
+                    <div class="ui fluid large grey cancel button"
+                        onclick="window.location.href = '/views/login.html'">
+                        Cancel</div>
+                </div>
+                <div class="ui error message"></div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

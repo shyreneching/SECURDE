@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavier's School For Gifted Youngsters Libarary | Book</title>
+    <link rel="icon" href="/public/logo_gold.png">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/reset.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/container.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/site.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/header.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/button.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/list.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/image.css">
+    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/form.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="/node_modules/semantic-ui/dist/components/form.js"></script>
+    <script src="/node_modules/semantic-ui/dist/components/transition.js"></script>
+    <script src="/node_modules/semantic-ui/dist/semantic.min.js"></script>
+    <style type="text/css">
+        html,
+        body {
+            background-color: white;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track-piece {
+            background-color: rgb(0, 0, 0);
+        }
+
+        ::-webkit-scrollbar-thumb:vertical {
+            /* height: 10px; */
+            background-color: rgba(184, 165, 56, 0.507);
+            border-radius: 10px;
+        }
+
+        .hidden.menu {
+            display: none;
+        }
+
+        .container-main {
+            background-image: linear-gradient(0deg, rgba(56, 56, 56, 0.6), rgba(56, 56, 56, 0.6)),
+                url("/public/backdrop_long.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            /* -webkit-filter: drop-shadow(12px 12px 25px rgba(0,0,0,0.5));
+            filter: url(#drop-shadow);
+            -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+            filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')"; */
+            box-shadow: 2px 2px 4px 1px rgb(153, 153, 153);
+        }
+
+        .secondary.pointing.menu .toc.item {
+            display: none;
+        }
+
+        .masthead.segment {
+            min-height: 200px;
+            padding: 1em 0em;
+        }
+
+        .masthead .logo.item img {
+            margin-right: 1em;
+        }
+
+        .masthead .ui.menu .ui.button {
+            margin-left: 0.5em;
+        }
+
+        .masthead h1.ui.header {
+            margin-top: 3em;
+            margin-bottom: 0em;
+            font-size: 4em;
+            font-weight: normal;
+        }
+
+        .masthead h2 {
+            font-size: 1.7em;
+            font-weight: normal;
+        }
+
+        .ui.vertical.stripe {
+            padding: 8em 0em;
+        }
+
+        .ui.vertical.stripe h3 {
+            font-size: 2em;
+        }
+
+        .ui.vertical.stripe .button+h3,
+        .ui.vertical.stripe p+h3 {
+            margin-top: 3em;
+        }
+
+        .ui.vertical.stripe .floated.image {
+            clear: both;
+        }
+
+        .ui.vertical.stripe p {
+            font-size: 1.33em;
+        }
+
+        .ui.vertical.stripe .horizontal.divider {
+            margin: 3em 0em;
+        }
+
+        .quote.stripe.segment {
+            padding: 0em;
+        }
+
+        .quote.stripe.segment .grid .column {
+            padding-top: 5em;
+            padding-bottom: 5em;
+        }
+
+        .footer.segment {
+            padding: 5em 0em;
+        }
+
+        .secondary.pointing.menu .toc.item {
+            display: none;
+        }
+
+        @media only screen and (max-width: 700px) {
+            .ui.fixed.menu {
+                display: none !important;
+            }
+
+            .secondary.pointing.menu .item,
+            .secondary.pointing.menu .menu {
+                display: none;
+            }
+
+            .secondary.pointing.menu .toc.item {
+                display: block;
+            }
+
+            .masthead.segment {
+                min-height: 50px;
+            }
+
+            .masthead h1.ui.header {
+                font-size: 2em;
+                margin-top: 1.5em;
+            }
+
+            .masthead h2 {
+                margin-top: 0.5em;
+                font-size: 1.5em;
+            }
+
+            #book-title, #reviews{
+                align-content: center;
+                align-items: center;
+                align-self: center;
+                text-align: center;
+            }
+
+            #button-review{
+                align-content: center;
+                align-items: center;
+                align-self: center;
+                text-align: center;
+            }
+        }
+    </style>
+    <script src="assets/library/jquery.min.js"></script>
+    <script src="../dist/components/visibility.js"></script>
+    <script src="../dist/components/sidebar.js"></script>
+    <script src="../dist/components/transition.js"></script>
+    <script>
+        $(document)
+            .ready(function () {
+
+                // fix menu when passed
+                $('.masthead')
+                    .visibility({
+                        once: false,
+                        onBottomPassed: function () {
+                            $('.fixed.menu').transition('fade in');
+                        },
+                        onBottomPassedReverse: function () {
+                            $('.fixed.menu').transition('fade out');
+                        }
+                    });
+
+                // create sidebar and attach to menu open
+                $('.ui.sidebar')
+                    .sidebar('attach events', '.toc.item');
+
+                // tab functionality
+                $('.tabular.menu .item').tab();
+                $('.tabular.menu .item').click(function () {
+                    $('.tabular.menu .item').removeClass("active");
+                    $('.tabular.menu .item').css({
+                        color: "black"
+                    });
+                    $(this).addClass("active");
+                    $(this).css({
+                        color: "rgb(184, 164, 56)"
+                    });
+                    $(this).tab.context('.tabular.menu').siblings('.active').removeClass('active');
+                    $('.tabular.menu .item').tab({
+                        context: '.tabular.menu',
+                        history: true,
+                        historyType: 'state',
+                        // base url for all other path changes
+                        // path : '/my/base/url',
+                    });
+                });
+
+                //Book status - changing font colour and showing/hiding Next Available Date div
+                $(function(){
+                    $('#book-status:contains(Available)').css({color: "rgb(154, 224, 153)"});
+                    $('#book-status:contains(Reserved)').css({color: "rgb(255, 122, 112)"});
+
+                    $('#book-status:contains(Reserved)').show(function(){
+                        $("#div-nextreservedate").show();
+                    })
+                    $('#book-status:contains(Available)').show(function(){
+                        $("#div-nextreservedate").hide();
+                    })
+                });
+
+                //Book Review Modal
+                $('#button-review').on('click', function(){
+                    $('#textarea-review').val('');
+                    $('#modal-writebookreview').modal('setting', 'transition', 'fade up')
+                    $('#modal-writebookreview').modal('show')
+                });
+
+                //Borrow Book show modal
+                $('#button-borrow').on('click', function() {
+                $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
+                $('#modal-borrowbook').modal('show')
+                });
+                
+            });
+    </script>
+</head>
+<body>
+    <!-- Following Menu -->
+    <div class="ui large top fixed hidden menu">
+        <div class="ui container">
+            <a class="active item">Books</a>
+            <a class="item">Profile</a>
+            <a class="item">Login</a>
+            <!-- <div class="right menu">
+                <div class="item">
+                    <a class="ui button">Log in</a>
+                </div>
+                <div class="item">
+                    <a class="ui primary button">Sign Up</a>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div class="ui vertical inverted sidebar menu">
+        <a class="item">Books</a>
+        <a class="item">Login</a>
+        <a class="item">Signup</a>
+    </div>
+
+    <div class="container-main">
+        <div class="ui vertical masthead center aligned segment">
+            <div class="ui mobile stackable grid" style="width: inherit;">
+                <div class="left aligned row" style="width: fit-content;">
+                    <div class="four wide left aligned computer only column">
+                        <div class="ui center aligned page image">
+                            <img class="center" src="/public/logo_gold_big.png" alt="Logo Failed To Load"
+                                style="width: 12em; height: 12em; margin-bottom: -8em; margin-left: 10em; margin-top: 0em;">
+                        </div>
+                    </div>
+                    <div class="ui container">
+                        <div class="ui large inverted secondary pointing six wide column menu"
+                            style="border-color: transparent; background-color: transparent;">
+                            <a class="toc item">
+                                <i class="sidebar icon"></i>
+                            </a>
+                            <div class="ui center aligned container" style="width: min-content;">
+                                <a class="active item">Books</a>
+                                <a class="item">Profile</a>
+                                <a class="item">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui two row center aligned grid">
+        <div class="row">
+            <div class="ui two column center aligned stackable grid" style="margin-top: 5%;">
+                <div class="four wide center aligned column">
+                    <!-- <h1 class="ui huge center aligned icon container" style="margin-top: 1em;"> -->
+                    <div class="row">
+                        <div class="ui icon container"
+                            style="border-width: 2px; border-color: black; margin-bottom: 4em;">
+                            <i class="massive middle aligned book icon"></i>
+                        </div>
+                    </div>
+                    <div class="center aligned middle aligned row" style="text-align: center;">
+                        <div class="ui center aligned container" style="width: fit-content;">
+                            <div class="ui fluid large yellow button" id="button-borrow"
+                                style="background: rgb(184, 164, 56);">Borrow</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="eight wide column">
+                    <div class="ui padded container">
+                        <h1 class="ui left aligned header" id="book-title" style="margin-left: auto;">Book Title</h1>
+                        <div class="ui two column grid">
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Author:</div>
+                                <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">John Doe</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Publisher:</div>
+                                <div class="ten wide left aligned column" id="book-publishinghouse" style="font-weight: bolder;">Triumphant
+                                    Publishing
+                                    House</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Year of Publication:</div>
+                                <div class="ten wide left aligned column" id="book-yearofpublication"
+                                    style="font-weight: bolder;">2020</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">ISBN:</div>
+                                <div class="ten wide left aligned column" id="book-isbn"
+                                    style="font-weight: bolder;">0001224356789
+                                </div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Call Number:</div>
+                                <div class="ten wide left aligned column" id="book-callnumber"
+                                    style="font-weight: bolder;">09171234567</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Date Added:</div>
+                                <div class="ten wide left aligned column" id="book-dateadded"
+                                    style="font-weight: bolder;">04/29/2020</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Status:</div>
+                                <div class="ten wide left aligned column" id="book-status"
+                                    style="font-weight: bolder;">
+                                    Reserved
+                                </div>
+                            </div>
+                            <div class="left aligned row" id="div-nextreservedate" style="margin-bottom: -1em; display: none;">
+                                <div class="six wide left aligned column">Next Available Date:</div>
+                                <div class="ten wide left aligned column" id="book-reservedate"
+                                    style="font-weight: bolder;">05/13/2020</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="ui container" style="height: 420px; width: 70%;">
+                <h3 class="ui large left aligned header" id="reviews">Reviews</h3>
+                <div class="ui container padded segment" style="height: 300px; overflow-y: scroll;">
+                    <div class="ui container padded segment">
+                        <div class="ui divided two column stackable grid">
+                            <div class="four wide center aligned middle aligned column">
+                                <h4>User</h4>
+                            </div>
+                            <div class="twelve wide column">
+                                <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">
+                                    04/29/2020</div>
+                                <div class="row" id="book-review">This is killing me semantic ui is not a joke why is it
+                                    testing my patience???????!!! Stackoverflow thank you so much bc the
+                                    documentation
+                                    is not really all that helpful T_T</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui container padded segment">
+                        <div class="ui divided two column stackable grid">
+                            <div class="four wide center aligned middle aligned column">
+                                <h4 id="review-user">User</h4>
+                            </div>
+                            <div class="twelve wide column">
+                                <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">
+                                    04/29/2020</div>
+                                <div class="row" id="book-review">Why am I such a procrastinator...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="ui right floated small labeled icon button" id="button-review">
+                        <i class="pencil icon"></i> Write Book Review
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Write Book Review Modal -->
+    <div class="ui small scrolling modal" id="modal-writebookreview">
+        <i class="close icon"></i>
+        <div class="header">
+            Write Book Review
+        </div>
+        <div class="content">
+            <form class="ui reply form">
+                <div class="field">
+                    <textarea id="textarea-review"></textarea>
+                </div>
+                <div class="ui blue labeled submit icon button">
+                    <i class="save icon"></i> Save Review
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Borrow Book Modal -->
+    <div class="ui small basic modal" id="modal-borrowbook">
+        <i class="close icon"></i>
+        <div class="header">
+            Borrow Book
+        </div>
+        <div class="content">
+            Do you wish to borrow this book?
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <div class="ui green ok right inverted button" id="button-borrowbook">
+                <i class="checkmark icon"></i>
+                Yes
+            </div>
+        </div>
+    </div>
+</body>
+</html>
