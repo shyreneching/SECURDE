@@ -79,9 +79,9 @@ router.post("/forgot-password/2", urlencoder, function(req, res){
   })
 
   router.post("/forgot-password/3", urlencoder, function(req, res){
-    // res.render("forgot_password_page3.hbs")
-    let template = fs.readFileSync('./views/forgot_password_page3.html', 'utf-8');
-    res.send(template);
+    res.render("forgot_password_page3.hbs")
+    // let template = fs.readFileSync('./views/forgot_password_page3.html', 'utf-8');
+    // res.send(template);
 
     // let username = req.body.user
     // let password = req.body.pww

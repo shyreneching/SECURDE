@@ -1,11 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
 const mongoose = require("mongoose");
 const urlencoder = bodyParser.urlencoded({
     extended: false
 }) 
 
 const session = require("express-session");
+const cookieparser = require("cookie-parser");
 const path = require("path");
 var app = new express();
 
@@ -19,11 +21,15 @@ mongoose.connect(MONGOLAB_URI, {
 
 app.use(urlencoder);
 app.use(session({
-    resave: false,
+    resave: true,
     name: "xavier-libsys",
     saveUninitialized: true, 
-    secret: "encrypt-pass"
+    secret: "encrypt-pass",
+    cookie: {
+        maxAge: 1000 * 60 * 24 * 365 * 2
+    }
 }))
+app.use(cookieparser())
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next) {
     res.set("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
