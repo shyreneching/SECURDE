@@ -18,6 +18,7 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/login", async (req, res) => {
+    res.render("login.hbs")
     // req.session.username = "admin";
     // if (req.session.username != null) {
         // if (req.session.username == "secretary") {
@@ -29,8 +30,8 @@ router.get("/login", async (req, res) => {
         // }
     // } else {
         // let acc = await Account.getAllAccounts();
-        let template = fs.readFileSync('./views/login.html', 'utf-8');
-        res.send(template);
+        // let template = fs.readFileSync('./views/login.html', 'utf-8');
+        // res.send(template);
         // , {
             // account: JSON.stringify(acc)
         // })

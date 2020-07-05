@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavier's School For Gifted Youngsters Libarary | Login </title>
+    <link rel="icon" href="img/logo-gold.png">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/reset.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/container.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/site.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/header.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/button.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/list.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/image.css">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic-ui/dist/components/form.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="semantic/semantic-ui/dist/components/form.js"></script>
+    <script src="semantic/semantic-ui/dist/components/transition.js"></script>
+    <script src="semantic/semantic-ui/dist/semantic.min.js"></script>
+    <script src="js/login.js"></script>
+</head>
+<body>
+    <div id="login-container" class="ui center aligned grid">
+        <div class="column">
+            <div class="ui image">
+                <img class="center" src="img/logo.png" alt="Logo Failed To Load"
+                    style="width: 12em; height: 12em; margin-bottom: 1em;">
+            </div>
+            <form class="ui large form error">
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input id="user-name" type="text" name="username" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input id="password" type="password" name="password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="field" style="font-size: 0.8em; margin-top: -2%;">
+                        <a href="forgot_password.html" style="text-decoration: underline;">Forgot your password?</a>
+                    </div>
+                    <div class="ui fluid large yellow submit button field" id="button-login"
+                        style="background: rgb(184, 164, 56);">Login</div>
+                    <div class="ui fluid large grey cancel button">Cancel</div>
+                </div>
+                <div class="ui error message"></div>
+            </form>
+            <div class="ui message">
+                Don't have an account? <a href="signup.html">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
