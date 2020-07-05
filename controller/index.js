@@ -55,7 +55,32 @@ router.get("/forgot-password", async(req, res) => {
 })
 
 router.post("/forgot-password/2", urlencoder, function(req, res){
-    let template = fs.readFileSync('./views/forgot_password_page2.html', 'utf-8');
+    res.render("forgot_password_page2.hbs")
+    // let template = fs.readFileSync('./views/forgot_password_page2.html', 'utf-8');
+    // res.send(template);
+
+    // let username = req.body.user
+    // let password = req.body.pww
+    
+    // Account.findOne({
+    //     username,
+    //     password
+    // }, (err, doc)=>{
+    //     if(err){
+    //         res.send(err)
+    //     }else if(doc){
+    //         console.log(doc)
+    //         req.session.username = doc.username
+    //         res.redirect("/")
+    //     }else{
+    //         res.render("Login.hbs")
+    //     }
+    // })   
+  })
+
+  router.post("/forgot-password/3", urlencoder, function(req, res){
+    // res.render("forgot_password_page3.hbs")
+    let template = fs.readFileSync('./views/forgot_password_page3.html', 'utf-8');
     res.send(template);
 
     // let username = req.body.user
