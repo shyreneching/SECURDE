@@ -44,6 +44,12 @@ router.get("/signup", async(req, res) => {
     // res.send(template);
 })
 
+router.get("/forgot-password", async(req, res) => {
+    res.render("forgot_password.hbs")
+    // let template = fs.readFileSync('./views/forgot_password.html', 'utf-8');
+    // res.send(template);
+})
+
 router.get("/error", async(req, res) =>{
     res.render('error_page.hbs')
     // let template = fs.readFileSync('./views/error_page.html', 'utf-8');
