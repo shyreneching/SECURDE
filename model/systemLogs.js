@@ -5,6 +5,8 @@ var systemLogsSchema = new Schema({
     action: String,
     // username
     actor: String,
+    // ip address
+    ip_add: String,
     // book
     item: String,
     datetime: String
