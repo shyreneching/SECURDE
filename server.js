@@ -17,20 +17,19 @@ mongoose.connect(MONGOLAB_URI, {
     useUnifiedTopology: true
   }).catch(err => console.log(err))
 
-// app.use(urlencoder);
-// app.use(session({
-//     resave: false,
-//     name: "appointment-system",
-//     saveUninitialized: true, 
-//     secret: "secretpass"
-// }))
-// app.use(express.static(path.join(__dirname, 'public')));
-// app.use(function(req, res, next) {
-//     res.set("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
-//     next();
-// })
+app.use(urlencoder);
+app.use(session({
+    resave: false,
+    name: "xavier-libsys",
+    saveUninitialized: true, 
+    secret: "encrypt-pass"
+}))
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(function(req, res, next) {
+    res.set("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+    next();
+})
 
-app.use(express.static('public'))
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 

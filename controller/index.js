@@ -38,5 +38,21 @@ router.get("/login", async (req, res) => {
     // }
 })
 
+router.get("/signup", async(req, res) => {
+    res.render("signup.hbs")
+    // let template = fs.readFileSync('./views/signup.html', 'utf-8');
+    // res.send(template);
+})
+
+router.get("/error", async(req, res) =>{
+    res.render('error_page.hbs')
+    // let template = fs.readFileSync('./views/error_page.html', 'utf-8');
+    // res.send(template);
+})
+
+router.get('*', (req, res) =>{
+    res.redirect("/error")
+})
+
 
 module.exports = router;
