@@ -89,6 +89,14 @@ $(document)
                             }
                         ]
                     },
+                    security_question: {
+                        identifier: 'security_question',
+                        rules: [{
+                            type: 'empty',
+                            prompt: 'Please select a security question.'
+                            }
+                        ]
+                    },
                     security_answer: {
                         identifier: 'security_answer',
                         rules: [{
