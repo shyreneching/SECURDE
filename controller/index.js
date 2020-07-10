@@ -8,7 +8,8 @@ const urlencoder = bodyparser.urlencoded({
 
 router.get("/", async (req, res) => {
     // if (req.session.username == null) {
-        res.redirect("/login");
+        // res.redirect("/login");
+        res.render("books.hbs")
     // } else {
         // let account = await Account.getAccountByUsername(req.session.username);
         // if (account.accountType == "secretary") {
