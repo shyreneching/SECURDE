@@ -52,9 +52,6 @@ router.get("/login", async (req, res) => {
     // }
 })
 
-<<<<<<< HEAD
-router.get("/signup", async (req, res) => {
-=======
 router.get("/logout", async(req, res) => {
     req.session.username = null;
     req.session.id = null
@@ -63,7 +60,6 @@ router.get("/logout", async(req, res) => {
 })
 
 router.get("/signup", async(req, res) => {
->>>>>>> 84fafb61c475f619b99dd3075ee7d7d5efd79c5b
     res.render("signup.hbs")
     // let template = fs.readFileSync('./views/signup.html', 'utf-8');
     // res.send(template);
