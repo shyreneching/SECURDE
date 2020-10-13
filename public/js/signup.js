@@ -5,10 +5,7 @@ $(document)
                 fields: {
                     firstname: {
                         identifier: 'firstname',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your first name'
-                            },
+                        rules: [
                             {
                                 type: 'regExp',
                                 value: /^[A-Za-z\s]+$/,
@@ -18,10 +15,7 @@ $(document)
                     },
                     lastname: {
                         identifier: 'lastname',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your last name'
-                            },
+                        rules: [
                             {
                                 type: 'regExp',
                                 value: /^[A-Za-z\s]+$/,
@@ -40,10 +34,7 @@ $(document)
                     },
                     email: {
                         identifier: 'email',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your e-mail'
-                            },
+                        rules: [
                             {
                                 type: 'email',
                                 prompt: 'Please enter a valid e-mail'
@@ -52,10 +43,7 @@ $(document)
                     },
                     password: {
                         identifier: 'password',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your password'
-                            },
+                        rules: [
                             {
                                 type: 'length[6]',
                                 prompt: 'Your password must be at least 6 characters'
