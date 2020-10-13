@@ -32,24 +32,19 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/login", async (req, res) => {
+    let syslog = new SystemLogs({
+        action: "Entered Login Page",
+        actor: req.session.username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+
     res.render("login.hbs")
-    // req.session.username = "admin";
-    // if (req.session.username != null) {
-    // if (req.session.username == "secretary") {
-    //     res.redirect("/secretary");
-    // } else if (req.session.username == "dentist") {
-    //     res.redirect("/dentist");
-    // } else if (req.session.username == "admin") {
-    //     res.redirect("/admin");
-    // }
-    // } else {
-    // let acc = await Account.getAllAccounts();
-    // let template = fs.readFileSync('./views/login.html', 'utf-8');
-    // res.send(template);
-    // , {
-    // account: JSON.stringify(acc)
-    // })
-    // }
 })
 
 router.post("/validLogin", async (req, res) => {
@@ -63,13 +58,36 @@ router.get("/logout", async(req, res) => {
     req.session.username = null;
     req.session.id = null
     res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+
+    let syslog = new SystemLogs({
+        action: "Signed Out",
+        actor: req.session.username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+
     res.redirect("/")
 })
 
 router.get("/signup", async(req, res) => {
+    let syslog = new SystemLogs({
+        action: "Entered Sign Up Page",
+        actor: req.body.username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+
     res.render("signup.hbs")
-    // let template = fs.readFileSync('./views/signup.html', 'utf-8');
-    // res.send(template);
 })
 
 router.post("/createaccount", async (req, res) => {
