@@ -4,267 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xavier's School For Gifted Youngsters Libarary | Profile</title>
-    <link rel="icon" href="/public/logo_gold.png">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/reset.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/container.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/site.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/header.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/button.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/list.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/image.css">
-    <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/components/form.css">
+    <link rel="icon" href="/img/logo_gold.png">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/reset.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/container.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/site.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/header.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/button.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/list.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/image.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/student-teacher_profile.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="/node_modules/semantic-ui/dist/components/form.js"></script>
-    <script src="/node_modules/semantic-ui/dist/components/transition.js"></script>
-    <script src="/node_modules/semantic-ui/dist/semantic.min.js"></script>
-    <style type="text/css">
-        html,body {
-            background-color: white;
-        }
-
-        ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-        }
-
-        ::-webkit-scrollbar-track-piece {
-        background-color: rgb(0, 0, 0);
-        }
-
-        ::-webkit-scrollbar-thumb:vertical {
-        /* height: 10px; */
-        background-color: rgba(184, 165, 56, 0.507);
-        border-radius: 10px;
-        }
-
-        .hidden.menu {
-            display: none;
-        }
-
-        .container-main {
-            background-image: linear-gradient(0deg, rgba(56, 56, 56, 0.6), rgba(56, 56, 56, 0.6)),
-            url("/public/backdrop_long.jpg");
-            background-repeat: no-repeat;
-            background-position: center;
-            /* -webkit-filter: drop-shadow(12px 12px 25px rgba(0,0,0,0.5));
-            filter: url(#drop-shadow);
-            -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-            filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')"; */
-            box-shadow: 2px 2px 4px 1px rgb(153, 153, 153);
-        }
-
-        .borrowed_booktitle {
-            cursor: pointer;
-        }
-
-        .masthead.segment {
-            min-height: 200px;
-            padding: 1em 0em;
-        }
-
-        .masthead .logo.item img {
-            margin-right: 1em;
-        }
-
-        .masthead .ui.menu .ui.button {
-            margin-left: 0.5em;
-        }
-
-        .masthead h1.ui.header {
-            margin-top: 3em;
-            margin-bottom: 0em;
-            font-size: 4em;
-            font-weight: normal;
-        }
-
-        .masthead h2 {
-            font-size: 1.7em;
-            font-weight: normal;
-        }
-
-        .ui.vertical.stripe {
-            padding: 8em 0em;
-        }
-
-        .ui.vertical.stripe h3 {
-            font-size: 2em;
-        }
-
-        .ui.vertical.stripe .button+h3,
-        .ui.vertical.stripe p+h3 {
-            margin-top: 3em;
-        }
-
-        .ui.vertical.stripe .floated.image {
-            clear: both;
-        }
-
-        .ui.vertical.stripe p {
-            font-size: 1.33em;
-        }
-
-        .ui.vertical.stripe .horizontal.divider {
-            margin: 3em 0em;
-        }
-
-        .quote.stripe.segment {
-            padding: 0em;
-        }
-
-        .quote.stripe.segment .grid .column {
-            padding-top: 5em;
-            padding-bottom: 5em;
-        }
-
-        .footer.segment {
-            padding: 5em 0em;
-        }
-
-        .secondary.pointing.menu .toc.item {
-            display: none;
-        }
-
-        @media only screen and (max-width: 700px) {
-            .ui.fixed.menu {
-                display: none !important;
-            }
-
-            .secondary.pointing.menu .item,
-            .secondary.pointing.menu .menu {
-                display: none;
-            }
-
-            .secondary.pointing.menu .toc.item {
-                display: block;
-            }
-
-            .masthead.segment {
-                min-height: 50px;
-            }
-
-            .masthead h1.ui.header {
-                font-size: 2em;
-                margin-top: 1.5em;
-            }
-
-            .masthead h2 {
-                margin-top: 0.5em;
-                font-size: 1.5em;
-            }
-        }
-    </style>
+    <script src="/semantic/semantic-ui/dist/components/form.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/transition.js"></script>
+    <script src="/semantic/semantic-ui/dist/semantic.min.js"></script>
     <script src="assets/library/jquery.min.js"></script>
-    <script src="../dist/components/visibility.js"></script>
-    <script src="../dist/components/sidebar.js"></script>
-    <script src="../dist/components/transition.js"></script>
-    <script>
-        $(document)
-        .ready(function() {
-
-        // fix menu when passed
-        $('.masthead')
-        .visibility({
-        once: false,
-        onBottomPassed: function() {
-        $('.fixed.menu').transition('fade in');
-        },
-        onBottomPassedReverse: function() {
-        $('.fixed.menu').transition('fade out');
-        }
-        })
-        ;
-
-        // create sidebar and attach to menu open
-        $('.ui.sidebar')
-            .sidebar('attach events', '.toc.item');
-        
-        // tab functionality
-        $('.tabular.menu .item').tab();
-        $('.tabular.menu .item').click(function(){
-            $('.tabular.menu .item').removeClass("active");
-            $('.tabular.menu .item'     ).css({color: "black"});
-            $(this).addClass("active");
-            $(this).css({color: "rgb(184, 164, 56)"});
-            $(this).tab.context('.tabular.menu').siblings('.active').removeClass('active');
-            $('.tabular.menu .item').tab({
-            context : '.tabular.menu',
-            history : true,
-            historyType : 'state',
-            // base url for all other path changes
-            // path : '/my/base/url',
-            });
-        });
-
-        //Change password show modal
-        $('#change-password').on('click', function() { 
-            // $('.field').removeClass('error')
-            // $('#old-password').val('')
-            // $('#new-password').val('')
-            // $('#confirm-new-password').val('')
-
-            //Resets form input fields from data values
-            $('.ui.form').trigger("reset");
-            //Resets form error messages and field styles
-            $('.ui.form .field.error').removeClass( "error" );
-            $('.ui.form.error').removeClass( "error" );
-            $('#modal-changepassword').modal('setting', 'transition', 'vertical flip')
-            $('#modal-changepassword').modal('show')
-        });
-
-        $('#form-changepassword')
-             .form({
-                 fields: {
-                     new_password: {
-                        identifier: 'new_password',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your password'
-                            },
-                            {
-                                type: 'length[6]',
-                                prompt: 'Your password must be at least 6 characters'
-                            },
-                            {
-                                type: 'regExp',
-                                value: /.*[A-Z]/,
-                                prompt: 'Your password must contain at least one uppercase letter [A-Z]'
-                            },
-                            {
-                                type: 'regExp',
-                                value: /.*[0-9]/,
-                                prompt: 'Your password must contain at least one number [0-9]'
-                            },
-                            {
-                                type: 'regExp',
-                                value: /.*[!@#\$%\^<>\&*\)\(+=._-]/,
-                                prompt: 'Your password must contain at least one special character [!@#$%^<>&*()+=._-]'
-                            }
-                        ]
-                    },
-                    confirm_new_password: {
-                        identifier: 'confirm_new_password',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please confirm your password'
-                            },
-                            {
-                                type: 'match[new_password]',
-                                prompt: 'Your password does not match'
-                            }
-                        ]
-                    },
-                 }
-             });
-
-             //Borrow Book show modal
-             $('.borrowed_booktitle').on('click', function() {
-             $('#modal-borrowedbook').modal('setting', 'transition', 'vertical flip')
-             $('#modal-borrowedbook').modal('show')
-             });
-        
-        });
-    </script>
+    <script src="/semantic/semantic-ui/dist/components/visibility.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/sidebar.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/transition.js"></script>
+    <script src="/js/student-teacher_profile.js"></script>
 </head>
 <body>
     <!-- Following Menu -->
@@ -291,7 +50,7 @@
                 <div class="left aligned row" style="width: fit-content;">
                     <div class="four wide left aligned computer only column">
                         <div class="ui center aligned page image">
-                            <img class="center" src="/public/logo_gold_big.png" alt="Logo Failed To Load"
+                            <img class="center" src="/img/logo_gold_big.png" alt="Logo Failed To Load"
                                 style="width: 12em; height: 12em; margin-bottom: -8em; margin-left: 10em; margin-top: 0em;">
                         </div>
                     </div>

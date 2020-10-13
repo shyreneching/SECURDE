@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavier's School For Gifted Youngsters Libarary | Admin</title>
+    <link rel="icon" href="/img/logo_gold.png">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/reset.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/container.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/site.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/header.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/button.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/list.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/image.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.semanticui.min.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/form.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/transition.js"></script>
+    <script src="/semantic/semantic-ui/dist/semantic.min.js"></script>
+    <script src="/js/tablesort.js"></script>
+    <script src="assets/library/jquery.min.js"></script>
+    <script src="../dist/components/visibility.js"></script>
+    <script src="../dist/components/sidebar.js"></script>
+    <script src="../dist/components/transition.js"></script>
+    <script src="/js/admin.js"></script>
+</head>
+
+<body>
+    <!-- Following Menu -->
+    <!-- <div class="ui large top fixed hidden menu">
+        <div class="ui container">
+            <a class="active item">Admin</a>
+            <a class="item">Logout</a>
+        </div>
+    </div> -->
+
+    <!-- Sidebar Menu -->
+    <div class="ui vertical inverted sidebar menu">
+        <a class="item">Admin</a>
+        <a class="item" href="/logout">Logout</a>
+    </div>
+
+    <div class="container-main">
+        <div class="ui vertical masthead center aligned segment">
+            <div class="ui mobile stackable grid" style="width: inherit;">
+                <div class="left aligned row" style="width: fit-content;">
+                    <div class="four wide left aligned computer only column">
+                        <div class="ui center aligned page image">
+                            <img class="center" src="/img/logo_gold_big.png" alt="Logo Failed To Load"
+                                style="width: 12em; height: 12em; margin-bottom: -8em; margin-left: 10em; margin-top: 0em;">
+                        </div>
+                    </div>
+                    <div class="ui container">
+                        <div class="ui large inverted secondary pointing six wide column menu"
+                            style="border-color: transparent; background-color: transparent;">
+                            <a class="toc item">
+                                <i class="sidebar icon"></i>
+                            </a>
+                            <div class="ui center aligned container" style="width: min-content;">
+                                <a class="active item">Admin</a>
+                                <a class="item" href="/logout">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui two column center aligned stackable grid" style="margin-top: 5%;">
+        <div class="two wide column">
+            <h1 class="ui huge center aligned icon header">
+                <i class="id badge icon"></i>
+                <h1 class="username" id="user-name">Admin</h1>
+            </h1>
+            <div class="row">
+                <div class="ui right floated small labeled icon button" id="button-addmanager">
+                    <i class="user plus icon"></i> Add Manager
+                </div>
+            </div>
+        </div>
+        <div class="twelve wide column">
+            <div class="ui container" style="width: 90%;">
+                <h3>System Logs</h3>
+                <table class="ui sortable celled table" id="data-table">
+                    <thead class="sticky">
+                        <tr>
+                            <th class="sorted ascending" id="table-header">Action</th>
+                            <th id="table-header">Actor</th>
+                            <th class="" id="table-header">Item</th>
+                            <th class="" id="table-header">Date/Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="systemlog_action" id="systemlog-action">Something</td>
+                            <td class="systemlog_actor" id="systemlog-actor">John Doe</td>
+                            <td class="systemlog_item" id="systemlog-item">Item description</td>
+                            <td class="systemlog_datetime" id="systemlog-datetime">05/16/2020 9:23 PM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Manager Modal -->
+    <div class="ui tiny scrolling modal" id="modal-addmanager">
+        <i class="close icon"></i>
+        <div class="header">
+            Create Manager Account
+        </div>
+        <div class="content">
+            <form class="ui large form error" id="form-addmanager">
+                <div class="ui two column grid" style="margin-bottom: 0.1em; margin-top: -1em;">
+                    <div class="column">
+                        <div class="field">
+                            <div class="ui left icon input">
+                                <i class="id card icon"></i>
+                                <input id="first-name" type="text" name="firstname" placeholder="First Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <div class="ui left icon input">
+                                <i class="id card icon"></i>
+                                <input id="last-name" type="text" name="lastname" placeholder="Last Name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input id="user-name" type="text" name="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="mail icon"></i>
+                        <input id="email-address" type="text" name="email" placeholder="E-mail address">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="password" type="password" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="confirm-password" type="password" name="confirm_password"
+                            placeholder="Confirm Password">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="security_question">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Please answer one of the following security questions.</div>
+                        <div class="menu">
+                            <div class="item" data-value="question_one">In what city did you have your first
+                                ever birthday party?</div>
+                            <div class="item" data-value="question_two">What is the last name of your Science
+                                class teacher in high school?</div>
+                            <div class="item" data-value="question_three">Which company manufactured your first
+                                mobile phone?</div>
+                            <div class="item" data-value="question_four">Who was your childhood hero?</div>
+                            <div class="item" data-value="question_five">Where was your best family vacation?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="answer">
+                        <input type="text" name="security_answer" id="security-answer" placeholder="Answer">
+                    </div>
+                </div>
+                <div class="ui fluid large yellow submit button field" id="button-createmanageraccount"
+                    style="background: rgb(184, 164, 56);">Create Account</div>
+                <div class="ui error message" id="warnings"></div>
+            </form>
+        </div>
+    </div>
+    
+</body>
+
+</html>
