@@ -107,7 +107,7 @@ router.post("/createaccount", async (req, res) => {
                 item: null,
                 datetime: moment().format('YYYY-MM-DD HH:mm')
             })
-            await SystemLogs.addLogs(syslog)
+            SystemLogs.addLogs(syslog)
 
             res.redirect("/login");
         } else {
@@ -121,7 +121,7 @@ router.post("/createaccount", async (req, res) => {
                 item: null,
                 datetime: moment().format('YYYY-MM-DD HH:mm')
             })
-            await SystemLogs.addLogs(syslog)
+            SystemLogs.addLogs(syslog)
 
             res.redirect("/signup");
         }
@@ -136,7 +136,7 @@ router.post("/createaccount", async (req, res) => {
             item: error,
             datetime: moment().format('YYYY-MM-DD HH:mm')
         })
-        await SystemLogs.addLogs(syslog)
+        SystemLogs.addLogs(syslog)
 
         res.redirect("/error");
     })
