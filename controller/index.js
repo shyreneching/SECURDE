@@ -105,7 +105,7 @@ router.post("/createaccount", async (req, res) => {
                     req.socket.remoteAddress || 
                     req.connection.socket.remoteAddress,
                 item: null,
-                datetime: moment().format('YYYY-MM-DD HH:mm');
+                datetime: moment().format('YYYY-MM-DD HH:mm')
             })
             await SystemLogs.addLogs(syslog)
 
@@ -119,7 +119,7 @@ router.post("/createaccount", async (req, res) => {
                     req.socket.remoteAddress || 
                     req.connection.socket.remoteAddress,
                 item: null,
-                datetime: moment().format('YYYY-MM-DD HH:mm');
+                datetime: moment().format('YYYY-MM-DD HH:mm')
             })
             await SystemLogs.addLogs(syslog)
 
@@ -134,7 +134,7 @@ router.post("/createaccount", async (req, res) => {
                 req.socket.remoteAddress || 
                 req.connection.socket.remoteAddress,
             item: error,
-            datetime: moment().format('YYYY-MM-DD HH:mm');
+            datetime: moment().format('YYYY-MM-DD HH:mm')
         })
         await SystemLogs.addLogs(syslog)
 
