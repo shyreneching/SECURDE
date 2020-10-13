@@ -39,6 +39,12 @@ userSchema.statics.getUserByLastName = async function(lastname){
     }); 
 };
 
+userSchema.statics.getUserByUsername = async function(username){
+    return await this.findOne({
+        username
+    }); 
+};
+
 userSchema.statics.addUser = function(user, callback){
     user.save().then(callback);
 };
