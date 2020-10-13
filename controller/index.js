@@ -96,12 +96,48 @@ router.post("/createaccount", async (req, res) => {
     
     User.addUser(user, function (user) {
         if (user && existing == null && password == confirm_password) {
+            let syslog = new SystemLogs({
+                action: "Successfully Created Account",
+                actor: username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm');
+            })
+            await SystemLogs.addLogs(syslog)
+
             res.redirect("/login");
         } else {
+            let syslog = new SystemLogs({
+                action: "Failed to Create Account",
+                actor: null,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm');
+            })
+            await SystemLogs.addLogs(syslog)
+
             res.redirect("/signup");
         }
     }, (error) => {
-        res.send(error);
+        let syslog = new SystemLogs({
+            action: "Error",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: error,
+            datetime: moment().format('YYYY-MM-DD HH:mm');
+        })
+        await SystemLogs.addLogs(syslog)
+
+        res.redirect("/error");
     })
     
 })
