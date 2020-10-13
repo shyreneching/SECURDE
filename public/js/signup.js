@@ -41,6 +41,16 @@ $(document)
                             }
                         ]
                     },
+                    idnum: {
+                        identifier: 'idnum',
+                        rules: [
+                            {
+                                type: 'regExp',
+                                value: /^[0-9]{8}$/,
+                                prompt: 'Please enter a valid ID number'
+                            }
+                        ]
+                    },
                     password: {
                         identifier: 'password',
                         rules: [
