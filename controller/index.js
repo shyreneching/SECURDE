@@ -209,8 +209,7 @@ router.post("/createaccount", async (req, res) => {
     let password = req.body.password
     let confirm_password = req.body.confirm_password
     let email = req.body.email
-    //let idNum = req.body.idNum
-    let idNum = ''
+    let idNum = req.body.idnum
     let security_question = req.body.security_question
     let security_answer = req.body.security_answer
 
@@ -265,50 +264,69 @@ router.post("/createaccount", async (req, res) => {
                 } else {
                     user.password = hash
                     user.salt = salt
-                    User.addUser(user, function (user) {
-                        if (user && existing == null && password == confirm_password) {
+                    bcrypt.hash(security_answer, salt, async function(err, ans) {
+                        if (err){
                             let syslog = new SystemLogs({
-                                action: "Successfully Created Account",
-                                actor: username,
-                                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                                    req.connection.remoteAddress || 
-                                    req.socket.remoteAddress || 
-                                    req.connection.socket.remoteAddress,
-                                item: null,
-                                datetime: moment().format('YYYY-MM-DD HH:mm')
-                            })
-                            SystemLogs.addLogs(syslog)
-
-                            res.redirect("/login");
-                        } else {
-                            let syslog = new SystemLogs({
-                                action: "Failed to Create Account",
+                                action: "Error",
                                 actor: null,
                                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                                     req.connection.remoteAddress || 
                                     req.socket.remoteAddress || 
                                     req.connection.socket.remoteAddress,
-                                item: null,
+                                item: err.message,
                                 datetime: moment().format('YYYY-MM-DD HH:mm')
                             })
                             SystemLogs.addLogs(syslog)
+        
+                            res.redirect("/error");
+                        } else {
+                            user.security_answer = ans
+                            User.addUser(user, function (user) {
+                                if (user && existing == null && password == confirm_password) {
+                                    let syslog = new SystemLogs({
+                                        action: "Successfully Created Account",
+                                        actor: username,
+                                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                            req.connection.remoteAddress || 
+                                            req.socket.remoteAddress || 
+                                            req.connection.socket.remoteAddress,
+                                        item: null,
+                                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                                    })
+                                    SystemLogs.addLogs(syslog)
 
-                            res.redirect("/signup");
+                                    res.redirect("/login");
+                                } else {
+                                    let syslog = new SystemLogs({
+                                        action: "Failed to Create Account",
+                                        actor: null,
+                                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                            req.connection.remoteAddress || 
+                                            req.socket.remoteAddress || 
+                                            req.connection.socket.remoteAddress,
+                                        item: null,
+                                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                                    })
+                                    SystemLogs.addLogs(syslog)
+
+                                    res.redirect("/signup");
+                                }
+                            }, (error) => {
+                                let syslog = new SystemLogs({
+                                    action: "Error",
+                                    actor: null,
+                                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                        req.connection.remoteAddress || 
+                                        req.socket.remoteAddress || 
+                                        req.connection.socket.remoteAddress,
+                                    item: error.message,
+                                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                                })
+                                SystemLogs.addLogs(syslog)
+
+                                res.redirect("/error");
+                            })
                         }
-                    }, (error) => {
-                        let syslog = new SystemLogs({
-                            action: "Error",
-                            actor: null,
-                            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                                req.connection.remoteAddress || 
-                                req.socket.remoteAddress || 
-                                req.connection.socket.remoteAddress,
-                            item: error.message,
-                            datetime: moment().format('YYYY-MM-DD HH:mm')
-                        })
-                        SystemLogs.addLogs(syslog)
-
-                        res.redirect("/error");
                     })
                 }
             })
