@@ -12,7 +12,7 @@ const path = require("path");
 var app = new express();
 
 mongoose.Promise = global.Promise
-const MONGOLAB_URI = "mongodb+srv://securde_mp:databasepassword@onlinelibsys-srgiz.gcp.mongodb.net/test?retryWrites=true&w=majority" || "mongodb://localhost:27017/onlineLibsys"
+const MONGOLAB_URI = "mongodb+srv://securde_mp:databasepassword@onlinelibsys-srgiz.gcp.mongodb.net/securde-onlineLibsys?retryWrites=true&w=majority" || "mongodb://localhost:27017/onlineLibsys"
 
 mongoose.connect(MONGOLAB_URI, {
     useNewUrlParser: true,

@@ -52,6 +52,13 @@ router.get("/login", async (req, res) => {
     // }
 })
 
+router.post("/validLogin", async (req, res) => {
+    var user = await User.getUserByUsername(req.body.username);
+    if (user != undefined) {
+        
+    }
+})
+
 router.get("/logout", async(req, res) => {
     req.session.username = null;
     req.session.id = null
