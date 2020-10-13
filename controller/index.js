@@ -76,7 +76,8 @@ router.post("/createaccount", async (req, res) => {
     let idNum = ''
     let security_question = req.body.security_question
     let security_answer = req.body.security_answer
-    
+
+    username = username.toLowerCase()
     let datetime = moment().format('YYYY-MM-DD HH:mm');
 
     let user = new User({
