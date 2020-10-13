@@ -43,6 +43,13 @@ router.get("/login", async (req, res) => {
     // }
 })
 
+router.get("/logout", async(req, res) => {
+    req.session.username = null;
+    req.session.id = null
+    res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+    res.redirect("/")
+})
+
 router.get("/signup", async(req, res) => {
     res.render("signup.hbs")
     // let template = fs.readFileSync('./views/signup.html', 'utf-8');
