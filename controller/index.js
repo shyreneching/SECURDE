@@ -33,19 +33,35 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/login", async (req, res) => {
-    let syslog = new SystemLogs({
-        action: "Entered Login Page",
-        actor: req.session.username,
-        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-            req.connection.remoteAddress || 
-            req.socket.remoteAddress || 
-            req.connection.socket.remoteAddress,
-        item: null,
-        datetime: moment().format('YYYY-MM-DD HH:mm')
-    })
-    SystemLogs.addLogs(syslog)
+    if (req.session.username == null) {
+        let syslog = new SystemLogs({
+            action: "Entered Login Page",
+            actor: (User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
 
-    res.render("login.hbs")
+        res.render("login.hbs")
+    } else {
+        let syslog = new SystemLogs({
+            action: "Unauthorized Access to Login Page",
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/")
+    }
 })
 
 router.post("/validLogin", async (req, res) => {
@@ -67,7 +83,22 @@ router.post("/validLogin", async (req, res) => {
         res.redirect("/login");
     } else {
         bcrypt.compare(req.body.password, user.password, async (err, same) => {
-            if (same) {
+            if (err) {
+                let syslog = new SystemLogs({
+                    action: "Error",
+                    actor: null,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: err.message,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+
+                res.redirect("/error");
+            }
+            else if (same) {
                 let syslog = new SystemLogs({
                     action: "Successfully Login",
                     actor: user.username,
@@ -86,7 +117,21 @@ router.post("/validLogin", async (req, res) => {
                     // secure: true
                 });
                 res.redirect("/")
-            } 
+            } else {
+                let syslog = new SystemLogs({
+                    action: "Invalid Credentials",
+                    actor: null,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: null,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+        
+                res.redirect("/login");
+            }
         }, (error) => {
             let syslog = new SystemLogs({
                 action: "Error",
@@ -95,7 +140,7 @@ router.post("/validLogin", async (req, res) => {
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
                     req.connection.socket.remoteAddress,
-                item: error,
+                item: error.message,
                 datetime: moment().format('YYYY-MM-DD HH:mm')
             })
             SystemLogs.addLogs(syslog)
@@ -107,39 +152,54 @@ router.post("/validLogin", async (req, res) => {
 })
 
 router.get("/logout", async(req, res) => {
-    req.session.username = null;
-    req.session.id = null
-    res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+        req.session.username = null;
+        res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
 
-    let syslog = new SystemLogs({
-        action: "Signed Out",
-        actor: req.session.username,
-        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-            req.connection.remoteAddress || 
-            req.socket.remoteAddress || 
-            req.connection.socket.remoteAddress,
-        item: null,
-        datetime: moment().format('YYYY-MM-DD HH:mm')
-    })
-    SystemLogs.addLogs(syslog)
+        let syslog = new SystemLogs({
+            action: "Signed Out",
+            actor: User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
 
     res.redirect("/")
 })
 
 router.get("/signup", async(req, res) => {
-    let syslog = new SystemLogs({
-        action: "Entered Sign Up Page",
-        actor: req.body.username,
-        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-            req.connection.remoteAddress || 
-            req.socket.remoteAddress || 
-            req.connection.socket.remoteAddress,
-        item: null,
-        datetime: moment().format('YYYY-MM-DD HH:mm')
-    })
-    SystemLogs.addLogs(syslog)
+    if(req.session.username == null){
+        let syslog = new SystemLogs({
+            action: "Entered Sign Up Page",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
 
-    res.render("signup.hbs")
+        res.render("signup.hbs")
+    } else {
+        let syslog = new SystemLogs({
+            action: "Unauthorized Access to Sign Up Page",
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/")
+    }
 })
 
 router.post("/createaccount", async (req, res) => {
@@ -171,42 +231,23 @@ router.post("/createaccount", async (req, res) => {
 
     let existing = await User.getUserByUsername(username);
     bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(req.body.password, salt, async function(err, hash) {
-            user.password = hash
-            user.salt = salt
-            bcrypt.hash(security_answer, salt, async function(err, ans) {
-                user.security_answer = ans
-                User.addUser(user, function (user) {
-                    if (user && existing == null && password == confirm_password) {
-                        let syslog = new SystemLogs({
-                            action: "Successfully Created Account",
-                            actor: username,
-                            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                                req.connection.remoteAddress || 
-                                req.socket.remoteAddress || 
-                                req.connection.socket.remoteAddress,
-                            item: null,
-                            datetime: moment().format('YYYY-MM-DD HH:mm')
-                        })
-                        SystemLogs.addLogs(syslog)
+        if (err){
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: null,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
 
-                        res.redirect("/login");
-                    } else {
-                        let syslog = new SystemLogs({
-                            action: "Failed to Create Account",
-                            actor: null,
-                            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                                req.connection.remoteAddress || 
-                                req.socket.remoteAddress || 
-                                req.connection.socket.remoteAddress,
-                            item: null,
-                            datetime: moment().format('YYYY-MM-DD HH:mm')
-                        })
-                        SystemLogs.addLogs(syslog)
-
-                        res.redirect("/signup");
-                    }
-                }, (error) => {
+            res.redirect("/error");
+        } else {
+            bcrypt.hash(req.body.password, salt, async function(err, hash) {
+                if (err){
                     let syslog = new SystemLogs({
                         action: "Error",
                         actor: null,
@@ -214,15 +255,82 @@ router.post("/createaccount", async (req, res) => {
                             req.connection.remoteAddress || 
                             req.socket.remoteAddress || 
                             req.connection.socket.remoteAddress,
-                        item: error,
+                        item: err.message,
                         datetime: moment().format('YYYY-MM-DD HH:mm')
                     })
                     SystemLogs.addLogs(syslog)
 
                     res.redirect("/error");
-                })
+                } else {
+                    user.password = hash
+                    user.salt = salt
+                    bcrypt.hash(security_answer, salt, async function(err, ans) {
+                        if (err){
+                            let syslog = new SystemLogs({
+                                action: "Error",
+                                actor: null,
+                                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                    req.connection.remoteAddress || 
+                                    req.socket.remoteAddress || 
+                                    req.connection.socket.remoteAddress,
+                                item: err.message,
+                                datetime: moment().format('YYYY-MM-DD HH:mm')
+                            })
+                            SystemLogs.addLogs(syslog)
+        
+                            res.redirect("/error");
+                        } else {
+                            user.security_answer = ans
+                            User.addUser(user, function (user) {
+                                if (user && existing == null && password == confirm_password) {
+                                    let syslog = new SystemLogs({
+                                        action: "Successfully Created Account",
+                                        actor: username,
+                                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                            req.connection.remoteAddress || 
+                                            req.socket.remoteAddress || 
+                                            req.connection.socket.remoteAddress,
+                                        item: null,
+                                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                                    })
+                                    SystemLogs.addLogs(syslog)
+
+                                    res.redirect("/login");
+                                } else {
+                                    let syslog = new SystemLogs({
+                                        action: "Failed to Create Account",
+                                        actor: null,
+                                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                            req.connection.remoteAddress || 
+                                            req.socket.remoteAddress || 
+                                            req.connection.socket.remoteAddress,
+                                        item: null,
+                                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                                    })
+                                    SystemLogs.addLogs(syslog)
+
+                                    res.redirect("/signup");
+                                }
+                            }, (error) => {
+                                let syslog = new SystemLogs({
+                                    action: "Error",
+                                    actor: null,
+                                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                        req.connection.remoteAddress || 
+                                        req.socket.remoteAddress || 
+                                        req.connection.socket.remoteAddress,
+                                    item: error.message,
+                                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                                })
+                                SystemLogs.addLogs(syslog)
+
+                                res.redirect("/error");
+                            })
+                        }
+                    })
+                }
             })
-        })
+        } 
     })
 })
 
@@ -409,12 +517,36 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
 })
 
 router.get("/error", async (req, res) => {
+    let syslog = new SystemLogs({
+        action: "Entered Error Page",
+        actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+    
     res.render('error_page.hbs')
     // let template = fs.readFileSync('./views/error_page.html', 'utf-8');
     // res.send(template);
 })
 
 router.get('*', (req, res) => {
+    let syslog = new SystemLogs({
+        action: "Page Not Found",
+        actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+
     res.redirect("/error")
 })
 
