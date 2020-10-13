@@ -11,7 +11,8 @@ var userSchema = new Schema({
     security_question: String,
     security_answer: String,
     accountType: String,
-    lastLogin: String
+    lastLogin: String,
+    salt: String
 })
 
 userSchema.statics.getUserByID = async function(userID){

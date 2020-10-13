@@ -2,6 +2,7 @@ const express = require("express");
 const bodyparser = require("body-parser")
 const router = express.Router();
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 const moment = require('moment');
 const urlencoder = bodyparser.urlencoded({
     extended: false
@@ -32,44 +33,113 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/login", async (req, res) => {
+    let syslog = new SystemLogs({
+        action: "Entered Login Page",
+        actor: req.session.username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+
     res.render("login.hbs")
-    // req.session.username = "admin";
-    // if (req.session.username != null) {
-    // if (req.session.username == "secretary") {
-    //     res.redirect("/secretary");
-    // } else if (req.session.username == "dentist") {
-    //     res.redirect("/dentist");
-    // } else if (req.session.username == "admin") {
-    //     res.redirect("/admin");
-    // }
-    // } else {
-    // let acc = await Account.getAllAccounts();
-    // let template = fs.readFileSync('./views/login.html', 'utf-8');
-    // res.send(template);
-    // , {
-    // account: JSON.stringify(acc)
-    // })
-    // }
 })
 
 router.post("/validLogin", async (req, res) => {
     var user = await User.getUserByUsername(req.body.username);
-    if (user != undefined) {
-        
+    console.log(user)
+    if (user == undefined) {
+        let syslog = new SystemLogs({
+            action: "Invalid Credentials",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/login");
+    } else {
+        bcrypt.compare(req.body.password, user.password, async (err, same) => {
+            if (same) {
+                let syslog = new SystemLogs({
+                    action: "Successfully Login",
+                    actor: user.username,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: null,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+                req.session.username = user._id;
+                res.cookie('userID', user._id, { 
+                    maxAge: 1000*3600*24*365,
+                    sameSite: 'none',
+                    secure: true
+                });
+                res.redirect("/")
+            } 
+        }, (error) => {
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: null,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: error,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        })
     }
+    
 })
 
 router.get("/logout", async(req, res) => {
     req.session.username = null;
     req.session.id = null
     res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+
+    let syslog = new SystemLogs({
+        action: "Signed Out",
+        actor: req.session.username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+
     res.redirect("/")
 })
 
 router.get("/signup", async(req, res) => {
+    let syslog = new SystemLogs({
+        action: "Entered Sign Up Page",
+        actor: req.body.username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+
     res.render("signup.hbs")
-    // let template = fs.readFileSync('./views/signup.html', 'utf-8');
-    // res.send(template);
 })
 
 router.post("/createaccount", async (req, res) => {
@@ -101,53 +171,57 @@ router.post("/createaccount", async (req, res) => {
     })
 
     let existing = await User.getUserByUsername(username);
-    
-    User.addUser(user, function (user) {
-        if (user && existing == null && password == confirm_password) {
-            let syslog = new SystemLogs({
-                action: "Successfully Created Account",
-                actor: username,
-                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress || 
-                    req.connection.socket.remoteAddress,
-                item: null,
-                datetime: moment().format('YYYY-MM-DD HH:mm')
-            })
-            SystemLogs.addLogs(syslog)
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(req.body.password, salt, async function(err, hash) {
+            user.password = hash
+            user.salt = salt
+            User.addUser(user, function (user) {
+                if (user && existing == null && password == confirm_password) {
+                    let syslog = new SystemLogs({
+                        action: "Successfully Created Account",
+                        actor: username,
+                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                        item: null,
+                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                    })
+                    SystemLogs.addLogs(syslog)
 
-            res.redirect("/login");
-        } else {
-            let syslog = new SystemLogs({
-                action: "Failed to Create Account",
-                actor: null,
-                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress || 
-                    req.connection.socket.remoteAddress,
-                item: null,
-                datetime: moment().format('YYYY-MM-DD HH:mm')
-            })
-            SystemLogs.addLogs(syslog)
+                    res.redirect("/login");
+                } else {
+                    let syslog = new SystemLogs({
+                        action: "Failed to Create Account",
+                        actor: null,
+                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                        item: null,
+                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                    })
+                    SystemLogs.addLogs(syslog)
 
-            res.redirect("/signup");
-        }
-    }, (error) => {
-        let syslog = new SystemLogs({
-            action: "Error",
-            actor: null,
-            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                req.connection.remoteAddress || 
-                req.socket.remoteAddress || 
-                req.connection.socket.remoteAddress,
-            item: error,
-            datetime: moment().format('YYYY-MM-DD HH:mm')
+                    res.redirect("/signup");
+                }
+            }, (error) => {
+                let syslog = new SystemLogs({
+                    action: "Error",
+                    actor: null,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: error,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+
+                res.redirect("/error");
+            })
         })
-        SystemLogs.addLogs(syslog)
-
-        res.redirect("/error");
     })
-    
 })
 
 router.get("/forgot-password", async (req, res) => {
