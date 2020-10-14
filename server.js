@@ -22,11 +22,12 @@ mongoose.connect(MONGOLAB_URI, {
 app.use(urlencoder);
 app.use(session({
     resave: true,
+    rolling: true,
     name: "xavier-libsys",
     saveUninitialized: true, 
     secret: "encrypt-pass",
     cookie: {
-        maxAge: 1000 * 60 * 24 * 365 * 2
+        expires: 1000 * 30
     }
 }))
 app.use(cookieparser())
