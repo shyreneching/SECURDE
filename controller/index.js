@@ -16,6 +16,7 @@ const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
 
 router.use("/admin", require("./adminController"));
+router.use("/manager", require("./managerController"));
 
 router.get("/", async (req, res) => {
 
@@ -121,7 +122,9 @@ router.post("/validLogin", async (req, res) => {
 
                 if(user.accountType == "admin"){
                     res.redirect("/admin")
-                } else {
+                } else if(user.accountType == "book manager"){
+                    res.redirect("/manager")
+                }else {
                     res.redirect("/")
                 }
                 

@@ -3,6 +3,7 @@ const router = express.Router();
 const moment = require('moment');
 //const momentbusinesstime = require('moment-business-time');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 const bodyparser = require("body-parser");
 const urlencoder = bodyparser.urlencoded({
     extended: true
@@ -50,38 +51,140 @@ router.post("/search_user", urlencoder, async function (req, res) {
     });
 });
 
-router.post("/addUser", urlencoder, (req, res) => {
+router.post("/addUser", urlencoder, async (req, res) => {
 
-    let firstname = req.body.firstname;
-    let lastname = req.body.lastname;
-    let username = req.body.username;
-    let password = req.body.password;
-    let email = req.body.email;
-    let idNum = req.body.idNum;
-    let security_question = req.body.security_question;
-    let security_answer = req.body.security_answer;
-    let accountType = req.body.accountType;
+    let firstname = req.body.firstname.trim()
+    let lastname = req.body.lastname.trim()
+    let username = req.body.username.trim()
+    let password = req.body.password
+    let confirm_password = req.body.confirm_password
+    let email = req.body.email.trim()
+    ///let idNum = req.body.idnum.trim()
+    let security_question = req.body.security_question.trim()
+    let security_answer = req.body.security_answer.trim()
     
+    username = username.toLowerCase().trim()
+    let datetime = moment().format('YYYY-MM-DD HH:mm');
+
     let user= new User({
-        firstname,
-        lastname,
-        username,
-        password,
-        email,
-        idNum,
-        security_question,
-        security_answer,
-        accountType
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        password: password,
+        email: email,
+        //idNum: idNum,
+        security_question: security_question,
+        security_answer: security_answer,
+        accountType: "book manager",
+        lastLogin: datetime
     });
 
-    User.addUser(user, function (user) {
-        if (user) {
-            res.redirect("/***********SUCCES PAGE***************");
+    let existun = await User.getUserByUsername(username);
+    let existemail = await User.getUserByEmail(email);
+    let existID = await User.getUserByIDNumber(11707334);
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err){
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: null,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
         } else {
-            res.redirect("/*************ERROR IN CREATING USER PAGE************");
-        }
-    }, (error) => {
-        res.send(error);
+            bcrypt.hash(req.body.password, salt, async function(err, hash) {
+                if (err){
+                    let syslog = new SystemLogs({
+                        action: "Error",
+                        actor: null,
+                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                        item: err.message,
+                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                    })
+                    SystemLogs.addLogs(syslog)
+
+                    res.redirect("/error");
+                } else {
+                    user.password = hash
+                    user.salt = salt
+                    bcrypt.hash(security_answer, salt, async function(err, ans) {
+                        if (err){
+                            let syslog = new SystemLogs({
+                                action: "Error",
+                                actor: null,
+                                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                    req.connection.remoteAddress || 
+                                    req.socket.remoteAddress || 
+                                    req.connection.socket.remoteAddress,
+                                item: err.message,
+                                datetime: moment().format('YYYY-MM-DD HH:mm')
+                            })
+                            SystemLogs.addLogs(syslog)
+        
+                            res.redirect("/error");
+                        } else {
+                            user.security_answer = ans
+                            User.addUser(user, function (user) {
+                                if (user && existun == null && existemail == null && existID == null && password == confirm_password) {
+                                    let syslog = new SystemLogs({
+                                        action: "Successfully Created Book Manager Account",
+                                        actor: username,
+                                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                            req.connection.remoteAddress || 
+                                            req.socket.remoteAddress || 
+                                            req.connection.socket.remoteAddress,
+                                        item: null,
+                                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                                    })
+                                    SystemLogs.addLogs(syslog)
+
+                                    res.redirect("/admin");
+                                } else {
+                                    let syslog = new SystemLogs({
+                                        action: "Failed to Create Account",
+                                        actor: null,
+                                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                            req.connection.remoteAddress || 
+                                            req.socket.remoteAddress || 
+                                            req.connection.socket.remoteAddress,
+                                        item: null,
+                                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                                    })
+                                    SystemLogs.addLogs(syslog)
+
+                                    //res.send("Username, Email, or ID Number already taken")
+                                    console.log("Username, Email, or ID Number already taken")
+                                    res.redirect("/admin");
+                                }
+                            }, (error) => {
+                                let syslog = new SystemLogs({
+                                    action: "Error",
+                                    actor: null,
+                                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                        req.connection.remoteAddress || 
+                                        req.socket.remoteAddress || 
+                                        req.connection.socket.remoteAddress,
+                                    item: error.message,
+                                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                                })
+                                SystemLogs.addLogs(syslog)
+
+                                res.redirect("/error");
+                            })
+                        }
+                    })
+                }
+            })
+        } 
     })
 })
 
