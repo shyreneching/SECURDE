@@ -467,11 +467,11 @@ router.post("/forgot-password/2", urlencoder, async function (req, res) {
         res.redirect("/error");
     } else {
         req.session.temp = user._id;
-        res.cookie('userID', user._id, { 
-            maxAge: 1000*3600*24*365,
-            // sameSite: 'none',
-            // secure: true
-        });
+        // res.cookie('userID', user._id, { 
+        //     maxAge: 1000*3600*24*365,
+        //     // sameSite: 'none',
+        //     // secure: true
+        // });
         res.render("forgot_password_page2.hbs", {
             question: user.security_question,
             email: user.email
@@ -512,11 +512,11 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
                 res.redirect("/error");
             } else if (same) {                
                 req.session.temp = user._id;
-                res.cookie('userID', user._id, { 
-                    maxAge: 1000*3600*24*365,
-                    // sameSite: 'none',
-                    // secure: true
-                });
+                // res.cookie('userID', user._id, { 
+                //     maxAge: 1000*3600*24*365,
+                //     // sameSite: 'none',
+                //     // secure: true
+                // });
                 res.render("forgot_password_page3.hbs")
             } else {
                 let syslog = new SystemLogs({
