@@ -1,30 +1,80 @@
 $(document)
     .ready(function () {
-        var res = true
+        var res_uname = true
+        var res_email = true
+        var res_id = true
 
-        function change(param){
-            res = param
+        function changeUname(param){
+            res_uname = param
         }
 
-        $.fn.form.settings.rules.alreadyExist = function(param) {
-            var url = "/usercheck";
-            console.log( $.ajax({
+        function changeEmail(param){
+            res_email = param
+        }
+
+        function changeID(param){
+            res_id = param
+        }
+
+        $.fn.form.settings.rules.unameAlreadyExist = function(param) {
+            var url = "/usernamecheck";
+            $.ajax({
                 async : false,
                 url : url,
                 type : "POST",
                 data : {
-                    username : param.toLowerCase()
+                    username : param.toLowerCase().trim()
                 },
                 dataType: "json",
                 success: function(data){
                     if(data['message']==='user exists'){
-                        change(false);
+                        changeUname(false);
                     }else {
-                        change(true);
+                        changeUname(true);
                     }
                 }
-            }))
-            return res
+            })
+            return res_uname
+        }
+        $.fn.form.settings.rules.emailAlreadyExist = function(param) {
+            var url = "/emailcheck";
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    email : param.trim()
+                },
+                dataType: "json",
+                success: function(data){
+                    if(data['message']==='user exists'){
+                        changeEmail(false);
+                    }else {
+                        changeEmail(true);
+                    }
+                }
+            })
+            return res_email
+        }
+        $.fn.form.settings.rules.idAlreadyExist = function(param) {
+            var url = "/idcheck";
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    id : param.trim()
+                },
+                dataType: "json",
+                success: function(data){
+                    if(data['message']==='user exists'){
+                        changeID(false);
+                    }else {
+                        changeID(true);
+                    }
+                }
+            })
+            return res_id
         }
         $('.ui.form')
             .form({
@@ -55,7 +105,7 @@ $(document)
                             type: 'empty',
                             prompt: 'Please enter your username'
                             }, {
-                                type: 'alreadyExist',
+                                type: 'unameAlreadyExist',
                                 prompt: 'This username is already registered, please choose another one.'
                             }
                             //checking for valid username here
@@ -67,6 +117,9 @@ $(document)
                             {
                                 type: 'email',
                                 prompt: 'Please enter a valid e-mail'
+                            }, {
+                                type: 'emailAlreadyExist',
+                                prompt: 'This email is already registered, please choose another one.'
                             }
                         ]
                     },
@@ -77,6 +130,9 @@ $(document)
                                 type: 'regExp',
                                 value: /^[0-9]{8}$/,
                                 prompt: 'Please enter a valid ID number'
+                            }, {
+                                type: 'idAlreadyExist',
+                                prompt: 'This ID number is already registered, please choose another one.'
                             }
                         ]
                     },

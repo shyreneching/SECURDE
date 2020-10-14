@@ -65,7 +65,7 @@ router.get("/login", async (req, res) => {
 })
 
 router.post("/validLogin", async (req, res) => {
-    var user = await User.getUserByUsername(req.body.username);
+    var user = await User.getUserByUsername(req.body.username.trim());
     console.log(user)
     if (user == undefined) {
         let syslog = new SystemLogs({
@@ -203,17 +203,17 @@ router.get("/signup", async(req, res) => {
 })
 
 router.post("/createaccount", async (req, res) => {
-    let firstname = req.body.firstname
-    let lastname = req.body.lastname
-    let username = req.body.username
+    let firstname = req.body.firstname.trim()
+    let lastname = req.body.lastname.trim()
+    let username = req.body.username.trim()
     let password = req.body.password
     let confirm_password = req.body.confirm_password
-    let email = req.body.email
-    let idNum = req.body.idnum
-    let security_question = req.body.security_question
-    let security_answer = req.body.security_answer
+    let email = req.body.email.trim()
+    let idNum = req.body.idnum.trim()
+    let security_question = req.body.security_question.trim()
+    let security_answer = req.body.security_answer.trim()
 
-    username = username.toLowerCase()
+    username = username.toLowerCase().trim()
     let datetime = moment().format('YYYY-MM-DD HH:mm');
 
     let user = new User({
@@ -372,7 +372,7 @@ router.get("/forgot-password", async (req, res) => {
 })
 
 router.post("/forgot-password/2", urlencoder, async function (req, res) {
-    var user = await User.getUserByEmail(req.body.email)
+    var user = await User.getUserByEmail(req.body.email.trim())
     let syslog = new SystemLogs({
         action: "Entered Email for Forget Password",
         actor: null,
@@ -514,7 +514,7 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
     bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
         if (err){
             let syslog = new SystemLogs({
-                action: "Successfully Reset Password",
+                action: "Error",
                 actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
@@ -583,11 +583,71 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
     })
 })
 
-router.post('/usercheck', function(req, res) {
+router.post('/usernamecheck', function(req, res) {
     User.findOne({username: req.body.username}, function(err, user){
         if(err) {
             let syslog = new SystemLogs({
-                action: "Successfully Reset Password",
+                action: "Error",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        var message;
+        if(user) {
+        //   console.log(user)
+            message = "user exists";
+            // console.log(message)
+        } else {
+            message= "user doesn't exist";
+            // console.log(message)
+        }
+        res.json({message: message});
+    });
+});
+
+router.post('/emailcheck', function(req, res) {
+    User.findOne({email: req.body.email}, function(err, user){
+        if(err) {
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        var message;
+        if(user) {
+        //   console.log(user)
+            message = "user exists";
+            // console.log(message)
+        } else {
+            message= "user doesn't exist";
+            // console.log(message)
+        }
+        res.json({message: message});
+    });
+});
+
+router.post('/idcheck', function(req, res) {
+    User.findOne({idNum: req.body.id}, function(err, user){
+        if(err) {
+            let syslog = new SystemLogs({
+                action: "Error",
                 actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
