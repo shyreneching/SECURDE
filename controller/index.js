@@ -229,7 +229,9 @@ router.post("/createaccount", async (req, res) => {
         lastLogin: datetime
     })
 
-    let existing = await User.getUserByUsername(username);
+    let existun = await User.getUserByUsername(username);
+    let existemail = await User.getUserByEmail(email);
+    let existID = await User.getUserByIDNumber(idNum);
     bcrypt.genSalt(10, function(err, salt) {
         if (err){
             let syslog = new SystemLogs({
@@ -282,7 +284,7 @@ router.post("/createaccount", async (req, res) => {
                         } else {
                             user.security_answer = ans
                             User.addUser(user, function (user) {
-                                if (user && existing == null && password == confirm_password) {
+                                if (user && existun == null && existemail == null && existID == null && password == confirm_password) {
                                     let syslog = new SystemLogs({
                                         action: "Successfully Created Account",
                                         actor: username,
@@ -309,6 +311,8 @@ router.post("/createaccount", async (req, res) => {
                                     })
                                     SystemLogs.addLogs(syslog)
 
+                                    //res.send("Username, Email, or ID Number already taken")
+                                    console.log("Username, Email, or ID Number already taken")
                                     res.redirect("/signup");
                                 }
                             }, (error) => {
