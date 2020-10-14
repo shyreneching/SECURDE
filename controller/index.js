@@ -68,7 +68,7 @@ router.get("/", async (req, res) => {
                 text: "Login",
                 books: books
             })
-        } else {
+        } else if (user.accountType == "user"){
             let syslog = new SystemLogs({
                 action: "Entered Home Page",
                 actor: user.username,
@@ -84,7 +84,24 @@ router.get("/", async (req, res) => {
             res.render("books.hbs", {
                 link: "/profile",
                 text: "Profile",
-                books: books
+                books: books,
+                timeout: "/js/timeout.js"
+            })
+        } else if (user.accountType == "admin"){
+            let syslog = new SystemLogs({
+                action: "Entered Admin Page",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+    
+            res.render("admin.hbs", {
+                timeout: "/js/timeout.js"
             })
         }
     }
@@ -790,6 +807,14 @@ router.post('/isAnsCorrect', function(req, res) {
         message = ansC
         res.json({message: message});
     });
+});
+
+router.post('/isValidSession', function(req, res) {
+    if(req.session.username == undefined || req.session.username == null){
+        res.json({message: "no"});
+    } else {
+        res.json({message: "yes"});
+    }
 });
 
 router.get("/session-timeout", async (req, res) => {

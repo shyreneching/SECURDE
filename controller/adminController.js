@@ -17,13 +17,13 @@ const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
 
 router.get("/", async (req, res) => {
-    console.log("This is session " + req.session.username)
-    var admin = await User.getUserByID(req.session.username)
-    if (admin != undefined && admin.accountType == "admin"){
-        res.render("admin.hbs")
-    } else {
+    // console.log("This is session " + req.session.username)
+    // var admin = await User.getUserByID(req.session.username)
+    // if (admin != undefined && admin.accountType == "admin"){
+    //     res.render("admin.hbs")
+    // } else {
         res.redirect("/");
-    }
+    // }
 })
 
 router.post("/get_all_users", urlencoder, async function (req, res) {
