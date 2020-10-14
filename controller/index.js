@@ -335,18 +335,34 @@ router.post("/createaccount", async (req, res) => {
 })
 
 router.get("/forgot-password", async (req, res) => {
-    let syslog = new SystemLogs({
-        action: "Entered Forget Password",
-        actor: null,
-        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-            req.connection.remoteAddress || 
-            req.socket.remoteAddress || 
-            req.connection.socket.remoteAddress,
-        item: null,
-        datetime: moment().format('YYYY-MM-DD HH:mm')
-    })
-    SystemLogs.addLogs(syslog)
-    res.render("forgot_password.hbs")
+    if (req.session.username == null) {
+        let syslog = new SystemLogs({
+            action: "Entered Forget Password Page",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+        res.render("forgot_password.hbs")
+    } else {
+        let syslog = new SystemLogs({
+            action: "Unauthorized Access to Forget Password Page",
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/")
+    }
     // let template = fs.readFileSync('./views/forgot_password.html', 'utf-8');
     // res.send(template);
 })
@@ -379,7 +395,7 @@ router.post("/forgot-password/2", urlencoder, async function (req, res) {
 
         res.redirect("/login");
     } else {
-        req.session.username = user._id;
+        req.session.temp = user._id;
         res.cookie('userID', user._id, { 
             maxAge: 1000*3600*24*365,
             // sameSite: 'none',
@@ -390,7 +406,7 @@ router.post("/forgot-password/2", urlencoder, async function (req, res) {
 })
 
 router.post("/forgot-password/3", urlencoder, async function (req, res) {
-    var user = await User.getUserByID(req.session.username)
+    var user = await User.getUserByID(req.session.temp)
     let answer = req.body.security_answer
     let syslog = new SystemLogs({
         action: "Entered Security Answer for Forget Password",
@@ -406,8 +422,22 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
 
     if (user != undefined) {
         bcrypt.compare(answer, user.security_answer, async (err, same) => {
-            if (same) {                
-                req.session.username = user._id;
+            if (err){
+                let syslog = new SystemLogs({
+                    action: "Error",
+                    actor: null,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: err.message,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+
+                res.redirect("/error");
+            } else if (same) {                
+                req.session.temp = user._id;
                 res.cookie('userID', user._id, { 
                     maxAge: 1000*3600*24*365,
                     // sameSite: 'none',
@@ -423,7 +453,7 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
                     req.connection.socket.remoteAddress,
-                item: error,
+                item: error.message,
                 datetime: moment().format('YYYY-MM-DD HH:mm')
             })
             SystemLogs.addLogs(syslog)
@@ -456,49 +486,13 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
 
 router.post("/resetpassword", urlencoder, async function (req, res) {
     console.log("Enter Here")
-    console.log(req.session.username)
-    var user = await User.getUserByID(req.session.username)
+    console.log(req.session.temp)
+    var user = await User.getUserByID(req.session.temp)
     let password = req.body.new_password
     let confirm_password = req.body.confirm_new_password
     console.log(user)
     bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
-        console.log(user.salt)
-        console.log(hash)
-        let changepw = await User.updateUserPassword(user._id, hash, function (userID, hash) {
-            console.log(user._id)
-            console.log(password)
-            console.log(confirm_password)
-            if (user && password == confirm_password) {
-                let syslog = new SystemLogs({
-                    action: "Successfully Reset Password",
-                    actor: user.username,
-                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                        req.connection.remoteAddress || 
-                        req.socket.remoteAddress || 
-                        req.connection.socket.remoteAddress,
-                    item: null,
-                    datetime: moment().format('YYYY-MM-DD HH:mm')
-                })
-                SystemLogs.addLogs(syslog)
-
-                res.redirect("/login");
-            } else {
-                let syslog = new SystemLogs({
-                    action: "Failed to Reset Password",
-                    actor: user.usernamell,
-                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                        req.connection.remoteAddress || 
-                        req.socket.remoteAddress || 
-                        req.connection.socket.remoteAddress,
-                    item: null,
-                    datetime: moment().format('YYYY-MM-DD HH:mm')
-                })
-                SystemLogs.addLogs(syslog)
-
-                //res.send("Failed to Create Password");
-                res.redirect("/");
-            }
-        }, (error) => {
+        if (err){
             let syslog = new SystemLogs({
                 action: "Error",
                 actor: null,
@@ -506,13 +500,65 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
                     req.connection.socket.remoteAddress,
-                item: error,
+                item: err.message,
                 datetime: moment().format('YYYY-MM-DD HH:mm')
             })
             SystemLogs.addLogs(syslog)
 
             res.redirect("/error");
-        })
+        } else {
+            console.log(user.salt)
+            console.log(hash)
+            let changepw = await User.updateUserPassword(user._id, hash, function (userID, hash) {
+                console.log(user._id)
+                console.log(password)
+                console.log(confirm_password)
+                if (user && password == confirm_password) {
+                    let syslog = new SystemLogs({
+                        action: "Successfully Reset Password",
+                        actor: user.username,
+                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                        item: null,
+                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                    })
+                    SystemLogs.addLogs(syslog)
+
+                    res.redirect("/login");
+                } else {
+                    let syslog = new SystemLogs({
+                        action: "Failed to Reset Password",
+                        actor: user.username,
+                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                        item: null,
+                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                    })
+                    SystemLogs.addLogs(syslog)
+
+                    //res.send("Failed to Create Password");
+                    res.redirect("/");
+                }
+            }, (error) => {
+                let syslog = new SystemLogs({
+                    action: "Error",
+                    actor: null,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: error.message,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+
+                res.redirect("/error");
+            })
+        }
     })
 })
 
