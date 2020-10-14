@@ -53,14 +53,16 @@ router.post("/search_user", urlencoder, async function (req, res) {
 });
 
 router.post("/addUser", urlencoder, async (req, res) => {
-
+    let temp = await User.getUserByUsername("admin")
+    req.session.username = temp._id
+    console.log(req.session.username)
     let firstname = req.body.firstname.trim()
     let lastname = req.body.lastname.trim()
     let username = req.body.username.trim()
     let password = req.body.password
     let confirm_password = req.body.confirm_password
     let email = req.body.email.trim()
-    ///let idNum = req.body.idnum.trim()
+    let idNum = req.body.idnum.trim()
     let security_question = req.body.security_question.trim()
     let security_answer = req.body.security_answer.trim()
     
@@ -73,7 +75,7 @@ router.post("/addUser", urlencoder, async (req, res) => {
         username: username,
         password: password,
         email: email,
-        //idNum: idNum,
+        idNum: idNum,
         security_question: security_question,
         security_answer: security_answer,
         accountType: "book manager",
@@ -82,7 +84,7 @@ router.post("/addUser", urlencoder, async (req, res) => {
 
     let existun = await User.getUserByUsername(username);
     let existemail = await User.getUserByEmail(email);
-    let existID = await User.getUserByIDNumber(11707334);
+    let existID = await User.getUserByIDNumber(idNum);
     bcrypt.genSalt(10, function(err, salt) {
         if (err){
             let syslog = new SystemLogs({
@@ -134,6 +136,7 @@ router.post("/addUser", urlencoder, async (req, res) => {
                             res.redirect("/error");
                         } else {
                             user.security_answer = ans
+                            console.log("Before user is created " + req.session.username)
                             User.addUser(user, function (user) {
                                 if (user && existun == null && existemail == null && existID == null && password == confirm_password) {
                                     let syslog = new SystemLogs({
@@ -147,7 +150,7 @@ router.post("/addUser", urlencoder, async (req, res) => {
                                         datetime: moment().format('YYYY-MM-DD HH:mm')
                                     })
                                     SystemLogs.addLogs(syslog)
-
+                                    console.log("After User is created " + req.session.username)
                                     res.redirect("/admin");
                                 } else {
                                     let syslog = new SystemLogs({

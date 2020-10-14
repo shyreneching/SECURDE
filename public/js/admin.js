@@ -84,10 +84,11 @@ $(document)
                                 type: 'regExp',
                                 value: /^[0-9]{8}$/,
                                 prompt: 'Please enter a valid ID number'
-                            }, {
-                                type: 'idAlreadyExist',
-                                prompt: 'This ID number is already registered, please choose another one.'
-                            }
+                            }, 
+                            // {
+                            //     type: 'idAlreadyExist',
+                            //     prompt: 'This ID number is already registered, please choose another one.'
+                            // }
                         ]
                     },
                     password: {

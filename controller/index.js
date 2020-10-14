@@ -169,11 +169,11 @@ router.post("/validLogin", async (req, res) => {
                 })
                 SystemLogs.addLogs(syslog)
                 req.session.username = user._id;
-                res.cookie('userID', user._id, { 
-                    maxAge: 1000*3600*24*365,
-                    // sameSite: 'none',
-                    // secure: true
-                });
+                // res.cookie('userID', user._id, { 
+                //     maxAge: 1000*3600*24*365,
+                //     // sameSite: 'none',
+                //     // secure: true
+                // });
                 let updateLastlogin = await User.updateLogin(req.session.username, moment().format('YYYY-MM-DD HH:mm'))
                 if(user.accountType == "admin"){
                     res.redirect("/admin")
