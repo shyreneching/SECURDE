@@ -1,5 +1,32 @@
 $(document)
     .ready(function () {
+        var res_email = true
+
+        function changeEmail(param){
+            res_email = param
+        }
+
+        $.fn.form.settings.rules.emailAlreadyExist = function(param) {
+            var url = "/emailcheck";
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    email : param.trim()
+                },
+                dataType: "json",
+                success: function(data){
+                    if(data['message']==='user exists'){
+                        changeEmail(true);
+                    }else {
+                        changeEmail(false);
+                    }
+                }
+            })
+            return res_email
+        }
+
         $('.ui.form')
             .form({
                 fields: {
@@ -12,6 +39,9 @@ $(document)
                             {
                                 type: 'email',
                                 prompt: 'Please enter a valid e-mail'
+                            }, {
+                                type: 'emailAlreadyExist',
+                                prompt: 'Email does not exist'
                             }
                         ]
                     },

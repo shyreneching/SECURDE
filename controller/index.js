@@ -313,7 +313,7 @@ router.post("/createaccount", async (req, res) => {
 
                                     //res.send("Username, Email, or ID Number already taken")
                                     console.log("Username, Email, or ID Number already taken")
-                                    res.redirect("/signup");
+                                    res.redirect("/error");
                                 }
                             }, (error) => {
                                 let syslog = new SystemLogs({
@@ -398,7 +398,7 @@ router.post("/forgot-password/2", urlencoder, async function (req, res) {
         SystemLogs.addLogs(syslog)
         //res.send("Failed to Reset Password");
         console.log("Failed to Reset Password")
-        res.redirect("/login");
+        res.redirect("/error");
     } else {
         req.session.temp = user._id;
         res.cookie('userID', user._id, { 
@@ -406,7 +406,10 @@ router.post("/forgot-password/2", urlencoder, async function (req, res) {
             // sameSite: 'none',
             // secure: true
         });
-        res.render("forgot_password_page2.hbs")
+        res.render("forgot_password_page2.hbs", {
+            question: user.security_question,
+            email: user.email
+        })
     }
 })
 
@@ -463,7 +466,7 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
                 SystemLogs.addLogs(syslog)
                 //res.send("Failed to Reset Password");
                 console.log("Failed to Reset Password")
-                res.redirect("/login");
+                res.redirect("/error");
             }
         }, (error) => {
             let syslog = new SystemLogs({
@@ -562,7 +565,7 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
 
                     //res.send("Failed to Reset Password");
                     console.log("Failed to Reset Password")
-                    res.redirect("/login");
+                    res.redirect("/error");
                 }
             }, (error) => {
                 let syslog = new SystemLogs({
@@ -673,6 +676,70 @@ router.post('/idcheck', function(req, res) {
     });
 });
 
+var ansC
+function changeAns(param){
+    ansC = param
+}
+
+router.post('/isAnsCorrect', function(req, res) {
+    User.findOne({email: req.body.email}, function(err, user){
+        if(err) {
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        var message;
+        if (user != undefined) {
+            bcrypt.compare(req.body.answer, user.security_answer, async (err, same) => {
+                if (err){
+                    let syslog = new SystemLogs({
+                        action: "Error",
+                        actor: null,
+                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                        item: err.message,
+                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                    })
+                    SystemLogs.addLogs(syslog)
+    
+                    res.redirect("/error");
+                } else if (same) {                
+                    changeAns("correct")
+                } else {
+                    changeAns("incorrect")
+                }
+            }, (error) => {
+                let syslog = new SystemLogs({
+                    action: "Error",
+                    actor: user.username,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: error.message,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+    
+                res.redirect("/login");
+            })
+        }
+        message = ansC
+        res.json({message: message});
+    });
+});
 
 router.get("/error", async (req, res) => {
     let syslog = new SystemLogs({
