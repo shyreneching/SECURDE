@@ -103,7 +103,7 @@ router.get("/login", async (req, res) => {
             datetime: moment().format('YYYY-MM-DD HH:mm')
         })
         SystemLogs.addLogs(syslog)
-        let updateLastlogin = await User.updateLogin(user._id, moment().format('YYYY-MM-DD HH:mm'))
+        
         res.render("login.hbs")
     } else {
         let syslog = new SystemLogs({
@@ -174,7 +174,7 @@ router.post("/validLogin", async (req, res) => {
                     // sameSite: 'none',
                     // secure: true
                 });
-
+                let updateLastlogin = await User.updateLogin(req.session.username, moment().format('YYYY-MM-DD HH:mm'))
                 if(user.accountType == "admin"){
                     res.redirect("/admin")
                 } else if(user.accountType == "book manager"){

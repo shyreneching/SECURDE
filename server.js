@@ -21,7 +21,7 @@ mongoose.connect(MONGOLAB_URI, {
 
 app.use(urlencoder);
 app.use(session({
-    resave: true,
+    resave: false,
     rolling: true,
     name: "xavier-libsys",
     saveUninitialized: true, 
