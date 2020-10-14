@@ -38,11 +38,11 @@
     </div> -->
 
     <!-- Sidebar Menu -->
-    <div class="ui vertical inverted sidebar menu">
+    {{!-- <div class="ui vertical inverted sidebar menu">
         <a class="item">Books</a>
         <a class="item">Login</a>
         <a class="item">Signup</a>
-    </div>
+    </div> --}}
 
     <div class="container-main">
         <div class="ui vertical masthead center aligned segment">
@@ -62,8 +62,8 @@
                             </a>
                             <div class="ui center aligned container" style="width: min-content;">
                                 <a class="active item">Books</a>
-                                <a class="item">Profile</a>
-                                <a href="/login" class="item">Login</a>
+                                {{!-- <a class="item">Profile</a> --}}
+                                <a href="{{link}}" class="item">{{text}}</a>
                             </div>
                         </div>
                     </div>
@@ -82,11 +82,13 @@
                 </tr>
             </thead>
             <tbody>
+                {{#each books}}
                 <tr>
-                    <td class="selectable"><a href="http://" id="book-title">Wishes</a></td>
-                    <td class="selectable"><a href="http://" id="book-author">Jude Deveraux</a></td>
-                    <td class="negative">Reserved</td>
+                    <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
+                    <td class="selectable"><a href="http://" id="book-author">{{author}}</a></td>
+                    <td>Reserved</td>
                 </tr>
+                {{/each}}
                 <tr>
                     <td class="selectable"><a href="http://" id="book-title">The Realms of the Gods</a>
                     </td>
