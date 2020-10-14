@@ -15,6 +15,8 @@ const { Review } = require("../model/review");
 const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
 
+router.use("/admin", require("./adminController"));
+
 router.get("/", async (req, res) => {
     let bookslist = await Book.getAllBook();
     let books = [];
@@ -171,7 +173,13 @@ router.post("/validLogin", async (req, res) => {
                     // sameSite: 'none',
                     // secure: true
                 });
-                res.redirect("/")
+
+                if(user.accountType == "admin"){
+                    res.redirect("/admin")
+                } else {
+                    res.redirect("/")
+                }
+                
             } else {
                 let syslog = new SystemLogs({
                     action: "Invalid Credentials",
