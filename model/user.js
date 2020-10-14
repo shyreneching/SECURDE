@@ -107,7 +107,7 @@ userSchema.statics.updateLogin = async function(userID, lastLogin) {
     return await this.updateOne({
         _id: userID
     }, { $set: {
-        lastLogin
+        lastLogin: lastLogin
     }})
 }
 
