@@ -396,7 +396,8 @@ router.post("/forgot-password/2", urlencoder, async function (req, res) {
             datetime: moment().format('YYYY-MM-DD HH:mm')
         })
         SystemLogs.addLogs(syslog)
-
+        //res.send("Failed to Reset Password");
+        console.log("Failed to Reset Password")
         res.redirect("/login");
     } else {
         req.session.temp = user._id;
