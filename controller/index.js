@@ -559,8 +559,9 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
                     })
                     SystemLogs.addLogs(syslog)
 
-                    //res.send("Failed to Create Password");
-                    res.redirect("/");
+                    //res.send("Failed to Reset Password");
+                    console.log("Failed to Reset Password")
+                    res.redirect("/login");
                 }
             }, (error) => {
                 let syslog = new SystemLogs({
