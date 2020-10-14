@@ -52,6 +52,12 @@ userSchema.statics.getUserByEmail = async function(email){
     }); 
 };
 
+userSchema.statics.getUserByIDNumber= async function(idNum){
+    return await this.findOne({
+        idNum
+    }); 
+};
+
 userSchema.statics.addUser = function(user, callback){
     user.save().then(callback);
 };

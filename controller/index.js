@@ -229,7 +229,9 @@ router.post("/createaccount", async (req, res) => {
         lastLogin: datetime
     })
 
-    let existing = await User.getUserByUsername(username);
+    let existun = await User.getUserByUsername(username);
+    let existemail = await User.getUserByEmail(email);
+    let existID = await User.getUserByIDNumber(idNum);
     bcrypt.genSalt(10, function(err, salt) {
         if (err){
             let syslog = new SystemLogs({
@@ -282,7 +284,7 @@ router.post("/createaccount", async (req, res) => {
                         } else {
                             user.security_answer = ans
                             User.addUser(user, function (user) {
-                                if (user && existing == null && password == confirm_password) {
+                                if (user && existun == null && existemail == null && existID == null && password == confirm_password) {
                                     let syslog = new SystemLogs({
                                         action: "Successfully Created Account",
                                         actor: username,
@@ -309,6 +311,8 @@ router.post("/createaccount", async (req, res) => {
                                     })
                                     SystemLogs.addLogs(syslog)
 
+                                    //res.send("Username, Email, or ID Number already taken")
+                                    console.log("Username, Email, or ID Number already taken")
                                     res.redirect("/signup");
                                 }
                             }, (error) => {
@@ -444,10 +448,25 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
                     // secure: true
                 });
                 res.render("forgot_password_page3.hbs")
-            } 
+            } else {
+                let syslog = new SystemLogs({
+                    action: "Security Answer Not match",
+                    actor: user.username,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: null,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+                //res.send("Failed to Reset Password");
+                console.log("Failed to Reset Password")
+                res.redirect("/login");
+            }
         }, (error) => {
             let syslog = new SystemLogs({
-                action: "Security Answer Not match",
+                action: "Error",
                 actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
@@ -494,8 +513,8 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
     bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
         if (err){
             let syslog = new SystemLogs({
-                action: "Error",
-                actor: null,
+                action: "Successfully Reset Password",
+                actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
