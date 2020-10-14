@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const moment = require('moment');
-const momentbusinesstime = require('moment-business-time');
+//const momentbusinesstime = require('moment-business-time');
 const fs = require('fs');
 const bodyparser = require("body-parser");
 const urlencoder = bodyparser.urlencoded({
@@ -14,6 +14,15 @@ const { Book } = require("../model/book");
 const { Review } = require("../model/review");
 const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
+
+router.get("/", async (req, res) => {
+    var admin = await User.getUserByID(req.session.username)
+    if (admin != null && admin.accountType == "admin"){
+        res.render("admin.hbs")
+    } else {
+        res.redirect("/");
+    }
+})
 
 router.post("/get_all_users", urlencoder, async function (req, res) {
 
