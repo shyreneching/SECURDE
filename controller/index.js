@@ -414,10 +414,25 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
                     // secure: true
                 });
                 res.render("forgot_password_page3.hbs")
-            } 
+            } else {
+                let syslog = new SystemLogs({
+                    action: "Security Answer Not match",
+                    actor: user.username,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: null,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+                //res.send("Failed to Reset Password");
+                console.log("Failed to Reset Password")
+                res.redirect("/login");
+            }
         }, (error) => {
             let syslog = new SystemLogs({
-                action: "Security Answer Not match",
+                action: "Error",
                 actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
@@ -464,56 +479,43 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
     bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
         console.log(user.salt)
         console.log(hash)
-        let changepw = await User.updateUserPassword(user._id, hash, function (userID, hash) {
+        if(user && password == confirm_password){
             console.log(user._id)
             console.log(password)
             console.log(confirm_password)
-            if (user && password == confirm_password) {
-                let syslog = new SystemLogs({
-                    action: "Successfully Reset Password",
-                    actor: user.username,
-                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                        req.connection.remoteAddress || 
-                        req.socket.remoteAddress || 
-                        req.connection.socket.remoteAddress,
-                    item: null,
-                    datetime: moment().format('YYYY-MM-DD HH:mm')
-                })
-                SystemLogs.addLogs(syslog)
-
-                res.redirect("/login");
-            } else {
-                let syslog = new SystemLogs({
-                    action: "Failed to Reset Password",
-                    actor: user.usernamell,
-                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                        req.connection.remoteAddress || 
-                        req.socket.remoteAddress || 
-                        req.connection.socket.remoteAddress,
-                    item: null,
-                    datetime: moment().format('YYYY-MM-DD HH:mm')
-                })
-                SystemLogs.addLogs(syslog)
-
-                //res.send("Failed to Create Password");
-                res.redirect("/");
-            }
-        }, (error) => {
+            let changepw = await User.updateUserPassword(user._id, hash)
+            console.log(changepw)
             let syslog = new SystemLogs({
-                action: "Error",
-                actor: null,
+                action: "Successfully Reset Password",
+                actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
                     req.connection.socket.remoteAddress,
-                item: error,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+            req.session.username = null;
+            res.redirect("/login");
+        } else {
+            let syslog = new SystemLogs({
+                action: "Failed to Reset Password",
+                actor: user.usernamell,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
                 datetime: moment().format('YYYY-MM-DD HH:mm')
             })
             SystemLogs.addLogs(syslog)
 
-            res.redirect("/error");
-        })
-    })
+            //res.send("Failed to Reset Password");
+            console.log("Failed to Reset Password")
+            res.redirect("/login");
+        }
+     })
 })
 
 router.get("/error", async (req, res) => {
