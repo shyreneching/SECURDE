@@ -17,7 +17,7 @@ $(document)
         $('table').tablesort()
 
         //datatable
-        $('#data-table').DataTable();
+        $('table.ui.sortable.celled.table').DataTable();
 
         //Add manager account show modal
         $('#button-addmanager').on('click', function() {
@@ -31,7 +31,7 @@ $(document)
             //Resets form error messages and field styles
             $('.ui.form .field.error').removeClass( "error" );
             $('.ui.form.error').removeClass( "error" );
-            $('#modal-addmanager').modal('setting', 'transition', 'vertical flip')
+            $('#modal-addmanager').modal('setting', 'closable', false, 'transition', 'vertical flip')
             $('#modal-addmanager').modal('show')
         });
 
@@ -41,10 +41,7 @@ $(document)
                 fields: {
                     firstname: {
                         identifier: 'firstname',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your first name'
-                            },
+                        rules: [
                             {
                                 type: 'regExp',
                                 value: /^[A-Za-z\s]+$/,
@@ -54,10 +51,7 @@ $(document)
                     },
                     lastname: {
                         identifier: 'lastname',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your last name'
-                            },
+                        rules: [
                             {
                                 type: 'regExp',
                                 value: /^[A-Za-z\s]+$/,
@@ -76,22 +70,29 @@ $(document)
                     },
                     email: {
                         identifier: 'email',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your e-mail'
-                            },
+                        rules: [
                             {
                                 type: 'email',
                                 prompt: 'Please enter a valid e-mail'
                             }
                         ]
                     },
+                    idnum: {
+                        identifier: 'idnum',
+                        rules: [
+                            {
+                                type: 'regExp',
+                                value: /^[0-9]{8}$/,
+                                prompt: 'Please enter a valid ID number'
+                            }, {
+                                type: 'idAlreadyExist',
+                                prompt: 'This ID number is already registered, please choose another one.'
+                            }
+                        ]
+                    },
                     password: {
                         identifier: 'password',
-                        rules: [{
-                                type: 'empty',
-                                prompt: 'Please enter your password'
-                            },
+                        rules: [
                             {
                                 type: 'length[6]',
                                 prompt: 'Your password must be at least 6 characters'

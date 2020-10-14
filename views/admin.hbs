@@ -85,7 +85,8 @@
             </div>
         </div>
         <div class="twelve wide column">
-            <div class="ui container" style="width: 90%;">
+            <div class="row">
+                <div class="ui container" style="width: 90%;">
                 <h3>System Logs</h3>
                 <table class="ui sortable celled table" id="data-table">
                     <thead class="sticky">
@@ -105,12 +106,36 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="ui container" style="width: 90%; margin-top: 6em">
+                <h3>Users</h3>
+                <table class="ui sortable celled table" id="data-table">
+                    <thead class="sticky">
+                        <tr>
+                            <th class="sorted ascending" id="table-header">Action</th>
+                            <th id="table-header">Actor</th>
+                            <th class="" id="table-header">Item</th>
+                            <th class="" id="table-header">Date/Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="systemlog_action" id="systemlog-action">Something</td>
+                            <td class="systemlog_actor" id="systemlog-actor">John Doe</td>
+                            <td class="systemlog_item" id="systemlog-item">Item description</td>
+                            <td class="systemlog_datetime" id="systemlog-datetime">05/16/2020 9:23 PM</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Add Manager Modal -->
-    <div class="ui tiny scrolling modal" id="modal-addmanager">
+    <div class="ui tiny scrolling modal" id="modal-addmanager" style="overflow-y: scroll; overflow-x: hidden; max-height: 80%">
         <i class="close icon"></i>
         <div class="header">
             Create Manager Account
@@ -185,6 +210,10 @@
                 </div>
                 <div class="ui fluid large yellow submit button field" id="button-createmanageraccount"
                     style="background: rgb(184, 164, 56);">Create Account</div>
+                <div class="actions" style="margin-left: -0.8em; width: 100%">
+                    <div class="ui fluid large red cancel button" id="button-cancelcreatemanageraccount"
+                    style="background: rgb(255, 107, 107);">Cancel</div>
+                </div>
                 <div class="ui error message" id="warnings"></div>
             </form>
         </div>
