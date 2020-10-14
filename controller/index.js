@@ -103,7 +103,7 @@ router.get("/login", async (req, res) => {
             datetime: moment().format('YYYY-MM-DD HH:mm')
         })
         SystemLogs.addLogs(syslog)
-
+        let updateLastlogin = await User.updateLogin(user._id, moment().format('YYYY-MM-DD HH:mm'))
         res.render("login.hbs")
     } else {
         let syslog = new SystemLogs({
@@ -598,56 +598,41 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
         } else {
             console.log(user.salt)
             console.log(hash)
-            let changepw = await User.updateUserPassword(user._id, hash, function (userID, hash) {
+            if(user && password == confirm_password){
                 console.log(user._id)
                 console.log(password)
                 console.log(confirm_password)
-                if (user && password == confirm_password) {
-                    let syslog = new SystemLogs({
-                        action: "Successfully Reset Password",
-                        actor: user.username,
-                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                            req.connection.remoteAddress || 
-                            req.socket.remoteAddress || 
-                            req.connection.socket.remoteAddress,
-                        item: null,
-                        datetime: moment().format('YYYY-MM-DD HH:mm')
-                    })
-                    SystemLogs.addLogs(syslog)
-
-                    res.redirect("/login");
-                } else {
-                    let syslog = new SystemLogs({
-                        action: "Failed to Reset Password",
-                        actor: user.username,
-                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                            req.connection.remoteAddress || 
-                            req.socket.remoteAddress || 
-                            req.connection.socket.remoteAddress,
-                        item: null,
-                        datetime: moment().format('YYYY-MM-DD HH:mm')
-                    })
-                    SystemLogs.addLogs(syslog)
-
-                    //res.send("Failed to Reset Password");
-                    console.log("Failed to Reset Password")
-                    res.redirect("/error");
-                }
-            }, (error) => {
+                let changepw = await User.updateUserPassword(user._id, hash)
+                console.log(changepw)
                 let syslog = new SystemLogs({
-                    action: "Error",
-                    actor: null,
+                    action: "Successfully Reset Password",
+                    actor: user.username,
                     ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                         req.connection.remoteAddress || 
                         req.socket.remoteAddress || 
                         req.connection.socket.remoteAddress,
-                    item: error.message,
+                    item: null,
                     datetime: moment().format('YYYY-MM-DD HH:mm')
                 })
                 SystemLogs.addLogs(syslog)
-
-                res.redirect("/error");
-            })
+                req.session.username = null;
+                res.redirect("/login");
+            } else {
+                let syslog = new SystemLogs({
+                    action: "Failed to Reset Password",
+                    actor: user.usernamell,
+                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                        req.connection.remoteAddress || 
+                        req.socket.remoteAddress || 
+                        req.connection.socket.remoteAddress,
+                    item: null,
+                    datetime: moment().format('YYYY-MM-DD HH:mm')
+                })
+                SystemLogs.addLogs(syslog)
+                //res.send("Failed to Reset Password");
+                console.log("Failed to Reset Password")
+                res.redirect("/login");
+            }
         }
     })
 })
