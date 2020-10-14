@@ -16,20 +16,75 @@ const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
 
 router.get("/", async (req, res) => {
+    let bookslist = await Book.getAllBook();
+    let books = [];
+    for (var l = 0; l < bookslist.length; l++) {
+        let book = appointmentlist[l];
+        //populate necessary info
+        book = await book.populateAuthorandReviews();
+        books.push(book);
+    }
 
-    res.render("books.hbs")
-    // let booklist = await Book.getAllBook();
-    // let books = [];
-    // for (var l = 0; l < booklist.length; l++) {
-    //     let book = booklist[l];
-    //     //populate necessary info
-    //     book = await book.populateAuthorandReviews();
-    //     books.push(book);
-    // }
-    // res.render('books.hbs', {
-    //     books: books,
-    // });
+    if (req.session.username == null) {
+        let syslog = new SystemLogs({
+            action: "Entered Home Page",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
 
+        res.render("books.hbs", {
+            link: "/login",
+            text: "Login",
+            books: books
+        })
+    } else {
+        var user = await User.getUserByID(req.session.username);
+        if (user == undefined){
+            req.session.username = null
+
+            let syslog = new SystemLogs({
+                action: "Entered Home Page",
+                actor: null,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+    
+            res.render("books.hbs", {
+                link: "/login",
+                text: "Login",
+                books: books
+            })
+        } else {
+            let syslog = new SystemLogs({
+                action: "Entered Home Page",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+    
+            res.render("books.hbs", {
+                link: "/profile",
+                text: "Profile",
+                books: books
+            })
+        }
+    }
 })
 
 router.get("/login", async (req, res) => {
