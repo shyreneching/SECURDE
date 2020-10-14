@@ -1,5 +1,31 @@
 $(document)
     .ready(function () {
+        var res = true
+
+        function change(param){
+            res = param
+        }
+
+        $.fn.form.settings.rules.alreadyExist = function(param) {
+            var url = "/usercheck";
+            console.log( $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    username : param.toLowerCase()
+                },
+                dataType: "json",
+                success: function(data){
+                    if(data['message']==='user exists'){
+                        change(false);
+                    }else {
+                        change(true);
+                    }
+                }
+            }))
+            return res
+        }
         $('.ui.form')
             .form({
                 fields: {
@@ -26,8 +52,11 @@ $(document)
                     username:{
                         identifier: 'username',
                         rules: [{
-                        type: 'empty',
-                        prompt: 'Please enter your username'
+                            type: 'empty',
+                            prompt: 'Please enter your username'
+                            }, {
+                                type: 'alreadyExist',
+                                prompt: 'This username is already registered, please choose another one.'
                             }
                             //checking for valid username here
                         ]
@@ -106,7 +135,22 @@ $(document)
                 }
             });
 
-        $('.ui.dropdown')
-            .dropdown()
-            ;
+        $('.ui.dropdown').dropdown();
     });
+
+    function check_existence(param) {
+        var temp
+        $.get('/usercheck?username='+param.toLowerCase(), function(response) {  
+            $('#usernameResponseHidden').text(response.message)
+            if ($('#usernameResponseHidden').html() === "user exists"){
+                console.log("yes")
+                temp = true
+                // $('#usernameResponse').text('That username is taken. Please pick another')
+            } else {
+                console.log("no")
+                temp = false
+            }
+        })
+        console.log(temp)
+        return temp
+    }

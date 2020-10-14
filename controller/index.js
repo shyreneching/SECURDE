@@ -583,6 +583,37 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
     })
 })
 
+router.post('/usercheck', function(req, res) {
+    User.findOne({username: req.body.username}, function(err, user){
+        if(err) {
+            let syslog = new SystemLogs({
+                action: "Successfully Reset Password",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        var message;
+        if(user) {
+        //   console.log(user)
+            message = "user exists";
+            // console.log(message)
+        } else {
+            message= "user doesn't exist";
+            // console.log(message)
+        }
+        res.json({message: message});
+    });
+});
+
+
 router.get("/error", async (req, res) => {
     let syslog = new SystemLogs({
         action: "Entered Error Page",
