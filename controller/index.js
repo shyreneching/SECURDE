@@ -741,6 +741,24 @@ router.post('/isAnsCorrect', function(req, res) {
     });
 });
 
+router.get("/session-timeout", async (req, res) => {
+    let syslog = new SystemLogs({
+        action: "Entered Session Timeout Page",
+        actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
+    
+    res.render('session_timeout.hbs')
+    // let template = fs.readFileSync('./views/error_page.html', 'utf-8');
+    // res.send(template);
+})
+
 router.get("/error", async (req, res) => {
     let syslog = new SystemLogs({
         action: "Entered Error Page",
