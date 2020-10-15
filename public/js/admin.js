@@ -1,8 +1,13 @@
 $(document)
     .ready(function () {
-        var res_uname = true
-        var res_email = true
-        var res_id = true
+        var res_uname
+        var res_email
+        var res_id
+        var res_pass
+
+        function changePass(param){
+            res_pass = param
+        }
 
         function changeUname(param){
             res_uname = param
@@ -134,6 +139,21 @@ $(document)
             $('#modal-addmanager').modal('show')
         });
 
+        $('#button-resetpassword').on('click', function() {
+            // $('.field').removeClass('error')
+            // $('#old-password').val('')
+            // $('#new-password').val('')
+            // $('#confirm-new-password').val('')
+
+            //Resets form input fields from data values
+            $('.ui.form').trigger("reset");
+            //Resets form error messages and field styles
+            $('.ui.form .field.error').removeClass( "error" );
+            $('.ui.form.error').removeClass( "error" );
+            $('#modal-resetpassword').modal('setting', 'closable', false, 'transition', 'vertical flip')
+            $('#modal-resetpassword').modal('show')
+        });
+
         //Form error checking
         $('#form-addmanager')
             .form({
@@ -231,6 +251,14 @@ $(document)
                             }
                         ]
                     },
+                    security_question: {
+                        identifier: 'security_question',
+                        rules: [{
+                            type: 'empty',
+                            prompt: 'Please select a security question.'
+                            }
+                        ]
+                    },
                     security_answer: {
                         identifier: 'security_answer',
                         rules: [{
@@ -239,6 +267,78 @@ $(document)
                             }
                         ]
                     }
+                }
+            });
+
+            $.fn.form.settings.rules.isPassCorrect = function(param) {
+                var url = "/checkPassword";
+                $.ajax({
+                    async : false,
+                    url : url,
+                    type : "POST",
+                    data : {
+                        password : param
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        if(data['message']==='correct'){
+                            changePass(true);
+                        }else {
+                            changePass(false);
+                        }
+                    }
+                })
+                return res_pass
+            }
+
+            $('#form-resetpassword')
+            .form({
+                fields: {
+                    curr_password: {
+                        identifier: 'curr_password',
+                        rules: [
+                            {
+                                type: 'isPassCorrect',
+                                prompt: 'Current password is incorrect'
+                            }
+                        ]
+                    },
+                    new_password: {
+                        identifier: 'new_password',
+                        rules: [
+                            {
+                                type: 'length[6]',
+                                prompt: 'Your password must be at least 6 characters'
+                            },
+                            {
+                                type: 'regExp',
+                                value: /.*[A-Z]/,
+                                prompt: 'Your password must contain at least one uppercase letter [A-Z]'
+                            },
+                            {
+                                type: 'regExp',
+                                value: /.*[0-9]/,
+                                prompt: 'Your password must contain at least one number [0-9]'
+                            },
+                            {
+                                type: 'regExp',
+                                value: /.*[!@#\$%\^<>\&*\)\(+=._-]/,
+                                prompt: 'Your password must contain at least one special character [!@#$%^<>&*()+=._-]'
+                            }
+                        ]
+                    },
+                    confirm_password: {
+                        identifier: 'confirm_password',
+                        rules: [{
+                                type: 'empty',
+                                prompt: 'Please confirm your password'
+                            },
+                            {
+                                type: 'match[new_password]',
+                                prompt: 'Your password does not match'
+                            }
+                        ]
+                    },
                 }
             });
 

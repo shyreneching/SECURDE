@@ -1,8 +1,8 @@
 $(document)
     .ready(function () {
-        var res_uname = true
-        var res_email = true
-        var res_id = true
+        var res_uname
+        var res_email
+        var res_id
 
         function changeUname(param){
             res_uname = param

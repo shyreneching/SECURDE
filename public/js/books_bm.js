@@ -96,7 +96,7 @@ $(document)
             $("#form-addbook").submit()
         })
 
-        var res_auth = true
+        var res_auth
 
         function changeAuth(param){
             res_auth = param
@@ -172,7 +172,9 @@ $(document)
         })
 
         $("#button-canceladdauthor").on('click', () =>{
-            $("#form-addauthor").trigger("reset")
+            $(".ui.form").trigger("reset")
+            $('.ui.form .field.error').removeClass( "error" );
+            $('.ui.form.error').removeClass( "error" );
         })
 
         // $("#form-addauthor").on("submit", () => {
