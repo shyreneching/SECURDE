@@ -23,6 +23,8 @@ $(document)
         $('#button-add').on('click', function() {
             //Resets form input fields from data values
             $('.ui.form').trigger("reset");
+            $('#dropdown-addbookauthors').dropdown('clear');
+            $('#dropdown-addbookstatus').dropdown('clear');
             $('#modal-addbook').modal('setting', 'transition', 'vertical flip')
             $('#modal-addbook').modal('show')
         });
@@ -31,6 +33,7 @@ $(document)
         $('.edit.button').on('click', function() {
             //Resets form input fields from data values
             $('.ui.form').trigger("reset");
+            $('#dropdown-editbookstatus').dropdown('clear');
             $('#modal-editbook').modal('setting', 'transition', 'vertical flip')
             $('#modal-editbook').modal('show')
         });
@@ -43,15 +46,6 @@ $(document)
 
         //calendar
         $('#editdate_picker').calendar();
-
-        //add book modal
-        $('#button-add').on('click', function() {
-            //Resets form input fields from data values
-            $('.ui.form').trigger("reset");
-            //Resets form error messages and field styles
-            $('#modal-addbook').modal('setting', 'transition', 'vertical flip')
-            $('#modal-addbook').modal('show')
-        });
 
         //dropdown initialisation
         $('.ui.dropdown').dropdown();
