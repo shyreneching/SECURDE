@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
     let bookslist = await Book.getAllBook();
     let books = [];
     for (var l = 0; l < bookslist.length; l++) {
-        let book = appointmentlist[l];
+        let book = bookslist[l];
         //populate necessary info
         book = await book.populateAuthorandReviews();
         books.push(book);
