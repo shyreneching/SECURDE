@@ -17,14 +17,23 @@ $(document)
         $('table').tablesort()
 
         //datatable
-        $('#data-table').DataTable();
+        $('#data-table').DataTable({
+            "columnDefs": [
+                { "width": "30%", "targets": 0 },
+                { "width": "33%", "targets": 1 },
+                { "width": "15%", "targets": 2 },
+                { "width": "22%", "targets": 3 },
+            ],
+            "fixedColumns": true,
+        })
 
         //Add Book show modal
         $('#button-add').on('click', function() {
             //Resets form input fields from data values
             $('.ui.form').trigger("reset");
             $('#dropdown-addbookauthors').dropdown('clear');
-            $('#dropdown-addbookstatus').dropdown('clear');
+            $('.ui.form .field.error').removeClass( "error" );
+            $('.ui.form.error').removeClass( "error" );
             $('#modal-addbook').modal('setting', 'transition', 'vertical flip')
             $('#modal-addbook').modal('show')
         });
@@ -33,7 +42,8 @@ $(document)
         $('.edit.button').on('click', function() {
             //Resets form input fields from data values
             $('.ui.form').trigger("reset");
-            $('#dropdown-editbookstatus').dropdown('clear');
+            $('.ui.form .field.error').removeClass( "error" );
+            $('.ui.form.error').removeClass( "error" );
             $('#modal-editbook').modal('setting', 'transition', 'vertical flip')
             $('#modal-editbook').modal('show')
         });
@@ -124,6 +134,75 @@ $(document)
             return res_auth
         }
 
+        $('#form-addbook').form({
+            fields : {
+                book_title : {
+                    identifier: 'book_title',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book title'
+                        }
+                    ]
+                },
+                book_author : {
+                    identifier: 'book_author',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book author'
+                        }
+                    ]
+                },
+                book_publisher : {
+                    identifier: 'book_publisher',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book publisher'
+                        }
+                    ]
+                },
+                book_yearofpublication : {
+                    identifier: 'book_yearofpublication',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book year of publication'
+                        },
+                        {
+                            type: 'regExp',
+                            value: /^(?:19|20)\d{2}$/,
+                            prompt: 'Please enter a valid year of publication'
+                        }
+                    ]
+                },
+                book_isbn : {
+                    identifier: 'book_isbn',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book ISBN'
+                        }
+                    ]
+                },
+                book_callnumber : {
+                    identifier: 'book_callnumber',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a call number'
+                        },
+                        {
+                            type: 'regExp',
+                            value: /^\d$/,
+                            prompt: 'Please enter a call number'
+                        }
+                    ]
+                }
+            }
+        })
+
         $("#form-addauthor").form({
             fields : {
                 author_firstname : {
@@ -168,6 +247,75 @@ $(document)
                         $("#button-canceladdauthor").click()
                     }
                 })
+            }
+        })
+
+        $('#form-editbook').form({
+            fields : {
+                editbook_title : {
+                    identifier: 'book_edittitle',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book title'
+                        }
+                    ]
+                },
+                editbook_author : {
+                    identifier: 'editbook_author',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book author'
+                        }
+                    ]
+                },
+                editbook_publisher : {
+                    identifier: 'editbook_publisher',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book publisher'
+                        }
+                    ]
+                },
+                editbook_yearofpublication : {
+                    identifier: 'editbook_yearofpublication',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a book year of publication'
+                        },
+                        {
+                            type: 'regExp',
+                            value: /^(?:19|20)\d{2}$/,
+                            prompt: 'Please enter a valid year of publication'
+                        }
+                    ]
+                },
+                // editbook_isbn : {
+                //     identifier: 'editbook_isbn',
+                //     rules: [
+                //         {
+                //             type: 'empty',
+                //             prompt: 'Please enter a book ISBN'
+                //         }
+                //     ]
+                // },
+                editbook_callnumber : {
+                    identifier: 'editbook_callnumber',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a call number'
+                        },
+                        {
+                            type: 'regExp',
+                            value: /^\d$/,
+                            prompt: 'Please enter a call number'
+                        }
+                    ]
+                }
             }
         })
 
