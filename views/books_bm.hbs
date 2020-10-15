@@ -96,6 +96,21 @@
                 </tr>
             </thead>
             <tbody>
+                {{#each books}}
+                <tr>
+                    <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
+                    <td class="selectable"><a href="http://" id="book-author">{{author}}</a></td>
+                    <td>{{status}}</td>
+                    <td class="ui computer only" id="td-manage" style="max-width: 150px;">
+                        <div class="ui tiny yellow labeled icon button" id="button-edit"><i class="edit icon"></i>
+                            Edit
+                        </div>
+                        <div class="ui tiny labeled icon button" id="button-delete"><i class="trash icon"></i>
+                            Delete
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
                 <tr>
                     <td class="" id="book-title">Wishes</td>
                     <td class="" id="book-author">Jude Deveraux</td>
@@ -159,7 +174,7 @@
             Add Book
         </div>
         <div class="content">
-            <form class="ui small form" id="form-addbook">
+            <form class="ui small form" id="form-addbook" action="/addBook" method="POST">
                 <div class="ui stacked segment">
                     <div class="field">
                         <div class="ui left input">
