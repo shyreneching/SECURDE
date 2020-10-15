@@ -116,7 +116,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
 
             //res.send("Username, Email, or ID Number already taken")
             console.log("Failed to Create Book")
-            res.redirect("/");
+            res.redirect("/error");
         }
     }, (error) => {
         let syslog = new SystemLogs({
@@ -161,7 +161,11 @@ router.post("/addAuthor", urlencoder, async (req, res) => {
                 datetime: moment().format('YYYY-MM-DD HH:mm')
             })
             SystemLogs.addLogs(syslog)
-            res.redirect("/");
+            res.json({
+                id: newAuthor._id,
+                firstname: newAuthor.firstname,
+                lastname: newAuthor.lastname
+            });
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Add Author",
@@ -175,7 +179,7 @@ router.post("/addAuthor", urlencoder, async (req, res) => {
             })
             SystemLogs.addLogs(syslog)
 
-            res.redirect("/");
+            res.redirect("/error");
         }
     }, (error) => {
         let syslog = new SystemLogs({
