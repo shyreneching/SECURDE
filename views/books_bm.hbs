@@ -99,7 +99,12 @@
                 {{#each books}}
                 <tr data-id="{{_id}}">
                     <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
-                    <td class="selectable"><a href="http://" id="book-author">{{author}}</a></td>
+                    <td class="selectable"><a href="http://" id="book-author">
+                    {{#each author}}
+                    {{#if @index}}, {{/if}}
+                    {{firstname}} {{lastname}}
+                    {{/each}}
+                    </a></td>
                     <td>{{status}}</td>
                     <td class="ui computer only" id="td-manage" style="max-width: 150px;">
                         <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
