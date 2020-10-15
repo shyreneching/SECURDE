@@ -187,16 +187,16 @@
                     </div>
                     <div class="field grid">
                         <div class="row">
-                            <div class="ui selection dropdown" id="dropdown-addbookauthors" style="width: 75%;">
+                            <div class="ui multiple search selection dropdown field" id="dropdown-addbookauthors" style="width: 75%;">
                             <input type="hidden" name="book_author">
                             <div class="default text">Select Author</div>
                             <i class="dropdown icon"></i>
                             <div class="menu" id="auth-menu">
                                 {{!-- <div class="item" data-value="{{author.name}}" index="{{something}}" ng-repeat="char in chars">{{author.name}}</div> --}}
-                                <div class="item" data-value="author_name">Nora Roberts</div>
-                                <div class="item" data-value="author_name">Julia Quinn</div>
+                                <div class="item" data-value="author_name1">Nora Roberts</div>
+                                <div class="item" data-value="author_name2">Julia Quinn</div>
                                 {{#each authors}}
-                                <div class="item" data-value="author_name" data-id="{{_id}}">{{firstname}} {{lastname}}</div>
+                                <div class="item" data-value="{{_id}}">{{firstname}} {{lastname}}</div>
                                 {{/each}}
                             </div>
                             </div>
