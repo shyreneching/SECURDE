@@ -94,11 +94,27 @@ $(document)
 
         //system logs datatables initialisation and sorting
         $('#table-systemlogs').DataTable({
+            "columnDefs": [
+                { "width": "20%", "targets": 0 },
+                { "width": "15%", "targets": 1 },
+                { "width": "50%", "targets": 2 },
+                { "width": "15%", "targets": 3 },
+            ],
+            "fixedColumns": true,
             "order": [[ 3, "desc" ]]
         })
 
         //users datatables initialisation and sorting
         $('#table-users').DataTable({
+            "columnDefs": [
+                { "width": "15%", "targets": 0 },
+                { "width": "20%", "targets": 1 },
+                { "width": "25%", "targets": 2 },
+                { "width": "10%", "targets": 3 },
+                { "width": "15%", "targets": 4 },
+                { "width": "30%", "targets": 5 },
+            ],
+            "fixedColumns": true,
             "order": [[ 0, "asc" ]]
         })
 
