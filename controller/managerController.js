@@ -219,4 +219,59 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
     res.send("Success");
 })
 
+router.post("/editBook", urlencoder, async (req, res) => {
+    let userID = req.session.username;
+    let bookID = req.body.bookID;
+    
+    let title = req.body.book_title;
+    let authorlist = req.body.book_author.trim();
+    let author = authorlist.split(',');
+    let publisher = req.body.book_publisher;
+    let year_of_publication = req.body.book_yearofpublication;
+    let isbn = req.body.isbn;
+    let callNumber = req.body.book_callnumber;
+    let status = null
+    if (req.body.status == "status_available"){
+        status = "Available"
+    } else {
+        status = "Reserved"
+    }
+    
+    //let reviews = req.body["reviews[]"];
+    temp = await Author.getAuthorByID(author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < author.length; i++) {
+        temp = await Author.getAuthorByID(author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+    
+    let user = await User.getUserByID(userID);
+    let item = title + " by " + authorDisplay
+    let action = 'Successfully Added a Book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
+
+    let updateBook= new Book({
+        title,
+        author,
+        publisher,
+        year_of_publication,
+        isbn,
+        callNumber,
+        status,
+        reviews
+    });
+
+    let newBook = await Book.updateAppointment(bookID, updateBook);
+
+    res.send("Success");
+})
+
 module.exports = router;

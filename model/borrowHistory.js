@@ -4,16 +4,16 @@ const Schema = mongoose.Schema;
 var borrowHistorySchema = new Schema({
     book: {
         type: Schema.Types.ObjectId,
-        ref: "Book"
+        ref: "BookInstance"
     },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User"
     },
     time_barrow: String,
-    time_returned: String,
+    due_date: String,
     actual_returned: String,
-    // returned || barrowed
+    // returned || borrowed
     status: String
 })
 
@@ -30,6 +30,26 @@ borrowHistorySchema.statics.addBarrowHistory = function(barrowHistory, callback)
 borrowHistorySchema.statics.getAllHistory = async function(){
     return await this.find({}).sort({'time_barrow': 1});
 }
+
+borrowHistorySchema.statics.getUserHistory= async function(userID){
+    return await this.find({
+        'user': userID
+    }); 
+};
+
+borrowHistorySchema.statics.getPreviousUserHistory= async function(userID){
+    return await this.find({
+        'user': userID,
+        'status': "returned"
+    }); 
+};
+
+borrowHistorySchema.statics.getCurrentUserHistory= async function(userID){
+    return await this.find({
+        'user': userID,
+        'status': "borrowed"
+    }); 
+};
 
 borrowHistorySchema.statics.delete = async function(hisID){
     return await this.deleteOne({
