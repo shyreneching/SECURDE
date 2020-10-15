@@ -72,6 +72,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let user = await User.getUserByID(userID);
     let item = title + " by " + author
     let action = 'Successfully Added a Book';
+    console.log("username " + user.username)
     console.log("user:::::::::::: " + user)
     let book= new Book({
         title,
@@ -82,20 +83,20 @@ router.post("/addBook", urlencoder, async (req, res) => {
         callNumber,
         status,
         //reviews,
-        date_added: datetime
+        date_added: moment().format('YYYY-MM-DD HH:mm')
     });
 
     Book.addBook(book, function (book) {
         if (book) {
             let sysLogs = new SystemLogs({
                 action,
-                username: user.username,
+                actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                             req.connection.remoteAddress || 
                             req.socket.remoteAddress || 
                             req.connection.socket.remoteAddress,
                 item,
-                datetime
+                datetime: moment().format('YYYY-MM-DD HH:mm')
             });
             
             SystemLogs.addLogs(sysLogs);
@@ -104,7 +105,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Create Book",
-                actor: username,
+                actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
