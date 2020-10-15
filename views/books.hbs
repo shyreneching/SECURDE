@@ -88,11 +88,11 @@
                 {{#each books}}
                 <tr>
                     <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
-                    <td class="selectable"><a href="http://" id="book-author">{{author}}</a></td>
-                    <td>Reserved</td>
+                    <td class="selectable"><a href="http://" id="book-author">{{author.firstname}} {{author.lastname}}</a></td>
+                    <td>{{status}}</td>
                 </tr>
                 {{/each}}
-                <tr>
+                {{!-- <tr>
                     <td class="selectable"><a href="http://" id="book-title">The Realms of the Gods</a>
                     </td>
                     <td class="selectable"><a href="http://" id="book-author">Tamora Pierce</a></td>
@@ -102,7 +102,7 @@
                     <td class="selectable" id="book-title"><a href="http://" id="book-title">Savor the Moment</a></td>
                     <td class="selectable"><a href="http://" id="book-author">Nora Roberts</a></td>
                     <td class="positive">Available</td>
-                </tr>
+                </tr> --}}
             </tbody>
         </table>
     </div>
