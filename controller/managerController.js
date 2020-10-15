@@ -35,7 +35,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let author = authorlist.split(',');
     let publisher = req.body.book_publisher;
     let year_of_publication = req.body.book_yearofpublication;
-    let isbn = req.body.isbn;
+    let isbn = req.body.book_isbn;
     let callNumber = req.body.book_callnumber;
     let status = null
     if (req.body.status == "status_available"){
@@ -61,7 +61,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
         author,
         publisher,
         year_of_publication,
-        isbn,
+        isbn: isbn,
         callNumber,
         date_added: moment().format('YYYY-MM-DD HH:mm')
     });
