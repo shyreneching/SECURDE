@@ -32,7 +32,12 @@
             <div class="header">
                 Login attempt failed 3 times!
             </div>
-            <p>You may attempt to login again in 5 minute.</p>
+            <p>You may attempt to login again in 5 minutes.</p>
+            </div>
+            <div class="ui attached negative {{hidden2}} message">
+            <div class="header">
+                Invalid username or password
+            </div>
             </div>
             {{#each list}}
             <form class="ui large form error" action="/validLogin" method="POST">

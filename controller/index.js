@@ -138,10 +138,61 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/login", async (req, res) => {
+    let invalid = await SystemLogs.getInvalidLoginByIP((req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+        req.connection.remoteAddress || 
+        req.socket.remoteAddress || 
+        req.connection.socket.remoteAddress);
+    let valid = await SystemLogs.getValidLoginByIP((req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+        req.connection.remoteAddress || 
+        req.socket.remoteAddress || 
+        req.connection.socket.remoteAddress);
+
+    // res.send(invalid)
+
     if (req.session.username == null) {
+        if(invalid.length >= 3 && moment(invalid[2].datetime, 'YYYY-MM-DD HH:mm').isAfter(moment().subtract(5, 'minutes')) && (valid.length == 0 || moment(valid[0].datetime, 'YYYY-MM-DD HH:mm').isBefore(moment(invalid[2].datetime, 'YYYY-MM-DD HH:mm')))) {
+            let syslog = new SystemLogs({
+                action: "Entered Login Page - Login Lockout",
+                actor: (User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+            
+            res.render("login.hbs",{
+                hidden: "",
+                hidden2: "hidden",
+                list:[],
+                cancel:[{}]
+            })
+        } else {
+            let syslog = new SystemLogs({
+                action: "Entered Login Page - Normal",
+                actor: (User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+            
+            res.render("login.hbs",{
+                hidden: "hidden",
+                hidden2: "hidden",
+                list:[{}],
+                cancel:[]
+            })
+        }
+    } else {
         let syslog = new SystemLogs({
-            action: "Entered Login Page - Successful",
-            actor: (User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            action: "Unauthorized Access to Login Page",
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
             ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                 req.connection.remoteAddress || 
                 req.socket.remoteAddress || 
@@ -150,15 +201,63 @@ router.get("/login", async (req, res) => {
             datetime: moment().format('YYYY-MM-DD HH:mm')
         })
         SystemLogs.addLogs(syslog)
-        
-        res.render("login.hbs",{
-            hidden: "hidden",
-            list:[{}],
-            cancel:[]
-            // hidden: "",
-            // list:[],
-            // cancel:[{}]
-        })
+
+        res.redirect("/")
+    }
+})
+
+router.get("/invalidlogin", async (req, res) => {
+    let invalid = await SystemLogs.getInvalidLoginByIP((req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+        req.connection.remoteAddress || 
+        req.socket.remoteAddress || 
+        req.connection.socket.remoteAddress);
+    let valid = await SystemLogs.getValidLoginByIP((req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+        req.connection.remoteAddress || 
+        req.socket.remoteAddress || 
+        req.connection.socket.remoteAddress);
+
+    // res.send(invalid)
+
+    if (req.session.username == null) {
+        if(invalid.length >= 3 && moment(invalid[2].datetime, 'YYYY-MM-DD HH:mm').isAfter(moment().subtract(5, 'minutes')) && (valid.length == 0 || moment(valid[0].datetime, 'YYYY-MM-DD HH:mm').isBefore(moment(invalid[2].datetime, 'YYYY-MM-DD HH:mm')))) {
+            let syslog = new SystemLogs({
+                action: "Entered Login Page - Login Lockout",
+                actor: (User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+            
+            res.render("login.hbs",{
+                hidden: "",
+                hidden2: "hidden",
+                list:[],
+                cancel:[{}]
+            })
+        } else {
+            let syslog = new SystemLogs({
+                action: "Entered Login Page - Invalid",
+                actor: (User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+            
+            res.render("login.hbs",{
+                hidden: "hidden",
+                hidden2: "",
+                list:[{}],
+                cancel:[]
+            })
+        }
     } else {
         let syslog = new SystemLogs({
             action: "Unauthorized Access to Login Page",
@@ -192,7 +291,7 @@ router.post("/validLogin", async (req, res) => {
         })
         SystemLogs.addLogs(syslog)
 
-        res.redirect("/login");
+        res.redirect("/invalidlogin");
     } else {
         bcrypt.compare(req.body.password, user.password, async (err, same) => {
             if (err) {
@@ -250,7 +349,7 @@ router.post("/validLogin", async (req, res) => {
                 })
                 SystemLogs.addLogs(syslog)
         
-                res.redirect("/login");
+                res.redirect("/invalidlogin");
             }
         }, (error) => {
             let syslog = new SystemLogs({

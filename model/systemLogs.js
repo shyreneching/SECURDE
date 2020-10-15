@@ -23,13 +23,27 @@ systemLogsSchema.statics.addLogs = function(log, callback){
 };
 
 systemLogsSchema.statics.getAllLogs = async function(){
-    return await this.find({}).sort({'date': 1});
+    return await this.find({}).sort({'datetime': -1});
 }
 
 systemLogsSchema.statics.delete = async function(logID){
     return await this.deleteOne({
         _id : logID
     });
+}
+
+systemLogsSchema.statics.getInvalidLoginByIP = async function(IPAddress){
+    return await this.find({
+        ip_add : IPAddress,
+        action: "Invalid Credentials"
+    }).sort({'datetime': -1});
+}
+
+systemLogsSchema.statics.getValidLoginByIP = async function(IPAddress){
+    return await this.find({
+        ip_add : IPAddress,
+        action: "Successfully Login"
+    }).sort({'datetime': -1});
 }
 
 var SystemLogs = mongoose.model("SystemLogs", systemLogsSchema)

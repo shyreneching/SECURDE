@@ -89,7 +89,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
                 datetime
             });
             
-            await SystemLogs.addLogs(sysLogs);
+            SystemLogs.addLogs(sysLogs);
 
             res.redirect("/");
         } else {
