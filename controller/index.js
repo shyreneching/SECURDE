@@ -103,6 +103,22 @@ router.get("/", async (req, res) => {
             res.render("admin.hbs", {
                 timeout: "/js/timeout.js"
             })
+        } else if (user.accountType == "book manager"){
+            let syslog = new SystemLogs({
+                action: "Entered Book Manager Page",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+    
+            res.render("books_bm.hbs", {
+                timeout: "/js/timeout.js"
+            })
         }
     }
 })
