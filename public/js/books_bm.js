@@ -201,5 +201,27 @@ $(document)
         $("#button-confirmaddauthor").on("click", () =>{
             $("#form-addauthor").submit()
         })
+
+        var id
+
+        $(".ui.tiny.labeled.icon.delete.button").on('click', function(){
+            id = $(this).parent().parent().data('id')
+        })
+
+        $("#button-deletebook").on('click', () => {
+            var url = "/manager/deleteBook";
+                $.ajax({
+                    async : false,
+                    url : url,
+                    type : "POST",
+                    data : {
+                        data_id : id
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        $('.book-row[data-id="'+id+'"]').remove()
+                    }
+                })
+        })
     });
 

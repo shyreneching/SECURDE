@@ -179,9 +179,9 @@ router.post("/addAuthor", urlencoder, async (req, res) => {
     })
 })
 
-router.post("/deleteBook", urlencoder, async (req, res) => {
+router.post("/deleteBookInstance", urlencoder, async (req, res) => {
     let userID = req.session.username;
-    let bookID = req.body.data-id;
+    let bookID = req.body.data_id;
 
     let book = await Book.getBookByID(bookID);
     let reviews = book.reviews;
@@ -199,7 +199,7 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
     let user = await User.getUserByID(userID);
     let username = user.username;
     let item = book.title + " By " + authorDisplay
-    let action = 'Deleted a book';
+    let action = 'Deleted a Book Instance';
 
     let sysLogs = new SystemLogs({
         action,
@@ -216,7 +216,7 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
 
     await Book.delete(bookID);
 
-    res.send("Success");
+    res.json({message : "Success"});
 })
 
 module.exports = router;
