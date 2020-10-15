@@ -17,12 +17,12 @@ const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
 
 router.get("/", async (req, res) => {
-    var manager = await User.getUserByID(req.session.username)
-    if (manager != null && manager.accountType == "book manager"){
-        res.render("books_bm.hbs")
-    } else {
+    // var manager = await User.getUserByID(req.session.username)
+    // if (manager != null && manager.accountType == "book manager"){
+    //     res.render("books_bm.hbs")
+    // } else {
         res.redirect("/");
-    }
+    // }
 })
 
 module.exports = router;
