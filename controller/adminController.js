@@ -22,13 +22,11 @@ router.get("/", async (req, res) => {
     // if (admin != undefined && admin.accountType == "admin"){
     //     res.render("admin.hbs")
     // } else {
-    let sysLogs = await SystemLogs.getAllLogs();
+    // let sysLogs = await SystemLogs.getAllLogs();
 
-    res.send(sysLogs)
-    res.render("/", {
-        sysLogs: sysLogs
-    })
-        //res.redirect("/");
+    // res.send(sysLogs)
+    // res.render("/")
+        res.redirect("/");
 
     // }
 })

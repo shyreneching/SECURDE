@@ -100,8 +100,11 @@ router.get("/", async (req, res) => {
             })
             SystemLogs.addLogs(syslog)
     
+            let sysLogs = await SystemLogs.getAllLogs();
+
             res.render("admin.hbs", {
-                timeout: "/js/timeout.js"
+                timeout: "/js/timeout.js",
+                sysLogs: sysLogs
             })
         } else if (user.accountType == "book manager"){
             let syslog = new SystemLogs({
