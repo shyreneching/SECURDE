@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/addBook", urlencoder, async (req, res) => {
-
+    console.log(req.session.username)
     let userID = req.session.username;
     let title = req.body.book_title;
     //let author = req.body["author[]"];
@@ -38,8 +38,9 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let status = req.body.menu;
     //let reviews = req.body["reviews[]"];
 
+    console.log(author)
     let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
-
+    
     // let authorlist = [];
     // var arrayLength = author.length;
     // for (var i = 0; i < arrayLength; i++) {

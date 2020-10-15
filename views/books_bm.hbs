@@ -97,7 +97,7 @@
             </thead>
             <tbody>
                 {{#each books}}
-                <tr>
+                <tr data-id="{{_id}}">
                     <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
                     <td class="selectable"><a href="http://" id="book-author">{{author}}</a></td>
                     <td>{{status}}</td>
@@ -173,7 +173,7 @@
             Add Book
         </div>
         <div class="content">
-            <form class="ui small form" id="form-addbook" action="/addBook" method="POST">
+            <form class="ui small form" id="form-addbook" action="/manager/addBook" method="POST">
                 <div class="ui stacked segment">
                     <div class="field">
                         <div class="ui left input">

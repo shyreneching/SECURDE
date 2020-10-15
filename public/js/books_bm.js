@@ -97,5 +97,9 @@ $(document)
         $('#modal-addauthor').modal('attach events', '#button-addauthor')
 
         $('.modal').modal('setting', 'closable', false)
+
+        $("#button-confirmaddbook").on("click", () =>{
+            $("#form-addbook").submit()
+        })
     });
 
