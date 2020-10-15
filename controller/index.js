@@ -146,6 +146,8 @@ router.get("/", async (req, res) => {
 router.get("/profile", async (req, res) => {
     let userID = req.session.username
 
+    let user = await User.getUserByID(userID);
+
     let previousHistory = await BorrowHistory.getPreviousUserHistory(userID)
     let prevHistory = [];
     for (var l = 0; l < previousHistory.length; l++) {
@@ -174,6 +176,7 @@ router.get("/profile", async (req, res) => {
     }
 
     res.render("student-teacher_profile.hbs", {
+        user: user,
         prevHistory: prevHistory,
         currHistory: currHistory,
         books: books

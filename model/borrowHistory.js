@@ -6,6 +6,10 @@ var borrowHistorySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "BookInstance"
     },
+    author: [{
+        type: Schema.Types.ObjectId,
+        ref: "Author"
+    }],
     user: {
         type: Schema.Types.ObjectId,
         ref: "User"
@@ -71,7 +75,7 @@ borrowHistorySchema.statics.updateTimeReturnedByID = async function(hisID, actua
 borrowHistorySchema.methods.populate= async function(){
     return await borrowHistorySchema.findOne({
         _id: this._id
-    }).populate("user book");
+    }).populate("user book author");
 };
 
 var BorrowHistory = mongoose.model("BorrowHistory", borrowHistorySchema)
