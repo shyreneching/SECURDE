@@ -179,4 +179,44 @@ router.post("/addAuthor", urlencoder, async (req, res) => {
     })
 })
 
+router.post("/deleteBook", urlencoder, async (req, res) => {
+    let userID = req.session.username;
+    let bookID = req.body.data-id;
+
+    let book = await Book.getBookByID(bookID);
+    let reviews = book.reviews;
+    for (var l = 0; l < reviews.length; l++) {
+        await Review.delete(reviews[l]);
+    }
+
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = book.title + " By " + authorDisplay
+    let action = 'Deleted a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        actor: username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+        item,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    });
+    
+    SystemLogs.addLogs(sysLogs);
+
+    await Book.delete(bookID);
+
+    res.send("Success");
+})
+
 module.exports = router;
