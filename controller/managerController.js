@@ -51,27 +51,10 @@ router.post("/addBook", urlencoder, async (req, res) => {
         authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
     }
     
-    //     console.log(author[i]);
-    //     //Do something
-    //     let temp = Author.getAuthorByName(author[i].firstname, author[i].lastname);
-    //     if(temp =  null){
-    //         let firstname = author[i].firstname
-    //         let lastname = author[i].lastname
-    //         let newAuthor = new Author({
-    //             firstname,
-    //             lastname
-    //         })
-    //         Author.addAuthor(newAuthor);
-    //     }
-    //     temp = Author.getAuthorByName(author[i].firstname, author[i].lastname);
-    //     authorlist.push(temp._id);
-
-    // }
     let user = await User.getUserByID(userID);
     let item = title + " by " + authorDisplay
     let action = 'Successfully Added a Book';
-    console.log("username " + user.username)
-    console.log("user:::::::::::: " + user)
+    
     let book= new Book({
         title,
         author,
@@ -113,7 +96,6 @@ router.post("/addBook", urlencoder, async (req, res) => {
             })
             SystemLogs.addLogs(syslog)
 
-            //res.send("Username, Email, or ID Number already taken")
             console.log("Failed to Create Book")
             res.redirect("/error");
         }
