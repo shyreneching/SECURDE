@@ -16,8 +16,15 @@ $(document)
         //table sorting functionality
         $('table').tablesort()
 
-        //datatable
-        $('table.ui.sortable.celled.table').DataTable();
+        //system logs datatables initialisation and sorting
+        $('#table-systemlogs').DataTable({
+            "order": [[ 3, "desc" ]]
+        })
+
+        //users datatables initialisation and sorting
+        $('#table-users').DataTable({
+            "order": [[ 0, "asc" ]]
+        })
 
         //Add manager account show modal
         $('#button-addmanager').on('click', function() {
