@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 
 router.post("/get_all_users", urlencoder, async function (req, res) {
 
-    let user = await User.getAllUser();
+    let allUsers = await User.getAllUser();
     res.send({
         user
     });
