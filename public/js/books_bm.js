@@ -172,11 +172,13 @@ $(document)
                         $(div).text( data['firstname'] + ' ' + data['lastname'])
                         $("#auth-menu").append(div)
                         $("#button-canceladdauthor").click()
-
-                        $("#form-addauthor").trigger("reset")
                     }
                 })
             }
+        })
+
+        $("#button-canceladdauthor").on('click', () =>{
+            $("#form-addauthor").trigger("reset")
         })
 
         // $("#form-addauthor").on("submit", () => {
