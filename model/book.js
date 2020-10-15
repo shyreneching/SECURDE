@@ -44,8 +44,16 @@ bookSchema.statics.getBooksByPublisher = async function(publisher){
     });
 };
 
+bookSchema.statics.getBookByISBN = async function(isbn){
+    return await this.findOne({
+        'isbn': isbn        
+    });
+};
+
 bookSchema.statics.addBook = function(book, callback){
-    book.save().then(callback);
+    book.save().then(doc => {
+        callback (doc)
+    });
 };
 
 bookSchema.statics.getAllBook = async function(){

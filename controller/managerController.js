@@ -12,6 +12,7 @@ const urlencoder = bodyparser.urlencoded({
 const { Author } = require("../model/author");
 const { BorrowHistory } = require("../model/borrowHistory");
 const { Book } = require("../model/book");
+const { BookInstance } = require("../model/bookInstance");
 const { Review } = require("../model/review");
 const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
@@ -62,13 +63,11 @@ router.post("/addBook", urlencoder, async (req, res) => {
         year_of_publication,
         isbn,
         callNumber,
-        status,
-        //reviews,
         date_added: moment().format('YYYY-MM-DD HH:mm')
     });
 
-    Book.addBook(book, function (book) {
-        if (book) {
+    Book.addBook(book, function (doc) {
+        if (doc) {
             let sysLogs = new SystemLogs({
                 action,
                 actor: user.username,
@@ -81,6 +80,12 @@ router.post("/addBook", urlencoder, async (req, res) => {
             });
             
             SystemLogs.addLogs(sysLogs);
+
+            let instance = new BookInstance({
+                book: doc._id,
+                status: "Available"
+            });
+            BookInstance.addBookInstance(instance)
 
             res.redirect("/");
         } else {
@@ -179,7 +184,7 @@ router.post("/addAuthor", urlencoder, async (req, res) => {
     })
 })
 
-router.post("/deleteBookInstance", urlencoder, async (req, res) => {
+router.post("/deleteBook", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let bookID = req.body.data_id;
 
@@ -187,6 +192,11 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
     let reviews = book.reviews;
     for (var l = 0; l < reviews.length; l++) {
         await Review.delete(reviews[l]);
+    }
+
+    let instance = await BookInstance.getInstancesOfBooks(bookID);
+    for (var l = 0; l < instance.length; l++) {
+        await BookInstance.delete(instance[l]);
     }
 
     temp = await Author.getAuthorByID(book.author[0]);
