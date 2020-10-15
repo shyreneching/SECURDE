@@ -84,6 +84,12 @@
                     <i class="user plus icon"></i> Add Manager
                 </div>
             </div>
+            <h1 class="ui huge center aligned icon header"></h1>
+            <div class="row">
+                <div class="ui right floated small labeled icon button" id="button-resetpassword">
+                    <i class="lock icon"></i> Reset Password
+                </div>
+            </div>
         </div>
         <div class="twelve wide column">
             <div class="row">
@@ -227,6 +233,43 @@
                 </div>
                 <div class="ui fluid large yellow submit button field" id="button-createmanageraccount"
                     style="background: rgb(184, 164, 56);">Create Account</div>
+                <div class="actions" style="margin-left: -0.8em; width: 100%">
+                    <div class="ui fluid large red cancel button" id="button-cancelcreatemanageraccount"
+                    style="background: rgb(255, 107, 107);">Cancel</div>
+                </div>
+                <div class="ui error message" id="warnings"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="ui tiny scrolling modal" id="modal-resetpassword" style="overflow-y: scroll; overflow-x: hidden; max-height: 80%">
+        <i class="close icon"></i>
+        <div class="header">
+            Reset Password
+        </div>
+        <div class="content">
+            <form class="ui large form error" id="form-resetpassword" action="/changePassword" method="POST">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="curr-password" type="password" name="curr_password" placeholder="Current Password">
+                    </div>
+                </div><div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="new-password" type="password" name="new_password" placeholder="New Password">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="confirm-password" type="password" name="confirm_password"
+                            placeholder="Confirm Password">
+                    </div>
+                </div>
+                <div class="ui fluid large yellow submit button field" id="button-createmanageraccount"
+                    style="background: rgb(184, 164, 56);">Reset Password</div>
                 <div class="actions" style="margin-left: -0.8em; width: 100%">
                     <div class="ui fluid large red cancel button" id="button-cancelcreatemanageraccount"
                     style="background: rgb(255, 107, 107);">Cancel</div>
