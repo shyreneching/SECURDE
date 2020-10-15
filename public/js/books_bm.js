@@ -28,7 +28,7 @@ $(document)
         });
 
         //Edit Book show modal
-        $('#button-edit').on('click', function() {
+        $('.edit.button').on('click', function() {
             //Resets form input fields from data values
             $('.ui.form').trigger("reset");
             $('#modal-editbook').modal('setting', 'transition', 'vertical flip')
@@ -36,7 +36,7 @@ $(document)
         });
 
         //Delete Book show modal
-        $('#button-delete').on('click', function() {
+        $('.delete.button').on('click', function() {
             $('#modal-deletebook').modal('setting', 'transition', 'vertical flip')
             $('#modal-deletebook').modal('show')
         });
@@ -91,4 +91,11 @@ $(document)
         // $('#dropdown-bookstatus:contains(Available)').show(function(){
         // $("#field-duedate").hide();
         // })
+        
+        $('.coupled.modal').modal({allowMultiple: true})
+        
+        $('#modal-addauthor').modal('attach events', '#button-addauthor')
+
+        $('.modal').modal('setting', 'closable', false)
     });
+

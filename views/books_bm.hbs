@@ -102,10 +102,10 @@
                     <td class="selectable"><a href="http://" id="book-author">{{author}}</a></td>
                     <td>{{status}}</td>
                     <td class="ui computer only" id="td-manage" style="max-width: 150px;">
-                        <div class="ui tiny yellow labeled icon button" id="button-edit"><i class="edit icon"></i>
+                        <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
                             Edit
                         </div>
-                        <div class="ui tiny labeled icon button" id="button-delete"><i class="trash icon"></i>
+                        <div class="ui tiny labeled icon delete button" id="button-delete"><i class="trash icon"></i>
                             Delete
                         </div>
                     </td>
@@ -116,10 +116,10 @@
                     <td class="" id="book-author">Jude Deveraux</td>
                     <td class="negative">Reserved</td>
                     <td class="ui computer only" id="td-manage" style="max-width: 150px;">
-                        <div class="ui tiny yellow labeled icon button" id="button-edit"><i class="edit icon"></i>
+                        <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
                             Edit
                         </div>
-                        <div class="ui tiny labeled icon button" id="button-delete"><i class="trash icon"></i>
+                        <div class="ui tiny labeled icon delete button" id="button-delete"><i class="trash icon"></i>
                             Delete
                         </div>
                     </td>
@@ -130,10 +130,10 @@
                     <td class="positive">Available</td>
                     <td class="ui computer only" id="td-manage" style="max-width: 150px;">
                         <div class="center align" style="display: inline;">
-                            <div class="ui tiny yellow labeled icon button" id="button-edit"><i class="edit icon"></i>
+                            <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
                                 Edit
                             </div>
-                            <div class="ui tiny labeled icon button" id="button-delete"><i
+                            <div class="ui tiny labeled icon delete button" id="button-delete"><i
                                     class="trash icon"></i> Delete
                             </div>
                         </div>
@@ -145,10 +145,10 @@
                     <td class="positive">Available</td>
                     <td class="ui computer only" id="td-manage" style="max-width: 150px;">
                         <div class="center align" style="display: inline;">
-                            <div class="ui tiny yellow labeled icon button" id="button-edit"><i class="edit icon"></i>
+                            <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
                                 Edit
                             </div>
-                            <div class="ui tiny labeled icon button" id="button-delete"><i
+                            <div class="ui tiny labeled icon delete button" id="button-delete"><i
                                     class="trash icon"></i> Delete
                             </div>
                         </div>
@@ -168,8 +168,7 @@
     </div>
 
     <!-- Add Book Modal -->
-    <div class="ui small middle aligned modal" id="modal-addbook">
-        <i class="close icon"></i>
+    <div class="ui small middle aligned coupled modal" id="modal-addbook">
         <div class="header">
             Add Book
         </div>
@@ -181,9 +180,21 @@
                             <input type="text" name="book_title" placeholder="Book Title">
                         </div>
                     </div>
-                    <div class="field">
-                        <div class="ui left input">
-                            <input type="text" name="book_author" placeholder="Author">
+                    <div class="field grid">
+                        <div class="row">
+                            <div class="ui selection dropdown" style="width: 75%;">
+                            <input type="hidden" name="book_author">
+                            <div class="default text">Select Author</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                {{!-- <div class="item" data-value="{{author.name}}" index="{{something}}" ng-repeat="char in chars">{{author.name}}</div> --}}
+                                <div class="item" data-value="author_name">Nora Roberts</div>
+                                <div class="item" data-value="author_name">Julia Quinn</div>
+                            </div>
+                            </div>
+                            <div class="ui right floated labeled icon button field" id="button-addauthor">
+                            <i class="user plus icon"></i> Add Author
+                            </div>
                         </div>
                     </div>
                     <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
@@ -198,6 +209,11 @@
                                     <input type="text" name="book_yearofpublication" placeholder="Year of Publication">
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left input">
+                            <input type="text" name="book_isbn" placeholder="ISBN">
                         </div>
                     </div>
                     <div class="field">
@@ -239,10 +255,46 @@
                             </div>
                         </div>
                     </div>
-                    <div class="two fields" style="margin-top: 1.2em; padding-left: 0.5em; padding-right: 0.5em;">
-                        <div class="ui yellow button field" style="background: rgb(145, 145, 145); margin-right: 1em;">Cancel</div>
-                        <div class="ui yellow submit button field" id="button-confirmaddbook" style="background: rgb(184, 164, 56);">
-                            Add Book</div>
+                    <div class="actions">
+                        <div class="two fields" style="margin-top: 1.2em; padding-left: 0.5em; padding-right: 0.5em;">
+                            <div class="ui yellow cancel button field" style="background: rgb(145, 145, 145); margin-right: 1em;">Cancel</div>
+                            <div class="ui yellow submit button field" id="button-confirmaddbook" style="background: rgb(184, 164, 56);">
+                                Add Book</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Author Modal -->
+    <div class="ui small middle aligned coupled modal" id="modal-addauthor">
+        <div class="header">
+            Add Author
+        </div>
+        <div class="content">
+            <form class="ui small form" id="form-addauthor" action="/addAuthor" method="POST">
+                <div class="ui stacked segment">
+                    <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
+                        <div class="two fields">
+                            <div class="field">
+                                <div class="ui left input">
+                                    <input type="text" name="author_firstname" placeholder="First Name">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui left input">
+                                    <input type="text" name="author_lastname" placeholder="Last Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <div class="two fields" style="margin-top: 1.2em; padding-left: 0.5em; padding-right: 0.5em;">
+                            <div class="ui yellow cancel button field" style="background: rgb(145, 145, 145); margin-right: 1em;">Cancel</div>
+                            <div class="ui yellow submit button field" id="button-confirmaddauthor" style="background: rgb(184, 164, 56);">
+                                Add Author</div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -251,7 +303,6 @@
 
     <!-- Edit Book Modal -->
     <div class="ui small middle aligned modal" id="modal-editbook">
-        <i class="close icon"></i>
         <div class="header">
             Edit Book
         </div>
@@ -322,12 +373,14 @@
                             </div>
                         </div>
                     </div> -->
-                    <div class="two fields" style="margin-top: 1.2em; padding-left: 0.5em; padding-right: 0.5em;">
-                        <div class="ui yellow button field" style="background: rgb(145, 145, 145); margin-right: 1em;">
-                            Cancel</div>
-                        <div class="ui yellow submit button field" id="button-confirmeditbook"
-                            style="background: rgb(184, 164, 56);">
-                            Edit Book</div>
+                    <div class="actions">
+                        <div class="two fields" style="margin-top: 1.2em; padding-left: 0.5em; padding-right: 0.5em;">
+                            <div class="ui yellow cancel button field" style="background: rgb(145, 145, 145); margin-right: 1em;">
+                                Cancel</div>
+                            <div class="ui yellow submit button field" id="button-confirmeditbook"
+                                style="background: rgb(184, 164, 56);">
+                                Edit Book</div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -336,7 +389,6 @@
 
     <!-- Delete Book Modal -->
     <div class="ui small basic modal" id="modal-deletebook">
-        <i class="close icon"></i>
         <div class="header">
             Delete Book
         </div>
