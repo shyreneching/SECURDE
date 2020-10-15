@@ -12,6 +12,7 @@ const urlencoder = bodyparser.urlencoded({
 const { Author } = require("../model/author");
 const { BorrowHistory } = require("../model/borrowHistory");
 const { Book } = require("../model/book");
+const { BookInstance } = require("../model/bookInstance");
 const { Review } = require("../model/review");
 const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
@@ -34,7 +35,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let author = authorlist.split(',');
     let publisher = req.body.book_publisher;
     let year_of_publication = req.body.book_yearofpublication;
-    let isbn = req.body.isbn;
+    let isbn = req.body.book_isbn;
     let callNumber = req.body.book_callnumber;
     let status = null
     if (req.body.status == "status_available"){
@@ -60,15 +61,13 @@ router.post("/addBook", urlencoder, async (req, res) => {
         author,
         publisher,
         year_of_publication,
-        isbn,
+        isbn: isbn,
         callNumber,
-        status,
-        //reviews,
         date_added: moment().format('YYYY-MM-DD HH:mm')
     });
 
-    Book.addBook(book, function (book) {
-        if (book) {
+    Book.addBook(book, function (doc) {
+        if (doc) {
             let sysLogs = new SystemLogs({
                 action,
                 actor: user.username,
@@ -81,6 +80,12 @@ router.post("/addBook", urlencoder, async (req, res) => {
             });
             
             SystemLogs.addLogs(sysLogs);
+
+            let instance = new BookInstance({
+                book: doc._id,
+                status: "Available"
+            });
+            BookInstance.addBookInstance(instance)
 
             res.redirect("/");
         } else {
@@ -179,7 +184,7 @@ router.post("/addAuthor", urlencoder, async (req, res) => {
     })
 })
 
-router.post("/deleteBookInstance", urlencoder, async (req, res) => {
+router.post("/deleteBook", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let bookID = req.body.data_id;
 
@@ -187,6 +192,11 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
     let reviews = book.reviews;
     for (var l = 0; l < reviews.length; l++) {
         await Review.delete(reviews[l]);
+    }
+
+    let instance = await BookInstance.getInstancesOfBooks(bookID);
+    for (var l = 0; l < instance.length; l++) {
+        await BookInstance.delete(instance[l]);
     }
 
     temp = await Author.getAuthorByID(book.author[0]);
@@ -217,6 +227,61 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
     await Book.delete(bookID);
 
     res.json({message : "Success"});
+})
+
+router.post("/editBook", urlencoder, async (req, res) => {
+    let userID = req.session.username;
+    let bookID = req.body.bookID;
+    
+    let title = req.body.book_title;
+    let authorlist = req.body.book_author.trim();
+    let author = authorlist.split(',');
+    let publisher = req.body.book_publisher;
+    let year_of_publication = req.body.book_yearofpublication;
+    let isbn = req.body.isbn;
+    let callNumber = req.body.book_callnumber;
+    let status = null
+    if (req.body.status == "status_available"){
+        status = "Available"
+    } else {
+        status = "Reserved"
+    }
+    
+    //let reviews = req.body["reviews[]"];
+    temp = await Author.getAuthorByID(author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < author.length; i++) {
+        temp = await Author.getAuthorByID(author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+    
+    let user = await User.getUserByID(userID);
+    let item = title + " by " + authorDisplay
+    let action = 'Successfully Added a Book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        username,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
+
+    let updateBook= new Book({
+        title,
+        author,
+        publisher,
+        year_of_publication,
+        isbn,
+        callNumber,
+        status,
+        reviews
+    });
+
+    let newBook = await Book.updateAppointment(bookID, updateBook);
+
+    res.send("Success");
 })
 
 module.exports = router;

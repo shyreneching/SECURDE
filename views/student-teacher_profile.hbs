@@ -77,7 +77,11 @@
         <div class="four wide column">
             <h1 class="ui huge center aligned icon header">
                 <i class="circular user icon"></i>
-                <h1 class="username" id="user-name">Jane Doe</h1>
+                {{#with user}}
+                    <h1 class="username" id="name">{{firstname}} {{lastname}}</h1>
+                    <h3 class="username" id="user-name">{{username}}</h1>
+                {{/with}}
+
             </h1>
             <div class="row">
                 <i class="settings icon" style="color: rgb(184, 164, 56);"></i>
@@ -100,6 +104,23 @@
                             style="height: 300px; overflow-y: scroll;">
                             <!-- insert for loop here for the books -->
                             <div class="ui container padded segment" id="tab-content-one">
+                                {{#each currHistory}}
+                                    <div class="ui divided two column stackable grid">
+                                        <div class="ten wide center aligned middle aligned column">
+                                            <div class="row" id="date-borrowed"
+                                                style="font-weight: lighter; font-size: smaller; margin-bottom: 0.5em;">
+                                                {{time_barrow}}</div>
+                                            <div class="row">
+                                                <h4 class="borrowed_booktitle" id="borrowed-booktitle">{{book}}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="six wide center aligned middle aligned column" id="borrowed-bookauthor">
+                                            {{#each author}}
+                                                {{#if @index}}, {{/if}}
+                                                {{firstname}} {{lastname}}
+                                            {{/each}}</div>
+                                    </div>
+                                {{/each}}
                                 <div class="ui divided two column stackable grid">
                                     <div class="ten wide center aligned middle aligned column">
                                         <div class="row" id="date-borrowed"
@@ -189,6 +210,23 @@
                         <div class="ui bottom attached tab segment" id="tab-content-two" data-tab="previous"
                             style="height: 300px; overflow-y: scroll;">
                             <!-- insert for loop here for the books -->
+                            {{#each prevHistory}}
+                                    <div class="ui divided two column stackable grid">
+                                        <div class="ten wide center aligned middle aligned column">
+                                            <div class="row" id="date-borrowed"
+                                                style="font-weight: lighter; font-size: smaller; margin-bottom: 0.5em;">
+                                                {{time_barrow}} - {{actual_returned}}</div>
+                                            <div class="row">
+                                                <h4 class="borrowed_booktitle" id="borrowed-booktitle">{{book}}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="six wide center aligned middle aligned column" id="borrowed-bookauthor">
+                                            {{#each author}}
+                                                {{#if @index}}, {{/if}}
+                                                {{firstname}} {{lastname}}
+                                            {{/each}}</div>
+                                    </div>
+                                {{/each}}
                             <div class="ui container padded segment" id="returned-book">
                                 <div class="ui divided two column stackable grid">
                                     <div class="ten wide center aligned middle aligned column">
@@ -212,6 +250,19 @@
                 <div class="ui container" style="height: 420px;">
                     <h3 class="ui large left aligned header">My Reviews</h3>
                     <div class="ui container padded segment" style="height: 300px; overflow-y: scroll;">
+                        {{#each reviews}}
+                            <div class="ui container padded segment">
+                                <div class="ui divided two column stackable grid">
+                                    <div class="four wide center aligned middle aligned column">
+                                        <h4><a class="booktitle" id="reviewlink-booktitle" href="">{{book}}</a></h4>
+                                    </div>
+                                    <div class="twelve wide column">
+                                        <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">{{create_date}}</div>
+                                        <div class="row" id="book-review">{{review_text}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
                         <div class="ui container padded segment">
                             <div class="ui divided two column stackable grid">
                                 <div class="four wide center aligned middle aligned column">

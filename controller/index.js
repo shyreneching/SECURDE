@@ -11,6 +11,7 @@ const urlencoder = bodyparser.urlencoded({
 const { Author } = require("../model/author");
 const { BorrowHistory } = require("../model/borrowHistory");
 const { Book } = require("../model/book");
+const { BookInstance } = require("../model/bookInstance");
 const { Review } = require("../model/review");
 const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
@@ -141,6 +142,47 @@ router.get("/", async (req, res) => {
         }
     }
 })
+
+router.get("/profile", async (req, res) => {
+    let userID = req.session.username
+
+    let user = await User.getUserByID(userID);
+
+    let previousHistory = await BorrowHistory.getPreviousUserHistory(userID)
+    let prevHistory = [];
+    for (var l = 0; l < previousHistory.length; l++) {
+        let temp = previousHistory[l];
+        //populate necessary info
+        temp = await temp.populate();
+        prevHistory.push(temp);
+    }
+
+    let currentsHistory = await BorrowHistory.getCurrentUserHistory(userID)
+    let currHistory = [];
+    for (var l = 0; l < currentsHistory.length; l++) {
+        let temp = currentsHistory[l];
+        //populate necessary info
+        temp = await temp.populate();
+        currHistory.push(temp);
+    }
+
+    let bookslist = await Book.getAllBook();
+    let books = [];
+    for (var l = 0; l < bookslist.length; l++) {
+        let book = bookslist[l];
+        //populate necessary info
+        book = await book.populateAuthorandReviews();
+        books.push(book);
+    }
+
+    res.render("student-teacher_profile.hbs", {
+        user: user,
+        prevHistory: prevHistory,
+        currHistory: currHistory,
+        books: books
+    })
+})
+
 
 router.get("/login", async (req, res) => {
     let invalid = await SystemLogs.getInvalidLoginByIP((req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 

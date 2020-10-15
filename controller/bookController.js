@@ -11,6 +11,7 @@ const urlencoder = bodyparser.urlencoded({
 const { Author } = require("../model/author");
 const { BorrowHistory } = require("../model/borrowHistory");
 const { Book } = require("../model/book");
+const { BookInstance } = require("../model/bookInstance");
 const { Review } = require("../model/review");
 const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
@@ -215,7 +216,7 @@ router.post("/borrowBook", urlencoder, async (req, res) => {
     let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
 
     // deadline to return the books is 14 days after borrowing
-    let return_time = datetime.getDate() + 14;
+    let due_date = datetime.getDate() + 14;
     let actual_returned = '';
     let status = 'borrowed';
 
@@ -232,14 +233,14 @@ router.post("/borrowBook", urlencoder, async (req, res) => {
         datetime
     });
     
-    await Book.updateBookStatus(bookID, "Reserved, Available at :" + return_time)
+    await BookInstance.updateBookStatus(bookID, "Reserved, Available at :" + due_date)
     await SystemLogs.addLogs(sysLogs);
 
     let borrowHistory = new BorrowHistory({
         bookID,
         userID,
         datetime,
-        return_time,
+        due_date,
         actual_returned,
         status
     });
@@ -278,7 +279,7 @@ router.post("/returnBook", urlencoder, async (req, res) => {
     
     await SystemLogs.addLogs(sysLogs);
 
-    await Book.updateBookStatus(bookID, "Available")
+    await BookInstance.updateBookStatus(bookID, "Available")
     await BarrowHistory.updateTimeReturnedByID(hisID, datetime);
 
     res.send("Success");

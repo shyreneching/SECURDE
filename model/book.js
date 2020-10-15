@@ -11,8 +11,6 @@ var bookSchema = new Schema({
     year_of_publication: String,
     isbn: String,
     callNumber: String,
-    // Available, Reserved
-    status: String,
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: "Review"
@@ -46,8 +44,16 @@ bookSchema.statics.getBooksByPublisher = async function(publisher){
     });
 };
 
+bookSchema.statics.getBookByISBN = async function(isbn){
+    return await this.findOne({
+        'isbn': isbn        
+    });
+};
+
 bookSchema.statics.addBook = function(book, callback){
-    book.save().then(callback);
+    book.save().then(doc => {
+        callback (doc)
+    });
 };
 
 bookSchema.statics.getAllBook = async function(){
@@ -91,13 +97,13 @@ bookSchema.statics.updateBook = async function(bookID, book){
     }); 
 };
 
-bookSchema.statics.updateBookStatus = async function(bookID, status) {
-    return await this.updateOne({
-        _id: bookID
-    }, {
-        status
-    });
-}
+// bookSchema.statics.updateBookStatus = async function(bookID, status) {
+//     return await this.updateOne({
+//         _id: bookID
+//     }, {
+//         status
+//     });
+// }
 
 bookSchema.methods.populateAuthorandReviews = async function(){
     return await Book.findOne({
