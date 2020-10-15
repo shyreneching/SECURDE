@@ -190,6 +190,9 @@
                                 {{!-- <div class="item" data-value="{{author.name}}" index="{{something}}" ng-repeat="char in chars">{{author.name}}</div> --}}
                                 <div class="item" data-value="author_name">Nora Roberts</div>
                                 <div class="item" data-value="author_name">Julia Quinn</div>
+                                {{#each authors}}
+                                <div class="item" data-value="author_name" data-id="{{_id}}">{{firstname}} {{lastname}}</div>
+                                {{/each}}
                             </div>
                             </div>
                             <div class="ui right floated labeled icon button field" id="button-addauthor">
@@ -273,7 +276,7 @@
             Add Author
         </div>
         <div class="content">
-            <form class="ui small form" id="form-addauthor" action="/addAuthor" method="POST">
+            <form class="ui small form" id="form-addauthor">
                 <div class="ui stacked segment">
                     <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
                         <div class="two fields">

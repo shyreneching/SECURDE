@@ -130,8 +130,13 @@ router.get("/", async (req, res) => {
             })
             SystemLogs.addLogs(syslog)
     
+            let authors = await Author.getAllAuthor();
+            let reviews = await Review.getAllReview()
             res.render("books_bm.hbs", {
-                timeout: "/js/timeout.js"
+                timeout: "/js/timeout.js",
+                books: books,
+                authors: authors,
+                reviews: reviews
             })
         }
     }

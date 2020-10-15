@@ -383,7 +383,7 @@ router.post("/deleteReview", urlencoder, async (req, res) => {
     res.send("Success");
 })
 
-router.post("/addAuthor", urlencoder, (req, res) => {
+router.post("/addAuthor", urlencoder, async (req, res) => {
 
     let firstname = req.body.firstname;
     let lastname = req.body.lastname;

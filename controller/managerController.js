@@ -126,4 +126,63 @@ router.post("/addBook", urlencoder, async (req, res) => {
     })
 })
 
+router.post("/addAuthor", urlencoder, async (req, res) => {
+
+    let firstname = req.body.author_firstname;
+    let lastname = req.body.author_lastname;
+    let userID = req.session.username;
+
+    let user = await User.getUserByID(userID);
+
+    let newAuthor = new Author({
+        firstname,
+        lastname,
+    })
+    
+    Author.addAuthor(newAuthor, function (newAuthor) {
+        if (newAuthor) {
+            let syslog = new SystemLogs({
+                action: "Added Author",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+            res.redirect("/");
+        } else {
+            let syslog = new SystemLogs({
+                action: "Failed to Add Author",
+                actor: username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: item,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/");
+        }
+    }, (error) => {
+        let syslog = new SystemLogs({
+            action: "Error",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: error.message,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/error");
+    })
+})
+
 module.exports = router;
