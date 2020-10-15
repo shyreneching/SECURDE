@@ -94,6 +94,7 @@
                         <tr>
                             <th class="" id="table-header">Action</th>
                             <th class="" id="table-header">Actor</th>
+                            {{!-- <th class="" id="table-header">IP Address</th> --}}
                             <th class="" id="table-header">Item</th>
                             <th class="sorted descending" id="table-header">Date/Time</th>
                         </tr>
@@ -103,6 +104,7 @@
                         <tr data-id="{{_id}}">
                             <td class="systemlog_action" id="systemlog-action">{{action}}</td>
                             <td class="systemlog_actor" id="systemlog-actor">{{actor}}</td>
+                            {{!-- <td class="systemlog_actor" id="systemlog-actor">{{ip_add}}</td> --}}
                             <td class="systemlog_item" id="systemlog-item" style="word-break: break-all">{{item}}</td>
                             <td class="systemlog_datetime" id="systemlog-datetime">{{datetime}}</td>
                         </tr>

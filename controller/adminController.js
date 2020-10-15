@@ -156,7 +156,7 @@ router.post("/addUser", urlencoder, async (req, res) => {
                                     })
                                     SystemLogs.addLogs(syslog)
                                     console.log("After User is created " + req.session.username)
-                                    res.redirect("/admin");
+                                    res.redirect("/");
                                 } else {
                                     let syslog = new SystemLogs({
                                         action: "Failed to Create Account",
@@ -172,7 +172,7 @@ router.post("/addUser", urlencoder, async (req, res) => {
 
                                     //res.send("Username, Email, or ID Number already taken")
                                     console.log("Username, Email, or ID Number already taken")
-                                    res.redirect("/admin");
+                                    res.redirect("/");
                                 }
                             }, (error) => {
                                 let syslog = new SystemLogs({

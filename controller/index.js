@@ -166,20 +166,111 @@ router.get("/profile", async (req, res) => {
         currHistory.push(temp);
     }
 
-    let bookslist = await Book.getAllBook();
-    let books = [];
-    for (var l = 0; l < bookslist.length; l++) {
-        let book = bookslist[l];
+    let reviewlist = await Review.getReviewByUser(userID);
+    let reviews = [];
+    for (var l = 0; l < reviewlist.length; l++) {
+        let temp = reviewlist[l];
         //populate necessary info
-        book = await book.populateAuthorandReviews();
-        books.push(book);
+        temp = await temp.populate();
+        reviews.push(temp);
     }
 
     res.render("student-teacher_profile.hbs", {
         user: user,
         prevHistory: prevHistory,
         currHistory: currHistory,
-        books: books
+        reviews: reviews
+    })
+})
+
+router.post("/changepassword", urlencoder, async function (req, res) {
+
+    var user = await User.getUserByID(req.session.username)
+    let old_password = req.body.old_password
+    let password = req.body.new_password
+    let confirm_password = req.body.confirm_new_password
+
+    bcrypt.compare(old_password, user.password, async (err, same) => {
+        if (same) {
+            bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
+                if (err){
+                    let syslog = new SystemLogs({
+                        action: "Error",
+                        actor: user.username,
+                        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                        item: err.message,
+                        datetime: moment().format('YYYY-MM-DD HH:mm')
+                    })
+                    SystemLogs.addLogs(syslog)
+        
+                    res.redirect("/error");
+                } else {
+                    if(user && password == confirm_password){
+                        let changepw = await User.updateUserPassword(user._id, hash)
+                        console.log(changepw)
+                        let syslog = new SystemLogs({
+                            action: "Successfully Changed Password",
+                            actor: user.username,
+                            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                req.connection.remoteAddress || 
+                                req.socket.remoteAddress || 
+                                req.connection.socket.remoteAddress,
+                            item: null,
+                            datetime: moment().format('YYYY-MM-DD HH:mm')
+                        })
+                        SystemLogs.addLogs(syslog)
+                        req.session.username = null;
+                        res.redirect("/login");
+                    } else {
+                        let syslog = new SystemLogs({
+                            action: "Failed to Change Password",
+                            actor: user.usernamell,
+                            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                                req.connection.remoteAddress || 
+                                req.socket.remoteAddress || 
+                                req.connection.socket.remoteAddress,
+                            item: null,
+                            datetime: moment().format('YYYY-MM-DD HH:mm')
+                        })
+                        SystemLogs.addLogs(syslog)
+        
+                        console.log("Failed to Reset Password")
+                        res.redirect("/login");
+                    }
+                }
+            }) 
+        } else {
+            let syslog = new SystemLogs({
+                action: "Invalid Credentials",
+                actor: null,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+    
+            res.redirect("/invalidlogin");
+        }
+    }, (error) => {
+        let syslog = new SystemLogs({
+            action: "Error",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: error.message,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/error");
     })
 })
 

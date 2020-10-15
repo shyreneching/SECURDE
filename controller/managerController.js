@@ -238,14 +238,8 @@ router.post("/editBook", urlencoder, async (req, res) => {
     let author = authorlist.split(',');
     let publisher = req.body.book_publisher;
     let year_of_publication = req.body.book_yearofpublication;
-    let isbn = req.body.isbn;
+    let isbn = req.body.book_isbn;
     let callNumber = req.body.book_callnumber;
-    let status = null
-    if (req.body.status == "status_available"){
-        status = "Available"
-    } else {
-        status = "Reserved"
-    }
     
     //let reviews = req.body["reviews[]"];
     temp = await Author.getAuthorByID(author[0]);
@@ -257,11 +251,15 @@ router.post("/editBook", urlencoder, async (req, res) => {
     
     let user = await User.getUserByID(userID);
     let item = title + " by " + authorDisplay
-    let action = 'Successfully Added a Book';
+    let action = 'Successfully Edited a Book';
 
     let sysLogs = new SystemLogs({
         action,
-        username,
+        actor: username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
         item,
         datetime
     });
