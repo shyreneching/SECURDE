@@ -885,6 +885,39 @@ router.post('/idcheck', function(req, res) {
     });
 });
 
+router.post('/authExists', function(req, res) {
+    Author.findOne({
+        firstname: req.body.firstname,
+        lastname: req.body.lastname
+    }, function(err, user){
+        if(err) {
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        var message;
+        if(user) {
+        //   console.log(user)
+            message = "author exists";
+            // console.log(message)
+        } else {
+            message= "author doesn't exist";
+            // console.log(message)
+        }
+        res.json({message: message});
+    });
+});
+
 var ansC
 function changeAns(param){
     ansC = param

@@ -30,8 +30,8 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let title = req.body.book_title;
     //let author = req.body["author[]"];
-    let author = req.body.author;
-    let bauthor = req.body.book_author;
+    let authorlist = req.body.book_author.trim();
+    let author = authorlist.split(',');
     let publisher = req.body.book_publisher;
     let year_of_publication = req.body.book_yearofpublication;
     let isbn = req.body.isbn;
@@ -44,15 +44,13 @@ router.post("/addBook", urlencoder, async (req, res) => {
     }
     
     //let reviews = req.body["reviews[]"];
-
-    console.log("author "+author)
-    console.log("bauthor "+bauthor)
-    console.log("status " + status)
-    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
+    temp = await Author.getAuthorByID(author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < author.length; i++) {
+        temp = await Author.getAuthorByID(author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
     
-    // let authorlist = [];
-    // var arrayLength = author.length;
-    // for (var i = 0; i < arrayLength; i++) {
     //     console.log(author[i]);
     //     //Do something
     //     let temp = Author.getAuthorByName(author[i].firstname, author[i].lastname);
@@ -70,7 +68,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
 
     // }
     let user = await User.getUserByID(userID);
-    let item = title + " by " + author
+    let item = title + " by " + authorDisplay
     let action = 'Successfully Added a Book';
     console.log("username " + user.username)
     console.log("user:::::::::::: " + user)

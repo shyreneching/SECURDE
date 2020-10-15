@@ -102,28 +102,107 @@ $(document)
             $("#form-addbook").submit()
         })
 
-        $("#form-addauthor").on("submit", () => {
-            var url = "/manager/addAuthor";
+        var res_auth = true
+
+        function changeAuth(param){
+            res_auth = param
+        }
+
+        $.fn.form.settings.rules.isTaken = function(param) {
+            var url = "/authExists";
             $.ajax({
                 async : false,
                 url : url,
                 type : "POST",
                 data : {
-                    author_firstname :  $("#auth_firstname").val().trim(),
-                    author_lastname :  $("#auth_lastname").val().trim(),
+                    firstname : $("#auth_firstname").val().trim(),
+                    lastname : param.trim()
                 },
                 dataType: "json",
                 success: function(data){
-                    var div = document.createElement("div")
-                    $(div).attr("data-value", data['id'])
-                    $(div).addClass("item")
-                    $(div).text( data['firstname'] + ' ' + data['lastname'])
-                    $("#auth-menu").append(div)
-                    $("#button-canceladdauthor").click()
+                    if(data['message']==='author exists'){
+                        changeAuth(false);
+                    }else {
+                        changeAuth(true);
+                    }
                 }
             })
-            return false
+            return res_auth
+        }
+
+        $("#form-addauthor").form({
+            fields : {
+                author_firstname : {
+                    identifier: 'author_firstname',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a first name'
+                        }
+                    ]
+                },
+                author_lastname : {
+                    identifier: 'author_lastname',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a last name'
+                        } , {
+                            type: 'isTaken',
+                            prompt: 'Name already exists within the database'
+                        }
+                    ]
+                }
+            } , onSuccess:function(event){
+                event.preventDefault();
+                var url = "/manager/addAuthor";
+                $.ajax({
+                    async : false,
+                    url : url,
+                    type : "POST",
+                    data : {
+                        author_firstname :  $("#auth_firstname").val().trim(),
+                        author_lastname :  $("#auth_lastname").val().trim(),
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        var div = document.createElement("div")
+                        $(div).attr("data-value", data['id'])
+                        $(div).addClass("item")
+                        $(div).text( data['firstname'] + ' ' + data['lastname'])
+                        $("#auth-menu").append(div)
+                        $("#button-canceladdauthor").click()
+                    }
+                })
+            }
         })
+
+        $("#button-canceladdauthor").on('click', () =>{
+            $("#form-addauthor").trigger("reset")
+        })
+
+        // $("#form-addauthor").on("submit", () => {
+        //     var url = "/manager/addAuthor";
+        //     $.ajax({
+        //         async : false,
+        //         url : url,
+        //         type : "POST",
+        //         data : {
+        //             author_firstname :  $("#auth_firstname").val().trim(),
+        //             author_lastname :  $("#auth_lastname").val().trim(),
+        //         },
+        //         dataType: "json",
+        //         success: function(data){
+        //             var div = document.createElement("div")
+        //             $(div).attr("data-value", data['id'])
+        //             $(div).addClass("item")
+        //             $(div).text( data['firstname'] + ' ' + data['lastname'])
+        //             $("#auth-menu").append(div)
+        //             $("#button-canceladdauthor").click()
+        //         }
+        //     })
+        //     return false
+        // })
 
         $("#button-confirmaddauthor").on("click", () =>{
             $("#form-addauthor").submit()
