@@ -42,8 +42,10 @@ router.get("/", async (req, res) => {
         SystemLogs.addLogs(syslog)
 
         res.render("books.hbs", {
-            link: "/login",
-            text: "Login",
+            list : [{
+                link: "/login",
+                text: "Login",
+            }],
             books: books
         })
     } else {
@@ -64,8 +66,10 @@ router.get("/", async (req, res) => {
             SystemLogs.addLogs(syslog)
     
             res.render("books.hbs", {
-                link: "/login",
-                text: "Login",
+                list : [{
+                    link: "/login",
+                    text: "Login",
+                }],
                 books: books
             })
         } else if (user.accountType == "user"){
@@ -82,8 +86,13 @@ router.get("/", async (req, res) => {
             SystemLogs.addLogs(syslog)
     
             res.render("books.hbs", {
-                link: "/profile",
-                text: "Profile",
+                list : [{
+                    link: "/profile",
+                    text: "Profile",
+                }, {
+                    link: "/logout",
+                    text: "Logout",
+                }],
                 books: books,
                 timeout: "/js/timeout.js"
             })

@@ -64,7 +64,9 @@
                             <div class="ui center aligned container" style="width: min-content;">
                                 <a class="active item">Books</a>
                                 {{!-- <a class="item">Profile</a> --}}
+                                {{#each list}}
                                 <a href="{{link}}" class="item">{{text}}</a>
+                                {{/each}}
                             </div>
                         </div>
                     </div>
