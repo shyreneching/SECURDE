@@ -138,7 +138,7 @@ router.get("/", async (req, res) => {
 router.get("/login", async (req, res) => {
     if (req.session.username == null) {
         let syslog = new SystemLogs({
-            action: "Entered Login Page",
+            action: "Entered Login Page - Successful",
             actor: (User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
             ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                 req.connection.remoteAddress || 
@@ -149,7 +149,14 @@ router.get("/login", async (req, res) => {
         })
         SystemLogs.addLogs(syslog)
         
-        res.render("login.hbs")
+        res.render("login.hbs",{
+            hidden: "hidden",
+            list:[{}],
+            cancel:[]
+            // hidden: "",
+            // list:[],
+            // cancel:[{}]
+        })
     } else {
         let syslog = new SystemLogs({
             action: "Unauthorized Access to Login Page",

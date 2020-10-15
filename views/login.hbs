@@ -28,12 +28,13 @@
                 <img class="center" src="img/logo.png" alt="Logo Failed To Load"
                     style="width: 12em; height: 12em; margin-bottom: 1em;">
             </div>
-            <div class="ui attached negative hidden message">
+            <div class="ui attached negative {{hidden}} message">
             <div class="header">
                 Login attempt failed 3 times!
             </div>
-            <p>You may attempt to login again in 1 minute.</p>
+            <p>You may attempt to login again in 5 minute.</p>
             </div>
+            {{#each list}}
             <form class="ui large form error" action="/validLogin" method="POST">
                 <div class="ui stacked segment">
                     <div class="field">
@@ -57,6 +58,10 @@
                 </div>
                 <div class="ui error message"></div>
             </form>
+            {{/each}}
+            {{#each cancel}}
+            <div class="ui fluid large grey cancel button" onclick="window.location.href = '/'">Cancel</div>
+            {{/each}}
             <div class="ui message">
                 Don't have an account? <a href="/signup">Sign Up</a>
             </div>
