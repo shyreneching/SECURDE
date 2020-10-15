@@ -101,5 +101,32 @@ $(document)
         $("#button-confirmaddbook").on("click", () =>{
             $("#form-addbook").submit()
         })
+
+        $("#form-addauthor").on("submit", () => {
+            var url = "/manager/addAuthor";
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    author_firstname :  $("#auth_firstname").val().trim(),
+                    author_lastname :  $("#auth_lastname").val().trim(),
+                },
+                dataType: "json",
+                success: function(data){
+                    var div = document.createElement("div")
+                    $(div).attr("data-value", data['id'])
+                    $(div).addClass("item")
+                    $(div).text( data['firstname'] + ' ' + data['lastname'])
+                    $("#auth-menu").append(div)
+                    $("#button-canceladdauthor").click()
+                }
+            })
+            return false
+        })
+
+        $("#button-confirmaddauthor").on("click", () =>{
+            $("#form-addauthor").submit()
+        })
     });
 
