@@ -31,14 +31,23 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let title = req.body.book_title;
     //let author = req.body["author[]"];
     let author = req.body.author;
+    let bauthor = req.body.book_author;
     let publisher = req.body.book_publisher;
     let year_of_publication = req.body.book_yearofpublication;
     let isbn = req.body.isbn;
     let callNumber = req.body.book_callnumber;
-    let status = req.body.menu;
+    let status = null
+    if (req.body.status == "status_available"){
+        status = "Available"
+    } else {
+        status = "Reserved"
+    }
+    
     //let reviews = req.body["reviews[]"];
 
-    console.log(author)
+    console.log("author "+author)
+    console.log("bauthor "+bauthor)
+    console.log("status " + status)
     let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
     
     // let authorlist = [];
@@ -61,27 +70,26 @@ router.post("/addBook", urlencoder, async (req, res) => {
 
     // }
     let user = await User.getUserByID(userID);
-    let username = user.username;
     let item = title + " by " + author
     let action = 'Successfully Added a Book';
-
+    console.log("user:::::::::::: " + user)
     let book= new Book({
         title,
         author,
         publisher,
         year_of_publication,
-        //isbn,
+        isbn,
         callNumber,
         status,
         //reviews,
-        datetime
+        date_added: datetime
     });
 
     Book.addBook(book, function (book) {
         if (book) {
             let sysLogs = new SystemLogs({
                 action,
-                username,
+                username: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                             req.connection.remoteAddress || 
                             req.socket.remoteAddress || 
