@@ -88,7 +88,12 @@
                 {{#each books}}
                 <tr>
                     <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
-                    <td class="selectable"><a href="http://" id="book-author">{{author.firstname}} {{author.lastname}}</a></td>
+                    <td class="selectable"><a href="http://" id="book-author">
+                    {{#each author}}
+                    {{#if @index}}, {{/if}}
+                    {{firstname}} {{lastname}}
+                    {{/each}}
+                    </a></td>
                     <td>{{status}}</td>
                 </tr>
                 {{/each}}

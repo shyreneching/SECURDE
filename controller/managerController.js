@@ -62,20 +62,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let user = await User.getUserByID(userID);
     let username = user.username;
     let item = title + " By " + author
-    let action = 'Added a book';
-
-    let sysLogs = new SystemLogs({
-        action,
-        username,
-        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress || 
-                    req.connection.socket.remoteAddress,
-        item,
-        datetime
-    });
-    
-    await SystemLogs.addLogs(sysLogs);
+    let action = 'Successfully Added a Book';
 
     let book= new Book({
         title,
@@ -91,6 +78,19 @@ router.post("/addBook", urlencoder, async (req, res) => {
 
     Book.addBook(book, function (book) {
         if (book) {
+            let sysLogs = new SystemLogs({
+                action,
+                username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                item,
+                datetime
+            });
+            
+            await SystemLogs.addLogs(sysLogs);
+
             res.redirect("/");
         } else {
             let syslog = new SystemLogs({
@@ -117,7 +117,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
                 req.connection.remoteAddress || 
                 req.socket.remoteAddress || 
                 req.connection.socket.remoteAddress,
-            item: err.message,
+            item: error.message,
             datetime: moment().format('YYYY-MM-DD HH:mm')
         })
         SystemLogs.addLogs(syslog)
