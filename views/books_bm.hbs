@@ -116,49 +116,6 @@
                     </td>
                 </tr>
                 {{/each}}
-                {{!-- <tr>
-                    <td class="" id="book-title">Wishes</td>
-                    <td class="" id="book-author">Jude Deveraux</td>
-                    <td class="negative">Reserved</td>
-                    <td class="ui computer only" id="td-manage" style="max-width: 150px;">
-                        <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
-                            Edit
-                        </div>
-                        <div class="ui tiny labeled icon delete button" id="button-delete"><i class="trash icon"></i>
-                            Delete
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="" id="book-title">The Realms of the Gods</td>
-                    <td class="" id="book-author">Tamora Pierce</td>
-                    <td class="positive">Available</td>
-                    <td class="ui computer only" id="td-manage" style="max-width: 150px;">
-                        <div class="center align" style="display: inline;">
-                            <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
-                                Edit
-                            </div>
-                            <div class="ui tiny labeled icon delete button" id="button-delete"><i
-                                    class="trash icon"></i> Delete
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="" id="book-title">Savor the Moment</td>
-                    <td class="" id="book-author">Nora Roberts</td>
-                    <td class="positive">Available</td>
-                    <td class="ui computer only" id="td-manage" style="max-width: 150px;">
-                        <div class="center align" style="display: inline;">
-                            <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
-                                Edit
-                            </div>
-                            <div class="ui tiny labeled icon delete button" id="button-delete"><i
-                                    class="trash icon"></i> Delete
-                            </div>
-                        </div>
-                    </td>
-                </tr> --}}
             </tbody>
             <tfoot>
                 <tr>
@@ -193,8 +150,6 @@
                             <i class="dropdown icon"></i>
                             <div class="menu" id="auth-menu">
                                 {{!-- <div class="item" data-value="{{author.name}}" index="{{something}}" ng-repeat="char in chars">{{author.name}}</div> --}}
-                                {{!-- <div class="item" data-value="author_name1">Nora Roberts</div>
-                                <div class="item" data-value="author_name2">Julia Quinn</div> --}}
                                 {{#each authors}}
                                 <div class="item" data-value="{{_id}}">{{firstname}} {{lastname}}</div>
                                 {{/each}}

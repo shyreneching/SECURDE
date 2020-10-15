@@ -30,8 +30,8 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let title = req.body.book_title;
     //let author = req.body["author[]"];
-    let author = req.body.author;
-    let bauthor = req.body.book_author;
+    let authorlist = req.body.book_author.trim();
+    let author = authorlist.split(',');
     let publisher = req.body.book_publisher;
     let year_of_publication = req.body.book_yearofpublication;
     let isbn = req.body.isbn;
@@ -44,15 +44,13 @@ router.post("/addBook", urlencoder, async (req, res) => {
     }
     
     //let reviews = req.body["reviews[]"];
-
-    console.log("author "+author)
-    console.log("bauthor "+bauthor)
-    console.log("status " + status)
-    let datetime = moment(Date(), 'YYYY-MM-DD HH:mm');
+    temp = await Author.getAuthorByID(author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < author.length; i++) {
+        temp = await Author.getAuthorByID(author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
     
-    // let authorlist = [];
-    // var arrayLength = author.length;
-    // for (var i = 0; i < arrayLength; i++) {
     //     console.log(author[i]);
     //     //Do something
     //     let temp = Author.getAuthorByName(author[i].firstname, author[i].lastname);
@@ -70,8 +68,9 @@ router.post("/addBook", urlencoder, async (req, res) => {
 
     // }
     let user = await User.getUserByID(userID);
-    let item = title + " by " + author
+    let item = title + " by " + authorDisplay
     let action = 'Successfully Added a Book';
+    console.log("username " + user.username)
     console.log("user:::::::::::: " + user)
     let book= new Book({
         title,
@@ -82,20 +81,20 @@ router.post("/addBook", urlencoder, async (req, res) => {
         callNumber,
         status,
         //reviews,
-        date_added: datetime
+        date_added: moment().format('YYYY-MM-DD HH:mm')
     });
 
     Book.addBook(book, function (book) {
         if (book) {
             let sysLogs = new SystemLogs({
                 action,
-                username: user.username,
+                actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                             req.connection.remoteAddress || 
                             req.socket.remoteAddress || 
                             req.connection.socket.remoteAddress,
                 item,
-                datetime
+                datetime: moment().format('YYYY-MM-DD HH:mm')
             });
             
             SystemLogs.addLogs(sysLogs);
@@ -104,7 +103,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Create Book",
-                actor: username,
+                actor: user.username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
