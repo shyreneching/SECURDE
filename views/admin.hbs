@@ -117,20 +117,23 @@
                 <table class="ui sortable celled table" id="table-users">
                     <thead class="sticky">
                         <tr>
-                            <th class="sorted ascending" id="table-header">Action</th>
-                            <th id="table-header">Actor</th>
-                            <th class="" id="table-header">Item</th>
-                            <th class="" id="table-header">Date/Time</th>
+                            <th class="sorted ascending" id="table-header">Username</th>
+                            <th id="table-header">Name</th>
+                            <th class="" id="table-header">Email</th>
+                            <th class="" id="table-header">ID Number</th>
+                            <th class="" id="table-header">Last Login</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{#each allUsers}}
                         <tr>
-                            <td class="systemlog_action" id="systemlog-action">Something</td>
-                            <td class="systemlog_actor" id="systemlog-actor">John Doe</td>
-                            <td class="systemlog_item" id="systemlog-item">Item description</td>
-                            <td class="systemlog_datetime" id="systemlog-datetime">05/16/2020 9:23 PM</td>
+                            <td class="systemlog_action" id="systemlog-action">{{username}}</td>
+                            <td class="systemlog_actor" id="systemlog-actor">{{firstname}} {{lastname}}</td>
+                            <td class="systemlog_item" id="systemlog-item">{{email}}</td>
+                            <td class="systemlog_datetime" id="systemlog-datetime">{{idNum}}</td>
+                            <td class="systemlog_datetime" id="systemlog-datetime">{{lastLogin}}</td>
                         </tr>
-                        
+                        {{/each}}
                     </tbody>
                 </table>
                 </div>
