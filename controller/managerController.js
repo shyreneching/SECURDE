@@ -62,7 +62,7 @@ router.post("/addBook", urlencoder, async (req, res) => {
     // }
     let user = await User.getUserByID(userID);
     let username = user.username;
-    let item = title + " By " + author
+    let item = title + " by " + author
     let action = 'Successfully Added a Book';
 
     let book= new Book({
