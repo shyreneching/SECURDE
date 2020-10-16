@@ -400,38 +400,40 @@
         <div class="content">
             <div class="ui padded container" style="margin-bottom: 2em;">
                 <h4>Here you can see your account details.</h4>
+                {{#with user}}
                 <div class="ui two column grid">
                     <div class="left aligned row" style="margin-bottom: -1em;">
                         <div class="six wide left aligned column">Full Name:</div>
                         <div class="ten wide left aligned column" id="userdetails-name" style="font-weight: bolder;">
-                            John Doe</div>
+                            {{firstname}} {{lastname}}</div>
                     </div>
                     <div class="left aligned row" style="margin-bottom: -1em;">
                         <div class="six wide left aligned column">Username:</div>
                         <div class="ten wide left aligned column" id="userdetails-username"
-                            style="font-weight: bolder;">sheehan13</div>
+                            style="font-weight: bolder;">{{username}}</div>
                     </div>
                     <div class="left aligned row" style="margin-bottom: -1em;">
                         <div class="six wide left aligned column">Email:</div>
                         <div class="ten wide left aligned column" id="userdetails-email"
-                            style="font-weight: bolder;">john_doe@dlsu.edu.ph</div>
+                            style="font-weight: bolder;">{{email}}</div>
                     </div>
                     <div class="left aligned row" style="margin-bottom: -1em;">
                         <div class="six wide left aligned column">ID Number:</div>
                         <div class="ten wide left aligned column" id="userdetails-idnum"
-                            style="font-weight: bolder;">11711111</div>
+                            style="font-weight: bolder;">{{idNum}}</div>
                     </div>
                     <div class="left aligned row" style="margin-bottom: -1em;">
                         <div class="six wide left aligned column">Account Type:</div>
                         <div class="ten wide left aligned column" id="userdetails-accounttype"
-                            style="font-weight: bolder;">Student</div>
+                            style="font-weight: bolder;">{{accountType}}</div>
                     </div>
                     <div class="left aligned row" style="margin-bottom: -1em;">
                         <div class="six wide left aligned column">Last Login:</div>
                         <div class="ten wide left aligned column" id="userdetails-lastlogin"
-                            style="font-weight: bolder;">05/29/2020 11:59</div>
+                            style="font-weight: bolder;">{{lastLogin}}</div>
                     </div>
                 </div>
+                {{/with}}
             </div>
         </div>
     </div>

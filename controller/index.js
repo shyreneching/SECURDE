@@ -150,6 +150,8 @@ router.get("/profile", async (req, res) => {
 
     if(req.session.username != null && user != undefined && user.accountType != "admin"){
 
+        user.accountType = user.accountType.charAt(0).toUpperCase() + user.accountType.slice(1)
+
         let previousHistory = await BorrowHistory.getPreviousUserHistory(userID)
         let prevHistory = [];
         for (var l = 0; l < previousHistory.length; l++) {
