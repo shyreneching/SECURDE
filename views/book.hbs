@@ -73,8 +73,9 @@
                             </a>
                             <div class="ui center aligned container" style="width: min-content;">
                                 <a class="active item" href="/">Books</a>
-                                <a class="item" href="/profile">Profile</a>
-                                <a class="item" href="logout">Logout</a>
+                                {{#each list}}
+                                    <a href="{{link}}" class="item">{{text}}</a>
+                                {{/each}}
                             </div>
                         </div>
                     </div>
@@ -94,12 +95,12 @@
                             <i class="massive middle aligned book icon"></i>
                         </div>
                     </div>
-                    {{!-- <div class="center aligned middle aligned row" style="text-align: center;">
-                        <div class="ui center aligned container" style="width: fit-content;">
-                            <div class="ui fluid large yellow button" id="button-borrow"
-                                style="background: rgb(184, 164, 56);">Borrow</div>
+                    <div class="center aligned middle aligned row" style="text-align: center;">
+                        <div class="ui center aligned container" style="width: 80%;">
+                            <div class="ui fluid large yellow button" id="button-addbookinstance"
+                                style="background: rgb(184, 164, 56);" action="/manager/addBookInstance" method="POST">Add Book Instance</div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="eight wide column">
                     {{#with book}}
@@ -108,7 +109,6 @@
                         <div class="ui two column grid">
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Author/s:</div>
-                                <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">John Doe</div>
                                 {{#each author}}
                                 {{#if @index}}, {{/if}}
                                 <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">{{firstname}} {{lastname}}</div>
@@ -171,18 +171,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
+                        {{#each instances}}
                         <tr>
-                            <td class="selectable"><a href="http://" id="td-bookinstance_title">The Realms of the Gods</a>
-                            </td>
-                            <td class="positive" id="td-bookinstance_status">Available</td>
-                            <td id="td-bookinstance_dateavailable">Oct 16, 2020</td>
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{book.title}}</a>
+                            </td>           
+                            <td class="positive" id="td-bookinstance_status">{{status}}</td>
+                            <td id="td-bookinstance_dateavailable">{{date_available}}</td>
                             <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
                                 <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow"><i class="book icon"></i>
                                     Borrow
                                 </div>
                             </td>
                         </tr>
+                        {{/each}}
                         <tr>
                             <td class="selectable"><a href="http://" id="td-bookinstance_title1">Savor the Moment</a>
                             </td>
@@ -235,7 +236,7 @@
 
                 </div>
                 <div class="row">
-                    <div class="ui right floated small labeled icon button" id="button-review">
+                    <div class="ui right floated small labeled icon button {{hidden_writereview}} message" id="button-review">
                         <i class="pencil icon"></i> Write Book Review
                     </div>
                 </div>
@@ -272,10 +273,10 @@
         </div>
         <div class="content">
             <form class="ui reply form" id="form-writereview" action="/user/addReview" method="POST">
-                <div class="field">
+                <div class="field" style="margin-bottom: 1em;">
                     <textarea id="textarea-review" name="review_text"></textarea>
                     {{#with book}}
-                     <input type="hidden" name="bookID" value="{{_id}}" 
+                     <input type="hidden" name="bookID" value="{{_id}}"> 
                     {{/with}}
                 </div>
                 <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
@@ -284,5 +285,17 @@
             </form>
         </div>
     </div>
+
+    <form class="ui reply form" id="form-addbookinstance" action="/user/addBookInstance" method="POST">
+        <div class="field" style="margin-bottom: 1em;">
+            {{#with book}}
+                <input type="hidden" name="bookID" value="{{_id}}"> 
+            {{/with}}
+        </div>
+        <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
+            <i class="save icon"></i> Add Book Instance
+        </div>
+    </form>
+
 </body>
 </html>

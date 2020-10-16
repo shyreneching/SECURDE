@@ -69,7 +69,7 @@ bookInstanceSchema.statics.updateInstance = async function(bookID, status, date_
 }
 
 bookInstanceSchema.methods.populate = async function(){
-    return await Book.findOne({
+    return await BookInstance.findOne({
         _id: this._id
     }).populate("book");
 };
