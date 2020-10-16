@@ -427,8 +427,9 @@ router.post("/editBook", urlencoder, async (req, res) => {
 })
 
 router.post('/returnBook', function(req, res) {
+    // console.log(req.body.data_id)
     Book.findOne({
-        _id: req.body.id
+        _id: req.body.data_id
     }, function(err, book){
         if(err) {
             let syslog = new SystemLogs({
@@ -447,11 +448,11 @@ router.post('/returnBook', function(req, res) {
         }
         // var message;
         if(book) {
-        //   console.log(user)
+        //   console.log("HERE??")
             res.json({
                 // title = book.title,
                 // a
-                messade:"all ggo"
+                message: book
             })
             // console.log(message)
         } else {
