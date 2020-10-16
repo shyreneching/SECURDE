@@ -222,43 +222,8 @@
         </div>
     </div>
 
-    <!-- Add Author Modal -->
-    <div class="ui small middle aligned coupled modal" id="modal-addauthor">
-        <div class="header">
-            Add Author
-        </div>
-        <div class="content">
-            <form class="ui small form" id="form-addauthor">
-                <div class="ui stacked segment">
-                    <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
-                        <div class="two fields">
-                            <div class="field">
-                                <div class="ui left input">
-                                    <input type="text" name="author_firstname" placeholder="First Name" id="auth_firstname">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="ui left input">
-                                    <input type="text" name="author_lastname" placeholder="Last Name"  id="auth_lastname">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <div class="two fields" style="margin-top: 1.2em; padding-left: 0.5em; padding-right: 0.5em;">
-                            <div class="ui yellow cancel button field" id="button-canceladdauthor" style="background: rgb(145, 145, 145); margin-right: 1em;">Cancel</div>
-                            <div class="ui yellow submit button field" id="button-confirmaddauthor" style="background: rgb(184, 164, 56);">
-                                Add Author</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui error message" id="warnings"></div>
-            </form>
-        </div>
-    </div>
-
     <!-- Edit Book Modal -->
-    <div class="ui small middle aligned scrolling modal" id="modal-editbook" style="overflow-y: scroll; overflow-x: hidden; max-height: 80%">
+    <div class="ui small middle aligned scrolling coupled modal" id="modal-editbook" style="overflow-y: scroll; overflow-x: hidden; max-height: 80%">
         <div class="header">
             Edit Book
         </div>
@@ -270,9 +235,22 @@
                             <input type="text" name="editbook_title" placeholder="Book Title">
                         </div>
                     </div>
-                    <div class="field">
-                        <div class="ui left input">
-                            <input type="text" name="editbook_author" placeholder="Author">
+                    <div class="field grid">
+                        <div class="row">
+                            <div class="ui multiple search selection dropdown field" id="dropdown-editbookauthors" style="width: 75%;">
+                            <input type="hidden" name="editbook_author">
+                            <div class="default text">Select Author/s</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu" id="auth-menu">
+                                {{!-- <div class="item" data-value="{{author.name}}" index="{{something}}" ng-repeat="char in chars">{{author.name}}</div> --}}
+                                {{#each authors}}
+                                <div class="item" data-value="{{_id}}">{{firstname}} {{lastname}}</div>
+                                {{/each}}
+                            </div>
+                            </div>
+                            <div class="ui right floated labeled icon button field" id="button-editaddauthor">
+                            <i class="user plus icon"></i> Add Author
+                            </div>
                         </div>
                     </div>
                     <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
@@ -343,6 +321,41 @@
                 <i class="checkmark icon"></i>
                 Yes
             </div>
+        </div>
+    </div>
+
+    <!-- Add Author Modal -->
+    <div class="ui small middle aligned coupled modal" id="modal-addauthor">
+        <div class="header">
+            Add Author
+        </div>
+        <div class="content">
+            <form class="ui small form" id="form-addauthor">
+                <div class="ui stacked segment">
+                    <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
+                        <div class="two fields">
+                            <div class="field">
+                                <div class="ui left input">
+                                    <input type="text" name="author_firstname" placeholder="First Name" id="auth_firstname">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui left input">
+                                    <input type="text" name="author_lastname" placeholder="Last Name"  id="auth_lastname">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <div class="two fields" style="margin-top: 1.2em; padding-left: 0.5em; padding-right: 0.5em;">
+                            <div class="ui yellow cancel button field" id="button-canceladdauthor" style="background: rgb(145, 145, 145); margin-right: 1em;">Cancel</div>
+                            <div class="ui yellow submit button field" id="button-confirmaddauthor" style="background: rgb(184, 164, 56);">
+                                Add Author</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui error message" id="warnings"></div>
+            </form>
         </div>
     </div>
 

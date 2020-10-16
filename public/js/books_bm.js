@@ -43,6 +43,7 @@ $(document)
         $('.edit.button').on('click', function() {
             //Resets form input fields from data values
             $('.ui.form').trigger("reset");
+            $('#dropdown-editbookauthors').dropdown('clear');
             $('.ui.form .field.error').removeClass( "error" );
             $('.ui.form.error').removeClass( "error" );
             $('#modal-editbook').modal('setting', 'transition', 'vertical flip')
@@ -100,6 +101,8 @@ $(document)
         $('.coupled.modal').modal({allowMultiple: true})
         
         $('#modal-addauthor').modal('attach events', '#button-addauthor')
+        
+        $('#modal-addauthor').modal('attach events', '#button-editaddauthor')
 
         $('.modal').modal('setting', 'closable', false)
 
@@ -177,7 +180,7 @@ $(document)
                     rules: [
                         {
                             type: 'empty',
-                            prompt: 'Please enter a book author'
+                            prompt: 'Please select a book author'
                         }
                     ]
                 },
@@ -295,7 +298,7 @@ $(document)
                     rules: [
                         {
                             type: 'empty',
-                            prompt: 'Please enter a book author'
+                            prompt: 'Please select a book author'
                         }
                     ]
                 },
