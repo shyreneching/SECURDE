@@ -107,9 +107,14 @@ $(document)
         })
 
         var res_auth
+        var res_isbn
 
         function changeAuth(param){
             res_auth = param
+        }
+
+        function changeISBN(param){
+            res_isbn = param
         }
 
         $.fn.form.settings.rules.isTaken = function(param) {
@@ -132,6 +137,27 @@ $(document)
                 }
             })
             return res_auth
+        }
+        
+        $.fn.form.settings.rules.isISBNTaken = function(param) {
+            var url = "/ISBNExists";
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    isbn : param.trim()
+                },
+                dataType: "json",
+                success: function(data){
+                    if(data['message']==='book exists'){
+                        changeISBN(false);
+                    }else {
+                        changeISBN(true);
+                    }
+                }
+            })
+            return res_isbn
         }
 
         $('#form-addbook').form({
@@ -182,6 +208,10 @@ $(document)
                         {
                             type: 'empty',
                             prompt: 'Please enter a book ISBN'
+                        },
+                        {
+                            type: 'isISBNTaken',
+                            prompt: 'This ISBN has already been registered with another book'
                         }
                     ]
                 },
@@ -312,15 +342,15 @@ $(document)
                         }
                     ]
                 },
-                editbook_dateadded : {
-                    identifier: 'editbook_dateadded',
-                    rules: [
-                        {
-                            type: 'empty',
-                            prompt: 'Please choose a date'
-                        }
-                    ]
-                },
+                // editbook_dateadded : {
+                //     identifier: 'editbook_dateadded',
+                //     rules: [
+                //         {
+                //             type: 'empty',
+                //             prompt: 'Please choose a date'
+                //         }
+                //     ]
+                // },
             }
         })
 
@@ -361,6 +391,12 @@ $(document)
 
         $(".ui.tiny.labeled.icon.delete.button").on('click', function(){
             id = $(this).parent().parent().data('id')
+        })
+
+        $(".ui.tiny.yellow.labeled.icon.edit.button").on('click', function(){
+            id = $(this).parent().parent().data('id')
+
+
         })
 
         $("#button-deletebook").on('click', () => {
