@@ -171,8 +171,7 @@ $(document)
                             prompt: 'Please enter a book year of publication'
                         },
                         {
-                            type: 'regExp',
-                            value: /^(?:19|20)\d{2}$/,
+                            type: 'regExp[/^(?:19|20)\\d{2}$/]',
                             prompt: 'Please enter a valid year of publication'
                         }
                     ]
@@ -194,9 +193,8 @@ $(document)
                             prompt: 'Please enter a call number'
                         },
                         {
-                            type: 'regExp',
-                            value: /^\d$/,
-                            prompt: 'Please enter a call number'
+                            type: 'regExp[/^\\d{3}$/]',
+                            prompt: 'Please enter a valid call number'
                         }
                     ]
                 }
@@ -253,7 +251,7 @@ $(document)
         $('#form-editbook').form({
             fields : {
                 editbook_title : {
-                    identifier: 'book_edittitle',
+                    identifier: 'editbook_title',
                     rules: [
                         {
                             type: 'empty',
@@ -287,8 +285,7 @@ $(document)
                             prompt: 'Please enter a book year of publication'
                         },
                         {
-                            type: 'regExp',
-                            value: /^(?:19|20)\d{2}$/,
+                            type: 'regExp[/^(?:19|20)\\d{2}$/]',
                             prompt: 'Please enter a valid year of publication'
                         }
                     ]
@@ -310,12 +307,20 @@ $(document)
                             prompt: 'Please enter a call number'
                         },
                         {
-                            type: 'regExp',
-                            value: /^\d$/,
-                            prompt: 'Please enter a call number'
+                            type: 'regExp[/^\\d{3}$/]',
+                            prompt: 'Please enter a valid call number'
                         }
                     ]
-                }
+                },
+                editbook_dateadded : {
+                    identifier: 'editbook_dateadded',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please choose a date'
+                        }
+                    ]
+                },
             }
         })
 

@@ -130,7 +130,7 @@
     </div>
 
     <!-- Add Book Modal -->
-    <div class="ui small middle aligned coupled modal" id="modal-addbook">
+    <div class="ui small middle aligned scrolling coupled modal" id="modal-addbook" style="overflow-y: scroll; overflow-x: hidden; max-height: 80%">
         <div class="header">
             Add Book
         </div>
@@ -256,7 +256,7 @@
     </div>
 
     <!-- Edit Book Modal -->
-    <div class="ui small middle aligned modal" id="modal-editbook">
+    <div class="ui small middle aligned scrolling modal" id="modal-editbook" style="overflow-y: scroll; overflow-x: hidden; max-height: 80%">
         <div class="header">
             Edit Book
         </div>
@@ -297,7 +297,7 @@
                         <div class="ui calendar" id="editdate_picker">
                             <div class="ui input left icon">
                                 <i class="calendar icon"></i>
-                                <input type="text" placeholder="Date Added">
+                                <input type="text" name="editbook_dateadded" placeholder="Date Added">
                             </div>
                         </div>
                     </div>
@@ -319,8 +319,7 @@
                                 Edit Book</div>
                         </div>
                     </div>
-                </div>
-                <div class="ui error message"></div>
+                <div class="ui error message" id="warnings"></div>
             </form>
         </div>
     </div>
