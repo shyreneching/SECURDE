@@ -58,10 +58,29 @@ $(document)
                     $('#modal-writebookreview').modal('show')
                 });
 
+                //table sorting functionality
+                $('table').tablesort()
+
+                //Book Instances datatable initialisation
+                $('#table-bookinstances').DataTable({
+                    "columnDefs": [
+                        { "width": "40%", "targets": 0 },
+                        { "width": "20%", "targets": 1 },
+                        { "width": "25%", "targets": 2 },
+                        { "width": "15%", "targets": 3 }
+                    ],
+                    "fixedColumns": true,
+                })
+
                 //Borrow Book show modal
-                $('#button-borrow').on('click', function() {
-                $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
-                $('#modal-borrowbook').modal('show')
-                });
+                $('.borrow.button').on('click', function() {
+                    $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
+                    $('#modal-borrowbook').modal('show')
+                })
+
+                $("#button-confirmaddreview").on("click", () =>{
+                    console.log("Submit!")
+                    $("#form-writereview").submit()
+                })
                 
             });

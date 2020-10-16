@@ -254,7 +254,9 @@
                             <div class="ui container padded segment">
                                 <div class="ui divided two column stackable grid">
                                     <div class="four wide center aligned middle aligned column">
-                                        <h4><a class="booktitle" id="reviewlink-booktitle" href="">{{book}}</a></h4>
+                                        {{#with book}}
+                                        <h4><a class="booktitle" id="reviewlink-booktitle" href="">{{title}}</a></h4>
+                                        {{/with}}
                                     </div>
                                     <div class="twelve wide column">
                                         <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">{{create_date}}</div>

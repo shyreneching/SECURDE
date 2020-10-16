@@ -147,9 +147,13 @@ router.post("/returnBook", urlencoder, async (req, res) => {
 })
 
 router.post("/addReview", urlencoder, async (req, res) => {
+    console.log("Entering addReview")
+    console.log("req.session.username " + req.session.username)
+    console.log("req.body.bookID " + req.body.bookID)
+    console.log("req.body.review_text"  +  req.body.review_text)
     let userID = req.session.username;
     let bookID = req.body.bookID;
-    let review = req.body.review;
+    let review = req.body.review_text;
     
     let datetime = moment().format('YYYY-MM-DD HH:mm')
 
@@ -168,12 +172,14 @@ router.post("/addReview", urlencoder, async (req, res) => {
     let action = 'Added Review to a book';
     
     let newreview = new Review({
-        bookID,
-        userID,
-        review,
-        datetime
+        book: bookID,
+        user: userID,
+        review_text: review,
+        create_date: datetime
         
     });
+
+    console.log("newreview"  +  newreview)
 
     Review.addReview(newreview, async function (doc) {
         if (doc) {
@@ -192,9 +198,9 @@ router.post("/addReview", urlencoder, async (req, res) => {
     
             let reviews = book.reviews;
             reviews.push(doc._id);
-            await Book.updateBookReview(bookID, reviews);
-
-            res.redirect("/book");
+            let update = await Book.updateBookReview(bookID, reviews);
+            console.log(update)
+            res.redirect("/book?data_id=" + bookID);
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Add Review",
@@ -223,7 +229,7 @@ router.post("/addReview", urlencoder, async (req, res) => {
             datetime: moment().format('YYYY-MM-DD HH:mm')
         })
         SystemLogs.addLogs(syslog)
-
+        console.log("Error")
         res.redirect("/error");
     })
 })
