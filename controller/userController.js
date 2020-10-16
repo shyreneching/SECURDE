@@ -105,6 +105,47 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
     })
 });
 
+router.post("/returnBook", urlencoder, async (req, res) => {
+    //let bookID = req.body.bookID;
+    let userID = req.session.username;
+    let hisID = req.body.hisID;
+
+    let history = await BorrowedHistory.getBorrowHistoryByID(hisID)
+
+    let datetime = moment().format('YYYY-MM-DD HH:mm')
+
+    let book = await Book.getBookByID(history.book);
+    let user = await User.getUserByID(userID);
+
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+
+    let username = user.username;
+    let item = book.title + " By " + authorDisplay
+    let action = 'Returned a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        actor: username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+        item,
+        datetime
+    });
+    SystemLogs.addLogs(sysLogs);
+
+    await BookInstance.updateInstance(bookID, "Available", "")
+    await BorrowHistory.updateTimeReturnedByID(hisID, datetime);
+
+    res.send("/profile");
+})
+
 router.post("/addReview", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let bookID = req.body.bookID;
@@ -153,7 +194,7 @@ router.post("/addReview", urlencoder, async (req, res) => {
             reviews.push(doc._id);
             await Book.updateBookReview(bookID, reviews);
 
-            res.redirect("/");
+            res.redirect("/book");
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Add Review",
@@ -223,7 +264,47 @@ router.post("/editReview", urlencoder, async (req, res) => {
     SystemLogs.addLogs(sysLogs);
     
     let newReview = await Review.updateReview(reviewID, new_review);
-    res.send("Success");
+    res.redirect("/profile");
+})
+
+router.post("/deleteReview", urlencoder, async (req, res) => {
+    let reviewID = req.body.reviewID;
+    let rev = await Review.getReviewByID(reviewID);
+
+    let datetime = moment().format('YYYY-MM-DD HH:mm')
+    let book = await Book.getBookByID(rev.bookID);
+    let user = await User.getUserByID(rev.userID);
+
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+
+    let username = user.username;
+    let item = book.title + " By " + authorDisplay
+    let action = 'Deleted Review to a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        actor: username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+        item,
+        item,
+        datetime
+    });
+    
+    SystemLogs.addLogs(sysLogs);
+
+    var ary = book.reviews;
+    ary.pull(reviewID);    
+    await Reiview.delete(reviewID);
+
+    res.redirect("/profile");
 })
 
 module.exports = router;

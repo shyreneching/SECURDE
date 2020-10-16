@@ -90,39 +90,42 @@
                     </div>
                 </div>
                 <div class="eight wide column">
+                    {{#with book}}
                     <div class="ui padded container">
-                        <h1 class="ui left aligned header" id="book-title" style="margin-left: auto;">Book Title</h1>
+                        <h1 class="ui left aligned header" id="book-title" style="margin-left: auto;">{{title}}</h1>
                         <div class="ui two column grid">
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Author/s:</div>
                                 <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">John Doe</div>
+                                {#each author}}
+                                {{#if @index}}, {{/if}}
+                                <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">{{firstname}} {{lastname}}</div>
+                                {{/each}}
                             </div>
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Publisher:</div>
-                                <div class="ten wide left aligned column" id="book-publishinghouse" style="font-weight: bolder;">Triumphant
-                                    Publishing
-                                    House</div>
+                                <div class="ten wide left aligned column" id="book-publishinghouse" style="font-weight: bolder;">{{publisher}}</div>
                             </div>
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Year of Publication:</div>
                                 <div class="ten wide left aligned column" id="book-yearofpublication"
-                                    style="font-weight: bolder;">2020</div>
+                                    style="font-weight: bolder;">{{year_of_publication}}</div>
                             </div>
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">ISBN:</div>
                                 <div class="ten wide left aligned column" id="book-isbn"
-                                    style="font-weight: bolder;">0001224356789
+                                    style="font-weight: bolder;">{{isbn}}
                                 </div>
                             </div>
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Call Number:</div>
                                 <div class="ten wide left aligned column" id="book-callnumber"
-                                    style="font-weight: bolder;">09171234567</div>
+                                    style="font-weight: bolder;">{{callNumber}}</div>
                             </div>
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Date Added:</div>
                                 <div class="ten wide left aligned column" id="book-dateadded"
-                                    style="font-weight: bolder;">04/29/2020</div>
+                                    style="font-weight: bolder;">{{date_added}}</div>
                             </div>
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Status:</div>
@@ -138,6 +141,7 @@
                             </div>
                         </div>
                     </div>
+                    {{/with}}
                 </div>
             </div>
         </div>
@@ -146,19 +150,21 @@
                 <h3 class="ui large left aligned header" id="reviews">Reviews</h3>
                 <div class="ui container padded segment" style="height: 300px; overflow-y: scroll;">
                     <div class="ui container padded segment">
+                        {{#with book}}
+                        {{#each review}}
                         <div class="ui divided two column stackable grid">
                             <div class="four wide center aligned middle aligned column">
-                                <h4>User</h4>
+                                <h4>{{user}}</h4>
                             </div>
                             <div class="twelve wide column">
                                 <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">
-                                    04/29/2020</div>
-                                <div class="row" id="book-review">This is killing me semantic ui is not a joke why is it
-                                    testing my patience???????!!! Stackoverflow thank you so much bc the
-                                    documentation
-                                    is not really all that helpful T_T</div>
+                                    {{create_date}}</div>
+                                <div class="row" id="book-review">{{review_text}}</div>
                             </div>
                         </div>
+                        {{/each}}
+                        {{/with}}
+
                     </div>
 
                     <div class="ui container padded segment">
