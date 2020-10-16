@@ -184,6 +184,9 @@ router.get("/profile", async (req, res) => {
 })
 
 router.post("/changepassword", urlencoder, async function (req, res) {
+    if(req.session.username == null){
+        res.redirect("/")
+    }
 
     var user = await User.getUserByID(req.session.username)
     let old_password = req.body.old_password
@@ -191,7 +194,21 @@ router.post("/changepassword", urlencoder, async function (req, res) {
     let confirm_password = req.body.confirm_new_password
 
     bcrypt.compare(old_password, user.password, async (err, same) => {
-        if (same) {
+        if (err){
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        } else if (same) {
             bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
                 if (err){
                     let syslog = new SystemLogs({
