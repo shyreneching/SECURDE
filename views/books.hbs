@@ -39,11 +39,13 @@
     </div> -->
 
     <!-- Sidebar Menu -->
-    {{!-- <div class="ui vertical inverted sidebar menu">
-        <a class="item">Books</a>
-        <a class="item">Login</a>
-        <a class="item">Signup</a>
-    </div> --}}
+    <div class="ui vertical inverted sidebar menu">
+        <a class="active item">Books</a>
+        {{!-- <a class="item">Profile</a> --}}
+        {{#each list}}
+        <a href="{{link}}" class="item">{{text}}</a>
+        {{/each}}
+    </div>
 
     <div class="container-main">
         <div class="ui vertical masthead center aligned segment">
