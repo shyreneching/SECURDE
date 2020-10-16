@@ -20,9 +20,10 @@ $(document)
         $('#data-table').DataTable({
             "columnDefs": [
                 { "width": "30%", "targets": 0 },
-                { "width": "33%", "targets": 1 },
+                { "width": "28%", "targets": 1 },
                 { "width": "15%", "targets": 2 },
-                { "width": "22%", "targets": 3 },
+                { "width": "5%", "targets": 3 },
+                { "width": "22%", "targets": 4 },
             ],
             "fixedColumns": true,
         })
