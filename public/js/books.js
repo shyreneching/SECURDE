@@ -26,15 +26,17 @@ $(document)
 
             id = $(this).data('id')
 
-            var url = "/book";
-            $.ajax({
-                async : false,
-                url : url,
-                type : "POST",
-                data : {
-                    data_id : id
-                },
-                success: "success"
-            })
+            window.location.href = "/book?data_id=" + id;
+            // $.ajax({
+            //     async : false,
+            //     url : url,
+            //     type : "POST",
+            //     data : {
+            //         data_id : id
+            //     },
+            //     success: function(){
+            //         console.log("yehey")
+            //     }
+            // })
         })
     });

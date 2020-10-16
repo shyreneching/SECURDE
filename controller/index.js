@@ -1363,27 +1363,78 @@ router.get("/session-timeout", async (req, res) => {
     // res.send(template);
 })
 
-router.post("/book", async (req, res) => {
-    console.log("Should be passing the book id" + req.body.data_id)
-    let bookID = req.body.data_id
+router.get("/book", async (req, res) => {
+    console.log("Should be passing the book id" + req.query.data_id)
+    let bookID = req.query.data_id
     let userID = req.session.username
 
     let user = await User.getUserByID(userID)
-
     let book = await Book.getBookByID(bookID)
-    book = await book.populateAuthorandReviews();
+    if (book == undefined){
+        let syslog = new SystemLogs({
+            action: "Unauthorized Access to Book Page",
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+        res.redirect("/error")
+    } else {
+        book = await book.populateAuthorandReviews();
 
-    let rev = [];
-    for (var l = 0; l < book.reviews.length; l++) {
-        let temp = book.reviews[l];
-        //populate necessary info
-        temp = await temp.populate();
-        rev.push(temp);
+        let rev = [];
+        for (var l = 0; l < book.reviews.length; l++) {
+            let temp = book.reviews[l];
+            //populate necessary info
+            temp = await temp.populate();
+            rev.push(temp);
+        }
+
+        book.reviews = rev
+
+        let instanceList = await BookInstance.getInstancesOfBooks(bookID)
+
+        let syslog = new SystemLogs({
+            action: "Entering Book Page - " + book._id,
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        if(user == undefined){
+            console.log("user " + user)
+            console.log("book " + book)
+            console.log("instanceList " + instanceList)
+            console.log("rendering book.hbs")
+            res.render("book.hbs", {
+                user: user,
+                book: book,
+                instanceList: instanceList,
+                // timeout: "/js/timeout.js"
+            })
+        } else {
+            console.log("user " + user)
+            console.log("book " + book)
+            console.log("instanceList " + instanceList)
+            console.log("rendering book.hbs")
+            res.render("book.hbs", {
+                user: user,
+                book: book,
+                instanceList: instanceList,
+                timeout: "/js/timeout.js"
+            })
+        }
     }
-
-    book.reviews = rev
-
-    let instanceList = await BookInstance.getInstancesOfBooks(bookID)
+    
     console.log("user " + user)
     console.log("book " + book)
     console.log("instanceList " + instanceList)
