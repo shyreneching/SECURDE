@@ -397,23 +397,36 @@ $(document)
         $(".ui.tiny.yellow.labeled.icon.edit.button").on('click', function(){
             id = $(this).parent().parent().data('id')
 
-
+            var url = "/manager/returnBook";
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    data_id : id
+                },
+                dataType: "json",
+                success: function(data){
+                    var book = data["message"]
+                    $('input[name="editbook_title"]').val(book.title)
+                }
+            })
         })
 
         $("#button-deletebook").on('click', () => {
             var url = "/manager/deleteBook";
-                $.ajax({
-                    async : false,
-                    url : url,
-                    type : "POST",
-                    data : {
-                        data_id : id
-                    },
-                    dataType: "json",
-                    success: function(data){
-                        $('.book-row[data-id="'+id+'"]').remove()
-                    }
-                })
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    data_id : id
+                },
+                dataType: "json",
+                success: function(data){
+                    $('.book-row[data-id="'+id+'"]').remove()
+                }
+            })
         })
     });
 

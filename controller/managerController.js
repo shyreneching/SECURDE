@@ -426,5 +426,52 @@ router.post("/editBook", urlencoder, async (req, res) => {
     res.json({message : "Success"});
 })
 
+router.post('/returnBook', function(req, res) {
+    Book.findOne({
+        _id: req.body.id
+    }, function(err, book){
+        if(err) {
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        // var message;
+        if(book) {
+        //   console.log(user)
+            res.json({
+                // title = book.title,
+                // a
+                messade:"all ggo"
+            })
+            // console.log(message)
+        } else {
+            let syslog = new SystemLogs({
+                action: "Book Doesn't Exist",
+                actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        // res.json({message: message});
+    });
+});
+
 
 module.exports = router;
