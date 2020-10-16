@@ -18,4 +18,8 @@ $(document)
         
         //datatable
         $('#data-table').DataTable();
+
+        // $("#data-table tr").on('click', ()=>{
+        //     console.log("yehey")
+        // })
     });

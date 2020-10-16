@@ -86,26 +86,28 @@
     </div>
 
     <div class="ui container" style="margin-top: 5%; width: 70%;">
-        <table class="ui sortable celled table" id="data-table">
+        <table class="ui sortable selectable celled table" id="data-table">
             <thead>
                 <tr>
                     <th class="sorted ascending" id="table-header">Book Title</th>
                     <th id="table-header">Author</th>
-                    <th class="" id="table-header">Status</th>
+                    <th class="" id="table-header">ISBN</th>
+                    <th class="" id="table-header">Call Number</th>
                     <th class="" id="table-header">Manage</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each books}}
                 <tr class="book-row" data-id="{{_id}}">
-                    <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
-                    <td class="selectable"><a href="http://" id="book-author">
+                    <td>{{title}}</td>
+                    <td>
                     {{#each author}}
                     {{#if @index}}, {{/if}}
                     {{firstname}} {{lastname}}
                     {{/each}}
-                    </a></td>
-                    <td>{{status}}</td>
+                    </td>
+                    <td>{{isbn}}</td>
+                    <td>{{callNumber}}</td>
                     <td class="ui computer only" id="td-manage" style="max-width: 150px;">
                         <div class="ui tiny yellow labeled icon edit button" id="button-edit"><i class="edit icon"></i>
                             Edit

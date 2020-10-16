@@ -76,25 +76,29 @@
     </div>
 
     <div class="ui container" style="margin-top: 5%; width: 70%;">
-        <table class="ui sortable celled table" id="data-table">
+        <table class="ui sortable selectable celled table" id="data-table">
             <thead class="sticky">
                 <tr>
                     <th class="sorted ascending" id="table-header">Book Title</th>
                     <th id="table-header">Author</th>
-                    <th class="" id="table-header">Status</th>
+                    <th id="table-header">ISBN</th>
+                    <th id="table-header">Call Number</th>
+                    {{!-- <th class="" id="table-header">Status</th> --}}
                 </tr>
             </thead>
             <tbody>
                 {{#each books}}
-                <tr>
-                    <td class="selectable"><a href="http://" id="book-title">{{title}}</a></td>
-                    <td class="selectable"><a href="http://" id="book-author">
+                <tr data-id="{{_id}}">
+                    <td>{{title}}</td>
+                    <td>
                     {{#each author}}
                     {{#if @index}}, {{/if}}
                     {{firstname}} {{lastname}}
                     {{/each}}
-                    </a></td>
-                    <td>{{status}}</td>
+                    </td>
+                    {{!-- <td>{{status}}</td> --}}
+                    <td>{{isbn}}</td>
+                    <td>{{callNumber}}</td>
                 </tr>
                 {{/each}}
                 {{!-- <tr>
