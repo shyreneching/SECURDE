@@ -144,48 +144,91 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/profile", async (req, res) => {
-    let userID = req.session.username
-
     let user = await User.getUserByID(userID);
 
-    let previousHistory = await BorrowHistory.getPreviousUserHistory(userID)
-    let prevHistory = [];
-    for (var l = 0; l < previousHistory.length; l++) {
-        let temp = previousHistory[l];
-        //populate necessary info
-        temp = await temp.populate();
-        prevHistory.push(temp);
-    }
+    if(req.session.username != null && user != undefined && user.accountType != "admin"){
+        let userID = req.session.username
 
-    let currentsHistory = await BorrowHistory.getCurrentUserHistory(userID)
-    let currHistory = [];
-    for (var l = 0; l < currentsHistory.length; l++) {
-        let temp = currentsHistory[l];
-        //populate necessary info
-        temp = await temp.populate();
-        currHistory.push(temp);
-    }
+        let user = await User.getUserByID(userID);
 
-    let reviewlist = await Review.getReviewByUser(userID);
-    let reviews = [];
-    for (var l = 0; l < reviewlist.length; l++) {
-        let temp = reviewlist[l];
-        //populate necessary info
-        temp = await temp.populate();
-        reviews.push(temp);
-    }
+        let previousHistory = await BorrowHistory.getPreviousUserHistory(userID)
+        let prevHistory = [];
+        for (var l = 0; l < previousHistory.length; l++) {
+            let temp = previousHistory[l];
+            //populate necessary info
+            temp = await temp.populate();
+            prevHistory.push(temp);
+        }
 
-    res.render("student-teacher_profile.hbs", {
-        user: user,
-        prevHistory: prevHistory,
-        currHistory: currHistory,
-        reviews: reviews
-    })
+        let currentsHistory = await BorrowHistory.getCurrentUserHistory(userID)
+        let currHistory = [];
+        for (var l = 0; l < currentsHistory.length; l++) {
+            let temp = currentsHistory[l];
+            //populate necessary info
+            temp = await temp.populate();
+            currHistory.push(temp);
+        }
+
+        let reviewlist = await Review.getReviewByUser(userID);
+        let reviews = [];
+        for (var l = 0; l < reviewlist.length; l++) {
+            let temp = reviewlist[l];
+            //populate necessary info
+            temp = await temp.populate();
+            reviews.push(temp);
+        }
+
+        let syslog = new SystemLogs({
+            action: "Entered Profile Page",
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.render("student-teacher_profile.hbs", {
+            user: user,
+            prevHistory: prevHistory,
+            currHistory: currHistory,
+            reviews: reviews,
+            timeout: '/js/timeout.js'
+        })
+    } else {
+        let syslog = new SystemLogs({
+            action: "Unauthorized Access to Profile Page",
+            actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/")
+    }
 })
 
 router.post("/changepassword", urlencoder, async function (req, res) {
     if(req.session.username == null){
-        res.redirect("/")
+        let syslog = new SystemLogs({
+            action: "Session Timeout",
+            actor: user.username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: null,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/session-timeout")
     }
 
     var user = await User.getUserByID(req.session.username)
@@ -255,7 +298,7 @@ router.post("/changepassword", urlencoder, async function (req, res) {
                         SystemLogs.addLogs(syslog)
         
                         console.log("Failed to Reset Password")
-                        res.redirect("/login");
+                        res.redirect("/error");
                     }
                 }
             }) 
@@ -945,73 +988,73 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
     })
 })
 
-router.post("/changePassword", urlencoder, async function (req, res) {
-    // console.log("Enter Here")
-    // console.log(req.session.temp)
-    var user = await User.getUserByID(req.session.username)
-    let password = req.body.new_password
-    let confirm_password = req.body.confirm_password
-    console.log(user)
-    bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
-        if (err){
-            let syslog = new SystemLogs({
-                action: "Error",
-                actor: user.username,
-                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress || 
-                    req.connection.socket.remoteAddress,
-                item: err.message,
-                datetime: moment().format('YYYY-MM-DD HH:mm')
-            })
-            SystemLogs.addLogs(syslog)
+// router.post("/changePassword", urlencoder, async function (req, res) {
+//     // console.log("Enter Here")
+//     // console.log(req.session.temp)
+//     var user = await User.getUserByID(req.session.username)
+//     let password = req.body.new_password
+//     let confirm_password = req.body.confirm_password
+//     console.log(user)
+//     bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
+//         if (err){
+//             let syslog = new SystemLogs({
+//                 action: "Error",
+//                 actor: user.username,
+//                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+//                     req.connection.remoteAddress || 
+//                     req.socket.remoteAddress || 
+//                     req.connection.socket.remoteAddress,
+//                 item: err.message,
+//                 datetime: moment().format('YYYY-MM-DD HH:mm')
+//             })
+//             SystemLogs.addLogs(syslog)
 
-            res.redirect("/error");
-        } else {
-            console.log(user.salt)
-            console.log(hash)
-            if(user && password == confirm_password){
-                console.log(user._id)
-                console.log(password)
-                console.log(confirm_password)
-                let changepw = await User.updateUserPassword(user._id, hash)
-                console.log(changepw)
-                let syslog = new SystemLogs({
-                    action: "Successfully Changed Password",
-                    actor: user.username,
-                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                        req.connection.remoteAddress || 
-                        req.socket.remoteAddress || 
-                        req.connection.socket.remoteAddress,
-                    item: null,
-                    datetime: moment().format('YYYY-MM-DD HH:mm')
-                })
-                SystemLogs.addLogs(syslog)
+//             res.redirect("/error");
+//         } else {
+//             console.log(user.salt)
+//             console.log(hash)
+//             if(user && password == confirm_password){
+//                 console.log(user._id)
+//                 console.log(password)
+//                 console.log(confirm_password)
+//                 let changepw = await User.updateUserPassword(user._id, hash)
+//                 console.log(changepw)
+//                 let syslog = new SystemLogs({
+//                     action: "Successfully Changed Password",
+//                     actor: user.username,
+//                     ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+//                         req.connection.remoteAddress || 
+//                         req.socket.remoteAddress || 
+//                         req.connection.socket.remoteAddress,
+//                     item: null,
+//                     datetime: moment().format('YYYY-MM-DD HH:mm')
+//                 })
+//                 SystemLogs.addLogs(syslog)
 
-                if(user.accountType == 'admin'){
-                    res.redirect("/");
-                } else {
-                    res.redirect("/profile");
-                }
-            } else {
-                let syslog = new SystemLogs({
-                    action: "Failed to Change Password",
-                    actor: user.usernamell,
-                    ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                        req.connection.remoteAddress || 
-                        req.socket.remoteAddress || 
-                        req.connection.socket.remoteAddress,
-                    item: null,
-                    datetime: moment().format('YYYY-MM-DD HH:mm')
-                })
-                SystemLogs.addLogs(syslog)
-                //res.send("Failed to Reset Password");
-                console.log("Failed to Reset Password")
-                res.redirect("/error");
-            }
-        }
-    })
-})
+//                 if(user.accountType == 'admin'){
+//                     res.redirect("/");
+//                 } else {
+//                     res.redirect("/profile");
+//                 }
+//             } else {
+//                 let syslog = new SystemLogs({
+//                     action: "Failed to Change Password",
+//                     actor: user.usernamell,
+//                     ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+//                         req.connection.remoteAddress || 
+//                         req.socket.remoteAddress || 
+//                         req.connection.socket.remoteAddress,
+//                     item: null,
+//                     datetime: moment().format('YYYY-MM-DD HH:mm')
+//                 })
+//                 SystemLogs.addLogs(syslog)
+//                 //res.send("Failed to Reset Password");
+//                 console.log("Failed to Reset Password")
+//                 res.redirect("/error");
+//             }
+//         }
+//     })
+// })
 
 router.post('/usernamecheck', function(req, res) {
     User.findOne({username: req.body.username}, function(err, user){

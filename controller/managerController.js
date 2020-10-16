@@ -209,7 +209,7 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
     let user = await User.getUserByID(userID);
     let username = user.username;
     let item = book.title + " By " + authorDisplay
-    let action = 'Deleted a Book Instance';
+    let action = 'Deleted a Book';
 
     let sysLogs = new SystemLogs({
         action,
