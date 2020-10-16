@@ -197,9 +197,12 @@
             Write Book Review
         </div>
         <div class="content">
-            <form class="ui reply form">
+            <form class="ui reply form" action="/user/addReview" method="POST">
                 <div class="field">
                     <textarea id="textarea-review"></textarea>
+                    {{#with book}}
+                    <input type="text" name="bookID" placeholder="{{_id}}">
+                    {{/with}}
                 </div>
                 <div class="ui blue labeled submit icon button">
                     <i class="save icon"></i> Save Review

@@ -149,7 +149,7 @@ router.post("/returnBook", urlencoder, async (req, res) => {
 router.post("/addReview", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let bookID = req.body.bookID;
-    let review = req.body.review;
+    let review = req.body.textarea-review;
     
     let datetime = moment().format('YYYY-MM-DD HH:mm')
 
