@@ -1386,18 +1386,6 @@ router.get("/book", async (req, res) => {
     } else {
         book = await book.populateAuthorandReviews();
 
-        // let rev = [];
-        // for (var l = 0; l < book.reviews.length; l++) {
-        //     let temp = book.reviews[l];
-        //     //populate necessary info
-        //     temp = await temp.populate();
-        //     rev.push(temp);
-        // }
-        // console.log(book.reviews)
-        
-        // book.reviews = rev
-        // console.log(book.reviews)
-
         let reviewList = await Review.getReviewByBook(book._id)
         let rev = [];
         for (var l = 0; l < reviewList.length; l++) {
@@ -1407,6 +1395,13 @@ router.get("/book", async (req, res) => {
             rev.push(temp);
         }
         let instanceList = await BookInstance.getInstancesOfBooks(book._id)
+        let instances = [];
+        for (var l = 0; l < instanceList.length; l++) {
+            let temp = instanceList[l];
+            //populate necessary info
+            temp = await temp.populate();
+            instances.push(temp);
+        }
 
         let syslog = new SystemLogs({
             action: "Entering Book Page - " + book._id,
@@ -1422,17 +1417,30 @@ router.get("/book", async (req, res) => {
 
         if(user == undefined){
             res.render("book.hbs", {
+                list : [{
+                    link: "/login",
+                    text: "Login",
+                }],
+                hidden_borrow: "hidden",
+                hidden_writereview: "hidden",
                 user: user,
                 book: book,
-                instanceList: instanceList,
+                instances: instances,
                 rev:rev
                 // timeout: "/js/timeout.js"
             })
         } else {
             res.render("book.hbs", {
+                list : [{
+                    link: "/profile",
+                    text: "Profile",
+                }, {
+                    link: "/logout",
+                    text: "Logout",
+                }],
                 user: user,
                 book: book,
-                instanceList: instanceList,
+                instances: instances,
                 rev: rev,
                 timeout: "/js/timeout.js"
             })
