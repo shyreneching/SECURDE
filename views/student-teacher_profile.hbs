@@ -78,8 +78,8 @@
             <h1 class="ui huge center aligned icon header">
                 <i class="circular user icon"></i>
                 {{#with user}}
-                    <h1 class="username" id="name">{{firstname}} {{lastname}}</h1>
-                    <h3 class="username" id="user-name">{{username}}</h1>
+                    {{!-- <h1 class="username" id="name">{{firstname}} {{lastname}}</h1> --}}
+                    <h1 class="username" id="user-name" style="cursor: pointer;">{{username}}</h1>
                 {{/with}}
 
             </h1>
@@ -355,7 +355,7 @@
                             <a class="booktitle" id="borrowedbookdetails-title" href="">Book Title</a></h1>
                         <div class="ui two column grid">
                             <div class="left aligned row" style="margin-bottom: -1em;">
-                                <div class="six wide left aligned column">Author:</div>
+                                <div class="six wide left aligned column">Author/s:</div>
                                 <div class="ten wide left aligned column" id="borrowedbookdetails-author" style="font-weight: bolder;">
                                     John Doe</div>
                             </div>
@@ -390,5 +390,51 @@
             </div>
         </div>
     </div>
+
+    <!-- User Details Modal -->
+    <div class="ui small scrolling modal" id="modal-userdetails">
+        <i class="close icon"></i>
+        <div class="header">
+            Account Details
+        </div>
+        <div class="content">
+            <div class="ui padded container" style="margin-bottom: 2em;">
+                <h4>Here you can see your account details.</h4>
+                <div class="ui two column grid">
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Full Name:</div>
+                        <div class="ten wide left aligned column" id="userdetails-name" style="font-weight: bolder;">
+                            John Doe</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Username:</div>
+                        <div class="ten wide left aligned column" id="userdetails-username"
+                            style="font-weight: bolder;">sheehan13</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Email:</div>
+                        <div class="ten wide left aligned column" id="userdetails-email"
+                            style="font-weight: bolder;">john_doe@dlsu.edu.ph</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">ID Number:</div>
+                        <div class="ten wide left aligned column" id="userdetails-idnum"
+                            style="font-weight: bolder;">11711111</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Account Type:</div>
+                        <div class="ten wide left aligned column" id="userdetails-accounttype"
+                            style="font-weight: bolder;">Student</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Last Login:</div>
+                        <div class="ten wide left aligned column" id="userdetails-lastlogin"
+                            style="font-weight: bolder;">05/29/2020 11:59</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
