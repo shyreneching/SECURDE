@@ -8,11 +8,12 @@ var bookInstanceSchema = new Schema({
     },
     // Available, Reserved
     status: String,
+    date_available: String
 })
 
-bookInstanceSchema.statics.getBookInstanceByID= async function(bookID){
+bookInstanceSchema.statics.getBookInstanceByID= async function(instanceID){
     return await this.findOne({
-        _id: bookID
+        _id: instanceID
     }); 
 };
 
@@ -58,18 +59,19 @@ bookInstanceSchema.statics.deleteInstance = async function(bookID){
     });
 }
 
-bookInstanceSchema.statics.updateBookStatus = async function(bookID, status) {
+bookInstanceSchema.statics.updateBook = async function(bookID, status, date_available) {
     return await this.updateOne({
         _id: bookID
     }, {
-        status
+        status,
+        date_available
     });
 }
 
-bookInstanceSchema.methods.populateAuthorandReviews = async function(){
+bookInstanceSchema.methods.populate = async function(){
     return await Book.findOne({
         _id: this._id
-    }).populate("author reviews");
+    }).populate("book");
 };
 
 

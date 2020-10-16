@@ -37,12 +37,6 @@ router.post("/addBook", urlencoder, async (req, res) => {
     let year_of_publication = req.body.book_yearofpublication;
     let isbn = req.body.book_isbn;
     let callNumber = req.body.book_callnumber;
-    let status = null
-    if (req.body.status == "status_available"){
-        status = "Available"
-    } else {
-        status = "Reserved"
-    }
     
     //let reviews = req.body["reviews[]"];
     temp = await Author.getAuthorByID(author[0]);
@@ -273,13 +267,164 @@ router.post("/editBook", urlencoder, async (req, res) => {
         year_of_publication,
         isbn,
         callNumber,
-        status,
-        reviews
     });
 
-    let newBook = await Book.updateAppointment(bookID, updateBook);
+    let newBook = await Book.updateBook(bookID, updateBook);
 
-    res.send("Success");
+    res.json({message : "Success"});
 })
+
+router.post("/addBookInstance", urlencoder, async (req, res) => {
+    let userID = req.session.username;
+    let bookID = req.body.bookID;
+    
+    let book = await Book.getBookByID(bookID)
+
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+    
+    let user = await User.getUserByID(userID);
+    let item = title + " by " + authorDisplay
+    let action = 'Successfully Added a Book Instance';
+    
+    let instance = new BookInstance({
+        book: bookID,
+        status: "Available"
+    });
+
+    BookInstance.addBookInstance(instance, function (doc) {
+        if (doc) {
+            let sysLogs = new SystemLogs({
+                action,
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                item,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            });
+            SystemLogs.addLogs(sysLogs);
+
+            res.redirect("/book");
+        } else {
+            let syslog = new SystemLogs({
+                action: "Failed to Create Book Instance",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: item,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            console.log("Failed to Create Book Instance")
+            res.redirect("/error");
+        }
+    }, (error) => {
+        let syslog = new SystemLogs({
+            action: "Error",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: error.message,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/error");
+    })
+})
+
+router.post("/deleteBookInstance", urlencoder, async (req, res) => {
+    let userID = req.session.username;
+    let instanceID = req.body.data_id;
+
+    let instance = await BookInstance.getBookInstanceByID(instanceID);
+
+    let book = await Book.getBookByID(bookID);
+
+
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+
+    let user = await User.getUserByID(userID);
+    let username = user.username;
+    let item = book.title + " By " + authorDisplay
+    let action = 'Deleted a Book Instance';
+
+    let sysLogs = new SystemLogs({
+        action,
+        actor: username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+        item,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    });
+    
+    SystemLogs.addLogs(sysLogs);
+
+    await BookInstance.delete(instanceID);
+
+    res.json({message : "Success"});
+})
+
+
+router.post("/editBook", urlencoder, async (req, res) => {
+    let userID = req.session.username;
+    let instanceID = req.body.data_id;
+    let status = req.body.status;
+    let date_available = req.body.date_available;
+
+    let book = await Book.getBookByID(bookID);
+    
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+    
+    let user = await User.getUserByID(userID);
+    let item = title + " by " + authorDisplay
+    let action = 'Successfully Edited a Book Instance';
+
+    let sysLogs = new SystemLogs({
+        action,
+        actor: user.username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+        item,
+        datetime
+    });
+    
+    await SystemLogs.addLogs(sysLogs);
+
+    let updateInstance= new BookInstance({
+        status,
+        date_available
+    });
+
+    let newInstance = await BookInstance.updateInstance(instanceID, updateInstance);
+
+    res.json({message : "Success"});
+})
+
 
 module.exports = router;
