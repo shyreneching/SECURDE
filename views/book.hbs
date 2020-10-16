@@ -166,7 +166,7 @@
                             <th class="sorted ascending" id="table-header">Book Instance Title</th>
                             <th id="table-header">Status</th>
                             <th id="table-header">Date Available</th>
-                            <th id="table-header" {{hidden_borrow}}>Borrow</th>
+                            <th id="table-header">Borrow</th>
                             {{!-- <th class="" id="table-header">Status</th> --}}
                         </tr>
                     </thead>
@@ -178,7 +178,7 @@
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
                             <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
-                                <div class="ui tiny blue labeled icon borrow button" {{hidden_borrow}} id="button-bookinstanceborrow"><i class="book icon"></i>
+                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow"><i class="book icon"></i>
                                     Borrow
                                 </div>
                             </td>
@@ -236,7 +236,7 @@
 
                 </div>
                 <div class="row">
-                    <div class="ui right floated small labeled icon button" id="button-review"{{hidden_writereview}}>
+                    <div class="ui right floated small labeled icon button {{hidden_writereview}} message" id="button-review">
                         <i class="pencil icon"></i> Write Book Review
                     </div>
                 </div>
