@@ -360,9 +360,9 @@ $(document)
         })
 
         $("#button-canceladdauthor").on('click', () =>{
-            $(".ui.form").trigger("reset")
-            $('.ui.form .field.error').removeClass( "error" );
-            $('.ui.form.error').removeClass( "error" );
+            $("#form-addauthor").trigger("reset")
+            $('#form-addauthor .field.error').removeClass( "error" );
+            $('#form-addauthor.error').removeClass( "error" );
         })
 
         // $("#form-addauthor").on("submit", () => {
@@ -425,6 +425,7 @@ $(document)
                     $('input[name="editbook_publisher"]').val(book.publisher)
                     $('input[name="editbook_yearofpublication"]').val(book.year_of_publication)
                     $('input[name="editbook_callnumber"]').val(book.callNumber)
+                    $('input[name="editbook_id"]').val(book._id)
                 }
             })
         })

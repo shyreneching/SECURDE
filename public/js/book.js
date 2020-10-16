@@ -73,20 +73,14 @@ $(document)
                 })
 
                 //Borrow Book show modal
-<<<<<<< HEAD
-                $('#button-borrow').on('click', function() {
-                $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
-                $('#modal-borrowbook').modal('show')
-                });
+                $('.borrow.button').on('click', function() {
+                    $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
+                    $('#modal-borrowbook').modal('show')
+                })
 
                 $("#button-confirmaddreview").on("click", () =>{
                     console.log("Submit!")
                     $("#form-writereview").submit()
-=======
-                $('.borrow.button').on('click', function() {
-                    $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
-                    $('#modal-borrowbook').modal('show')
->>>>>>> 785ac7fcb27c26071751d06517a4df024e54fbf2
                 })
                 
             });

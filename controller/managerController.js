@@ -225,15 +225,19 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
 
 router.post("/editBook", urlencoder, async (req, res) => {
     let userID = req.session.username;
-    let bookID = req.body.bookID;
+    let bookID = req.body.editbook_id;
+
+    let book = await Book.getBookByID(bookID)
+    let isbn = book.isbn
     
-    let title = req.body.book_title;
-    let authorlist = req.body.book_author.trim();
+    let title = req.body.editbook_title;
+    let authorlist = req.body.editbook_author.trim();
     let author = authorlist.split(',');
-    let publisher = req.body.book_publisher;
-    let year_of_publication = req.body.book_yearofpublication;
-    let isbn = req.body.book_isbn;
-    let callNumber = req.body.book_callnumber;
+    let publisher = req.body.editbook_publisher;
+    let year_of_publication = req.body.editbook_yearofpublication;
+    // let isbn = req.body.edibook_isbn;
+    let callNumber = req.body.editbook_callnumber;
+    console.log(callNumber)
     
     //let reviews = req.body["reviews[]"];
     temp = await Author.getAuthorByID(author[0]);
@@ -255,7 +259,7 @@ router.post("/editBook", urlencoder, async (req, res) => {
                 req.socket.remoteAddress || 
                 req.connection.socket.remoteAddress,
         item,
-        datetime
+        datetime: moment().format('YYYY-MM-DD HH:mm')
     });
     
     await SystemLogs.addLogs(sysLogs);
@@ -268,10 +272,12 @@ router.post("/editBook", urlencoder, async (req, res) => {
         isbn,
         callNumber,
     });
+    console.log(callNumber)
 
     let newBook = await Book.updateBook(bookID, updateBook);
 
-    res.json({message : "Success"});
+    // res.json({message : "Success"});
+    res.redirect("/")
 })
 
 router.post("/addBookInstance", urlencoder, async (req, res) => {
@@ -384,7 +390,7 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
 })
 
 
-router.post("/editBook", urlencoder, async (req, res) => {
+router.post("/editBookInstance", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let instanceID = req.body.data_id;
     let status = req.body.status;
@@ -423,7 +429,8 @@ router.post("/editBook", urlencoder, async (req, res) => {
 
     let newInstance = await BookInstance.updateInstance(instanceID, updateInstance);
 
-    res.json({message : "Success"});
+    // res.json({message : "Success"});
+    res.redirect("/")
 })
 
 router.post('/returnBook', function(req, res) {
