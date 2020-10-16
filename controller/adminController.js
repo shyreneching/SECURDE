@@ -31,32 +31,6 @@ router.get("/", async (req, res) => {
     // }
 })
 
-router.post("/get_all_users", urlencoder, async function (req, res) {
-
-    let allUsers = await User.getAllUser();
-    res.send({
-        user
-    });
-});
-
-router.post("/search_user", urlencoder, async function (req, res) {
-    let name = req.body.name;
-
-    people = [];
-    if (/\s/.test(name)) {
-        nameArr = name.split(/(\s+)/);
-        people.push(await User.getUserByName(nameArr[0], nameArr[1]));
-    }
-    else{
-        people.push(await User.getUserByFirstName(name));
-        people.push(await User.getUserByLastName(name));
-    }   
-
-    res.send({
-        people
-    });
-});
-
 router.post("/addUser", urlencoder, async (req, res) => {
     let temp = await User.getUserByUsername("admin")
     req.session.username = temp._id
@@ -196,15 +170,6 @@ router.post("/addUser", urlencoder, async (req, res) => {
         } 
     })
 })
-
-router.post("/viewSystemLogs", urlencoder, async (req, res) => {
-   
-    let sysLogs = await SystemLogs.getAllLogs();
-
-    res.send(sysLogs);
-})
-
-
 
 
 module.exports = router;
