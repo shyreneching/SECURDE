@@ -146,7 +146,6 @@ router.get("/", async (req, res) => {
 
 router.get("/profile", async (req, res) => {
     let userID = req.session.username
-
     let user = await User.getUserByID(userID);
 
     if(req.session.username != null && user != undefined && user.accountType != "admin"){
@@ -569,20 +568,20 @@ router.post("/validLogin", async (req, res) => {
 })
 
 router.get("/logout", async(req, res) => {
-        req.session.username = null;
-        res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+    let syslog = new SystemLogs({
+        action: "Signed Out",
+        actor: User.getUserByID(req.session.username).username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+            req.connection.remoteAddress || 
+            req.socket.remoteAddress || 
+            req.connection.socket.remoteAddress,
+        item: null,
+        datetime: moment().format('YYYY-MM-DD HH:mm')
+    })
+    SystemLogs.addLogs(syslog)
 
-        let syslog = new SystemLogs({
-            action: "Signed Out",
-            actor: User.getUserByID(req.session.username).username,
-            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                req.connection.remoteAddress || 
-                req.socket.remoteAddress || 
-                req.connection.socket.remoteAddress,
-            item: null,
-            datetime: moment().format('YYYY-MM-DD HH:mm')
-        })
-        SystemLogs.addLogs(syslog)
+    req.session.username = null;
+    res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
 
     res.redirect("/")
 })

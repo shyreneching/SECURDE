@@ -13,7 +13,7 @@ function check(){
             if(data['message']==='no'){
                 window.location.replace("/session-timeout")
             }
-            // console.log(data['message'])
+            console.log(data['message'])
         }
     })
 }
