@@ -43,6 +43,7 @@ $(document)
         $('.edit.button').on('click', function() {
             //Resets form input fields from data values
             $('.ui.form').trigger("reset");
+            $('#dropdown-addbookauthors').dropdown('clear');
             $('.ui.form .field.error').removeClass( "error" );
             $('.ui.form.error').removeClass( "error" );
             $('#modal-editbook').modal('setting', 'transition', 'vertical flip')
