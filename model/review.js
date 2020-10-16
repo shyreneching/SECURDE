@@ -38,7 +38,7 @@ reviewSchema.statics.getReviewByUser = async function(userID){
         user:{
             "$in": [userID]
         }        
-    });
+    }).sort({'create_date': -1});
 };
 
 reviewSchema.statics.getReviewByBook = async function(bookID){
@@ -46,7 +46,7 @@ reviewSchema.statics.getReviewByBook = async function(bookID){
         book:{
             "$in": [bookID]
         }        
-    });
+    }).sort({'create_date': -1});
 };
 
 reviewSchema.statics.addReview = function(review, callback){
@@ -74,7 +74,7 @@ reviewSchema.statics.updateReview = async function(reviewID, review_text){
 };
 
 reviewSchema.methods.populate= async function(){
-    return await reviewSchema.findOne({
+    return await Review.findOne({
         _id: this._id
     }).populate("user book");
 };

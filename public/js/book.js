@@ -63,5 +63,10 @@ $(document)
                 $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
                 $('#modal-borrowbook').modal('show')
                 });
+
+                $("#button-confirmaddreview").on("click", () =>{
+                    console.log("Submit!")
+                    $("#form-writereview").submit()
+                })
                 
             });

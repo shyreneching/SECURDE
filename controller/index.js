@@ -175,7 +175,8 @@ router.get("/profile", async (req, res) => {
         for (var l = 0; l < reviewlist.length; l++) {
             let temp = reviewlist[l];
             //populate necessary info
-            temp = await temp.populate();
+            temp = await temp.populate(); 
+            //temp.book = await temp.book.populateAuthorandReviews();
             reviews.push(temp);
         }
 
@@ -1364,7 +1365,6 @@ router.get("/session-timeout", async (req, res) => {
 })
 
 router.get("/book", async (req, res) => {
-    console.log("Should be passing the book id" + req.query.data_id)
     let bookID = req.query.data_id
     let userID = req.session.username
 
@@ -1386,17 +1386,27 @@ router.get("/book", async (req, res) => {
     } else {
         book = await book.populateAuthorandReviews();
 
+        // let rev = [];
+        // for (var l = 0; l < book.reviews.length; l++) {
+        //     let temp = book.reviews[l];
+        //     //populate necessary info
+        //     temp = await temp.populate();
+        //     rev.push(temp);
+        // }
+        // console.log(book.reviews)
+        
+        // book.reviews = rev
+        // console.log(book.reviews)
+
+        let reviewList = await Review.getReviewByBook(book._id)
         let rev = [];
-        for (var l = 0; l < book.reviews.length; l++) {
-            let temp = book.reviews[l];
+        for (var l = 0; l < reviewList.length; l++) {
+            let temp = reviewList[l];
             //populate necessary info
             temp = await temp.populate();
             rev.push(temp);
         }
-
-        book.reviews = rev
-
-        let instanceList = await BookInstance.getInstancesOfBooks(bookID)
+        let instanceList = await BookInstance.getInstancesOfBooks(book._id)
 
         let syslog = new SystemLogs({
             action: "Entering Book Page - " + book._id,
@@ -1411,40 +1421,23 @@ router.get("/book", async (req, res) => {
         SystemLogs.addLogs(syslog)
 
         if(user == undefined){
-            console.log("user " + user)
-            console.log("book " + book)
-            console.log("instanceList " + instanceList)
-            console.log("rendering book.hbs")
             res.render("book.hbs", {
                 user: user,
                 book: book,
                 instanceList: instanceList,
+                rev:rev
                 // timeout: "/js/timeout.js"
             })
         } else {
-            console.log("user " + user)
-            console.log("book " + book)
-            console.log("instanceList " + instanceList)
-            console.log("rendering book.hbs")
             res.render("book.hbs", {
                 user: user,
                 book: book,
                 instanceList: instanceList,
+                rev: rev,
                 timeout: "/js/timeout.js"
             })
         }
     }
-    
-    console.log("user " + user)
-    console.log("book " + book)
-    console.log("instanceList " + instanceList)
-    console.log("rendering book.hbs")
-    res.render("book.hbs", {
-        user: user,
-        book: book,
-        instanceList: instanceList,
-        timeout: "/js/timeout.js"
-    })
 })
 
 router.get("/error", async (req, res) => {

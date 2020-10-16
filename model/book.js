@@ -74,7 +74,7 @@ bookSchema.statics.updateBookReview = async function(bookID, reviews){
     return await this.updateOne({
         _id: bookID
     }, {
-        reviews: book.reviews
+        reviews: reviews
     }, {
         new: true
     }); 
