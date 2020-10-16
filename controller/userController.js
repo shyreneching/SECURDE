@@ -22,8 +22,10 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/borrowBookInstance", urlencoder, async function (req, res) {
+    console.log(req.session.username)
+    console.log("instance id " + req.body.data_id)
     let userID = req.session.username;
-    let instanceID = req.body.instanceID;
+    let instanceID = req.body.data_id;
 
     let instance = await BookInstance.getBookInstanceByID(instanceID)
     
@@ -71,7 +73,7 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
         
             await BookInstance.updateInstance(instanceID, "Reserved", date_available)
 
-            res.redirect("/book");
+            res.redirect("/book?data_id=" + bookID);
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Borrow Book",

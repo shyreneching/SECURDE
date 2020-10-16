@@ -73,14 +73,43 @@ $(document)
                 })
 
                 //Borrow Book show modal
-                $('.borrow.button').on('click', function() {
+                //$('.borrow.button').on('click', function() {
+                $('#button-bookinstanceborrow').on('click', function() {
+                    console.log(" $(this).data('id') " +  $(this).data('id'))
+                    console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
+                    console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
+                    id =  $(this).data('id')
+                    
                     $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
                     $('#modal-borrowbook').modal('show')
+                    $('#button-borrowbook').attr("data-id",id)
                 })
 
                 $("#button-confirmaddreview").on("click", () =>{
-                    console.log("Submit!")
                     $("#form-writereview").submit()
+                })
+
+                $("#button-borrowbook").on("click", () =>{
+                    console.log(" $(this).data('id') " +  $(this).data('id'))
+                    console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
+                    console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
+                    id =  $(this).data('id')
+
+                    var url = "/user/borrowBookInstance";
+                    $.ajax({
+                        async : false,
+                        url : url,
+                        type : "POST",
+                        data : {
+                            data_id : id
+                        },
+                        success: function(){
+                            console.log("yehey")
+                            $("#td-bookinstance_dateavailable").val("Reserved")
+                            $("#button-bookinstanceborrow").removeClass("blue")
+                            $("#button-bookinstanceborrow").addClass("grey disabled")
+                        }
+                    })
                 })
                 
             });
