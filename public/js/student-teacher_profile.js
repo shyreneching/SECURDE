@@ -51,9 +51,45 @@ $(document)
         $('#modal-changepassword').modal('show')
     });
 
+    var res_pass
+
+    function changePass(param){
+        res_pass = param
+    }
+
+    $.fn.form.settings.rules.isPassCorrect = function(param) {
+        var url = "/checkPassword";
+        $.ajax({
+            async : false,
+            url : url,
+            type : "POST",
+            data : {
+                password : param
+            },
+            dataType: "json",
+            success: function(data){
+                if(data['message']==='correct'){
+                    changePass(true);
+                }else {
+                    changePass(false);
+                }
+            }
+        })
+        return res_pass
+    }
+
     $('#form-changepassword')
             .form({
                 fields: {
+                    old_password: {
+                        identifier: 'old_password',
+                        rules: [
+                            {
+                                type: 'isPassCorrect',
+                                prompt: 'Current password is incorrect'
+                            }
+                        ]
+                    },
                     new_password: {
                     identifier: 'new_password',
                     rules: [{

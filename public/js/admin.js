@@ -294,8 +294,8 @@ $(document)
             $('#form-resetpassword')
             .form({
                 fields: {
-                    curr_password: {
-                        identifier: 'curr_password',
+                    old_password: {
+                        identifier: 'old_password',
                         rules: [
                             {
                                 type: 'isPassCorrect',
@@ -327,8 +327,8 @@ $(document)
                             }
                         ]
                     },
-                    confirm_password: {
-                        identifier: 'confirm_password',
+                    confirm_new_password: {
+                        identifier: 'confirm_new_password',
                         rules: [{
                                 type: 'empty',
                                 prompt: 'Please confirm your password'
