@@ -1372,6 +1372,16 @@ router.get("/book", async (req, res) => {
     let book = await Book.getBookByID(bookID)
     book = await book.populateAuthorandReviews();
 
+    let rev = [];
+    for (var l = 0; l < book.reviews.length; l++) {
+        let temp = book.reviews[l];
+        //populate necessary info
+        temp = await temp.populate();
+        rev.push(temp);
+    }
+
+    book.reviews = rev
+
     let instanceList = await BookInstance.getInstancesOfBooks(bookID)
     res.render("book.hbs", {
         user: user,
