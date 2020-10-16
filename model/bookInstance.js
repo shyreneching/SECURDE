@@ -59,7 +59,7 @@ bookInstanceSchema.statics.deleteInstance = async function(bookID){
     });
 }
 
-bookInstanceSchema.statics.updateBook = async function(bookID, status, date_available) {
+bookInstanceSchema.statics.updateInstance = async function(bookID, status, date_available) {
     return await this.updateOne({
         _id: bookID
     }, {

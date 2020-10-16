@@ -16,6 +16,7 @@ const { Review } = require("../model/review");
 const { User } = require("../model/user");
 const { SystemLogs } = require("../model/systemLogs");
 
+router.use("/user", require("./userController"));
 router.use("/admin", require("./adminController"));
 router.use("/manager", require("./managerController"));
 
@@ -144,12 +145,11 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/profile", async (req, res) => {
+    let userID = req.session.username
+
     let user = await User.getUserByID(userID);
 
     if(req.session.username != null && user != undefined && user.accountType != "admin"){
-        let userID = req.session.username
-
-        let user = await User.getUserByID(userID);
 
         let previousHistory = await BorrowHistory.getPreviousUserHistory(userID)
         let prevHistory = [];
