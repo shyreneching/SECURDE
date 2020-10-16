@@ -202,12 +202,14 @@
             <div class="ui container" style="height: 420px; width: 70%;">
                 <h3 class="ui large left aligned header" id="reviews">Reviews</h3>
                 <div class="ui container padded segment" style="height: 300px; overflow-y: scroll;">
-                    <div class="ui container padded segment">
-                        {{#with book}}
-                        {{#each review}}
+                    {{#each rev}}
+                    <div class="ui container padded segment">        
                         <div class="ui divided two column stackable grid">
                             <div class="four wide center aligned middle aligned column">
-                                <h4>{{user}}</h4>
+                                {{#with user}}
+                                <h4>{{firstname}} {{lastname}}</h4>
+                                <h4>({{username}})</h4>
+                                {{/with}}
                             </div>
                             <div class="twelve wide column">
                                 <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">
@@ -215,10 +217,8 @@
                                 <div class="row" id="book-review">{{review_text}}</div>
                             </div>
                         </div>
-                        {{/each}}
-                        {{/with}}
-
                     </div>
+                    {{/each}}
 
                     <div class="ui container padded segment">
                         <div class="ui divided two column stackable grid">
@@ -271,13 +271,14 @@
             Write Book Review
         </div>
         <div class="content">
-            <form class="ui reply form">
+            <form class="ui reply form" id="form-writereview" action="/user/addReview" method="POST">
                 <div class="field">
+                    <textarea id="textarea-review" name="review_text"></textarea>
                     {{#with book}}
-                        <input type="text" style="display: hidden" name="bookID" placeholder="{{_id}}" data-value="{{_id}}">
+                     <input type="hidden" name="bookID" value="{{_id}}" 
                     {{/with}}
                 </div>
-                <div class="ui blue labeled submit icon button">
+                <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
                     <i class="save icon"></i> Save Review
                 </div>
             </form>
