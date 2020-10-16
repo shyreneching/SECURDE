@@ -1,5 +1,10 @@
+var interval = null;
 $(document).ready(function(){
-    setInterval(check, 1000)
+    interval = setInterval(check, 1000)
+
+    $('a[href="/logout"]').on('click',()=>{
+        clearInterval(interval);
+    })
 })
 
 function check(){
