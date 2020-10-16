@@ -228,7 +228,7 @@
             Edit Book
         </div>
         <div class="content">
-            <form class="ui small form" id="form-editbook">
+            <form class="ui small form" id="form-editbook" action="/manager/editBook" method="POST">
                 <div class="ui stacked segment">
                     <div class="field">
                         <div class="ui left input">
@@ -271,6 +271,11 @@
                     <div class="field">
                         <div class="ui left input">
                             <input type="text" name="editbook_callnumber" placeholder="Call Number">
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <input type="hidden" name="editbook_id">
                         </div>
                     </div>
                     {{!-- <div class="field">

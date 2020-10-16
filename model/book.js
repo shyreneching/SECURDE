@@ -89,7 +89,7 @@ bookSchema.statics.updateBook = async function(bookID, book){
         publisher: book.publisher,
         year_of_publication: book.year_of_publication,
         isbn: book.isbn,
-        callNumber: callNumber,
+        callNumber: book.callNumber,
         status: book.status,
         reviews: book.reviews
     }, {
