@@ -108,7 +108,7 @@
                         <div class="ui two column grid">
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Author/s:</div>
-                                {{!-- <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">John Doe</div> --}}
+                                <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">John Doe</div>
                                 {{#each author}}
                                 {{#if @index}}, {{/if}}
                                 <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">{{firstname}} {{lastname}}</div>
@@ -202,14 +202,12 @@
             <div class="ui container" style="height: 420px; width: 70%;">
                 <h3 class="ui large left aligned header" id="reviews">Reviews</h3>
                 <div class="ui container padded segment" style="height: 300px; overflow-y: scroll;">
-                     {{#each rev}}
-                    <div class="ui container padded segment">        
+                    <div class="ui container padded segment">
+                        {{#with book}}
+                        {{#each review}}
                         <div class="ui divided two column stackable grid">
                             <div class="four wide center aligned middle aligned column">
-                                {{#with user}}
-                                <h4>{{firstname}} {{lastname}}</h4>
-                                <h4>({{username}})</h4>
-                                {{/with}}
+                                <h4>{{user}}</h4>
                             </div>
                             <div class="twelve wide column">
                                 <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">
@@ -217,8 +215,10 @@
                                 <div class="row" id="book-review">{{review_text}}</div>
                             </div>
                         </div>
+                        {{/each}}
+                        {{/with}}
+
                     </div>
-                    {{/each}}
 
                     <div class="ui container padded segment">
                         <div class="ui divided two column stackable grid">
@@ -240,27 +240,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Write Book Review Modal -->
-    <div class="ui small scrolling modal" id="modal-writebookreview">
-        <i class="close icon"></i>
-        <div class="header">
-            Write Book Review
-        </div>
-        <div class="content">
-            <form class="ui reply form" id="form-writereview" action="/user/addReview" method="POST">
-                <div class="field">
-                    <textarea id="textarea-review" name="review_text"></textarea>
-                    {{#with book}}
-                     <input type="hidden" name="bookID" value="{{_id}}" 
-                    {{/with}}
-                </div>
-                <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
-                    <i class="save icon"></i> Save Review
-                </div>
-            </form>
         </div>
     </div>
 
