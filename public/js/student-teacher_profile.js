@@ -138,4 +138,10 @@ $(document)
             $('#modal-borrowedbook').modal('show')
             });
     
+            //User Details show modal
+            $('#user-name').on('click', function(){
+                $('#modal-userdetails').modal('setting', 'transition', 'vertical flip')
+                $('#modal-userdetails').modal('show')
+            });
+
     });
