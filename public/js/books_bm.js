@@ -276,6 +276,7 @@ $(document)
                         $(div).addClass("item")
                         $(div).text( data['firstname'] + ' ' + data['lastname'])
                         $("#auth-menu").append(div)
+                        $("#auth-menu2").append($(div).clone())
                         $("#button-canceladdauthor").click()
                     }
                 })
@@ -399,6 +400,7 @@ $(document)
 
         $(".ui.tiny.yellow.labeled.icon.edit.button").on('click', function(){
             id = $(this).parent().parent().data('id')
+            // console.log(id)
 
             var url = "/manager/returnBook";
             $.ajax({
@@ -410,8 +412,19 @@ $(document)
                 },
                 dataType: "json",
                 success: function(data){
+                    // console.log("hi")
                     var book = data["message"]
+                    console.log(book)
                     $('input[name="editbook_title"]').val(book.title)
+                    // var temp = []
+                    // for(var i = 0; i < book.author.length; i++){
+                        // temp.push(book.author[i]._id)
+                        // $('#auth-menu2 div[data-value"'+book.author[i]+'"]').addClass("active filtered")
+                    // }
+                    $('#dropdown-editbookauthors').dropdown('set selected', book.author)
+                    $('input[name="editbook_publisher"]').val(book.publisher)
+                    $('input[name="editbook_yearofpublication"]').val(book.year_of_publication)
+                    $('input[name="editbook_callnumber"]').val(book.callNumber)
                 }
             })
         })
