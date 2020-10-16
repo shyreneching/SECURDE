@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xavier's School For Gifted Youngsters Libarary | Book</title>
     <link rel="icon" href="/img/logo_gold.png">
-    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/semantic.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/node_modules/semantic-ui/dist/semantic.min.css"> -->
     <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/reset.css">
     <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/container.css">
     <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/site.css">
@@ -14,11 +14,23 @@
     <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/list.css">
     <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/image.css">
     <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/form.css">
-     <link rel="stylesheet" type="text/css" href="css/book.css">
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.semanticui.min.js"></script>
     <script src="/semantic/semantic-ui/dist/components/form.js"></script>
     <script src="/semantic/semantic-ui/dist/components/transition.js"></script>
-    <script src="/semantic/semantic-ui/dist/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/components/modal.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/components/modal.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/books_bm.css">
+    <!-- <script src="/node_modules/semantic-ui/dist/semantic.min.js"></script> -->
+    <script src="/js/tablesort.js"></script>
+    <script src="https://unpkg.com/sticky-table-headers"></script>
+    <script type="text/javascript" src="/semantic/semantic-ui-calendar/dist/calendar.min.js"></script>
+    <link rel="stylesheet" href="/semantic/semantic-ui-calendar/dist/calendar.min.css" />
+    <script src="/semantic/semantic-ui-calendar/dist/calendar.js"></script>
     <script src="assets/library/jquery.min.js"></script>
     <script src="/semantic/semantic-ui/dist/components/visibility.js"></script>
     <script src="/semantic/semantic-ui/dist/components/sidebar.js"></script>
@@ -82,12 +94,12 @@
                             <i class="massive middle aligned book icon"></i>
                         </div>
                     </div>
-                    <div class="center aligned middle aligned row" style="text-align: center;">
+                    {{!-- <div class="center aligned middle aligned row" style="text-align: center;">
                         <div class="ui center aligned container" style="width: fit-content;">
                             <div class="ui fluid large yellow button" id="button-borrow"
                                 style="background: rgb(184, 164, 56);">Borrow</div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="eight wide column">
                     {{#with book}}
@@ -127,7 +139,7 @@
                                 <div class="ten wide left aligned column" id="book-dateadded"
                                     style="font-weight: bolder;">{{date_added}}</div>
                             </div>
-                            <div class="left aligned row" style="margin-bottom: -1em;">
+                            {{!-- <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Status:</div>
                                 <div class="ten wide left aligned column" id="book-status"
                                     style="font-weight: bolder;">
@@ -138,11 +150,52 @@
                                 <div class="six wide left aligned column">Next Available Date:</div>
                                 <div class="ten wide left aligned column" id="book-reservedate"
                                     style="font-weight: bolder;">05/13/2020</div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     {{/with}}
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="ui container" style="margin-top: 5%; width: 70%;">
+                <h3 class="ui large left aligned header" id="reviews">Book Instances</h3>
+                <table class="ui sortable selectable celled table" id="table-bookinstances">
+                    <thead class="sticky">
+                        <tr>
+                            <th class="sorted ascending" id="table-header">Book Instance Title</th>
+                            <th id="table-header">Status</th>
+                            <th id="table-header">Date Available</th>
+                            <th id="table-header">Borrow</th>
+                            {{!-- <th class="" id="table-header">Status</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title">The Realms of the Gods</a>
+                            </td>
+                            <td class="positive" id="td-bookinstance_status">Available</td>
+                            <td id="td-bookinstance_dateavailable">Oct 16, 2020</td>
+                            <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
+                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow"><i class="book icon"></i>
+                                    Borrow
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title1">Savor the Moment</a>
+                            </td>
+                            <td class="positive" id="td-bookinstance_status">Available</td>
+                            <td id="td-bookinstance_dateavailable">Oct 19, 2020</td>
+                            <td class="ui computer only" id="td-bookinstanceborrow1" style="max-width: 150px;">
+                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow1"><i class="book icon"></i>
+                                    Borrow
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="row">
@@ -190,32 +243,14 @@
         </div>
     </div>
 
-    <!-- Write Book Review Modal -->
-    <div class="ui small scrolling modal" id="modal-writebookreview">
-        <i class="close icon"></i>
-        <div class="header">
-            Write Book Review
-        </div>
-        <div class="content">
-            <form class="ui reply form">
-                <div class="field">
-                    <textarea id="textarea-review"></textarea>
-                </div>
-                <div class="ui blue labeled submit icon button">
-                    <i class="save icon"></i> Save Review
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Borrow Book Modal -->
     <div class="ui small basic modal" id="modal-borrowbook">
         <i class="close icon"></i>
         <div class="header">
-            Borrow Book
+            Borrow Book Instance
         </div>
         <div class="content">
-            Do you wish to borrow this book?
+            Do you wish to borrow this book instance?
         </div>
         <div class="actions">
             <div class="ui red basic cancel inverted button">
@@ -226,6 +261,26 @@
                 <i class="checkmark icon"></i>
                 Yes
             </div>
+        </div>
+    </div>
+
+    <!-- Write Book Review Modal -->
+    <div class="ui small scrolling modal" id="modal-writebookreview">
+        <i class="close icon"></i>
+        <div class="header">
+            Write Book Review
+        </div>
+        <div class="content">
+            <form class="ui reply form">
+                <div class="field">
+                    {{#with book}}
+                        <input type="text" style="display: hidden" name="bookID" placeholder="{{_id}}" data-value="{{_id}}">
+                    {{/with}}
+                </div>
+                <div class="ui blue labeled submit icon button">
+                    <i class="save icon"></i> Save Review
+                </div>
+            </form>
         </div>
     </div>
 </body>
