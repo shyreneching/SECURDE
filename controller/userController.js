@@ -187,5 +187,43 @@ router.post("/addReview", urlencoder, async (req, res) => {
     })
 })
 
+router.post("/editReview", urlencoder, async (req, res) => {
+    let reviewID = req.body.reviewID;
+    let userID = req.sessoon.username;
+    let new_review = req.body.new_review;
+    
+    let datetime = moment().format('YYYY-MM-DD HH:mm')
+
+    let review = await Review.getReviewByID(reviewID)
+    let book = await Book.getBookByID(review.book);
+    let user = await User.getUserByID(userID);
+
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+
+    let username = user.username;
+    let item = book.title + " By " + authorDisplay
+    let action = 'Edited Review to a book';
+
+    let sysLogs = new SystemLogs({
+        action,
+        actor: username,
+        ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+        item,
+        datetime
+    });
+    
+    SystemLogs.addLogs(sysLogs);
+    
+    let newReview = await Review.updateReview(reviewID, new_review);
+    res.send("Success");
+})
 
 module.exports = router;
