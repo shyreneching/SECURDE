@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavier's School For Gifted Youngsters Libarary | Profile</title>
+    <link rel="icon" href="/img/logo_gold.png">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/reset.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/container.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/site.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/header.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/button.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/list.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/image.css">
+    <link rel="stylesheet" type="text/css" href="/semantic/semantic-ui/dist/components/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/student-teacher_profile.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/form.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/transition.js"></script>
+    <script src="/semantic/semantic-ui/dist/semantic.min.js"></script>
+    <script src="assets/library/jquery.min.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/visibility.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/sidebar.js"></script>
+    <script src="/semantic/semantic-ui/dist/components/transition.js"></script>
+    <script src="/js/student-teacher_profile.js"></script>
+    <script src={{timeout}}></script>
+</head>
+<body>
+    <!-- Following Menu -->
+    <!-- <div class="ui large top fixed hidden menu">
+        <div class="ui container">
+            <a class="active item">Home</a>
+            <a class="item">Work</a>
+            <a class="item">Company</a>
+            <a class="item">Careers</a>
+        </div>
+    </div> -->
+
+    <!-- Sidebar Menu -->
+    <div class="ui vertical inverted sidebar menu">
+        <a class="item" href="/">Books</a>
+        <a class="active item">Profile</a>
+        <a class="item" href="/logout">Logout</a>
+    </div>
+
+    <!-- Page Contents -->
+    <div class="container-main">
+        <div class="ui vertical masthead center aligned segment">
+            <div class="ui mobile two column stackable grid" style="width: inherit;">
+                <div class="left aligned row" style="width: fit-content;">
+                    <div class="four wide left aligned computer only column">
+                        <div class="ui center aligned page image">
+                            <img class="center" src="/img/logo_gold_big.png" alt="Logo Failed To Load"
+                                style="width: 12em; height: 12em; margin-bottom: -8em; margin-left: 10em; margin-top: 0em;">
+                        </div>
+                    </div>
+                    <div class="ui container">
+                        <div class="ui large inverted secondary pointing six wide column menu"
+                            style="border-color: transparent; background-color: transparent;">
+                            <a class="toc item">
+                                <i class="sidebar icon"></i>
+                            </a>
+                            <div class="ui center aligned container" style="width: min-content;">
+                                <a class="item" href="/">Books</a>
+                                <a class="active item">Profile</a>
+                                <a class="item" href="/logout">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui two column center aligned stackable grid" style="margin-top: 5%;">
+        <div class="four wide column">
+            <h1 class="ui huge center aligned icon header">
+                <i class="circular user icon"></i>
+                {{#with user}}
+                    {{!-- <h1 class="username" id="name">{{firstname}} {{lastname}}</h1> --}}
+                    <h1 class="username" id="user-name" style="cursor: pointer;">{{username}}</h1>
+                {{/with}}
+
+            </h1>
+            <div class="row">
+                <i class="settings icon" style="color: rgb(184, 164, 56);"></i>
+                <a id="change-password" style="color: rgb(184, 164, 56); cursor: pointer;">Change Password</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="ui tiny scrolling modal" id="modal-changepassword">
+        <i class="close icon"></i>
+        <div class="header">
+            Change Password
+        </div>
+        <div class="content">
+            <form class="ui large form error" id="form-changepassword" action="/changepassword" method="POST">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="old-password" type="password" name="old_password" placeholder="Enter Old Password">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="new-password" type="password" name="new_password" placeholder="Enter New Password">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="confirm-new-password" type="password" name="confirm_new_password"
+                            placeholder="Confirm New Password">
+                    </div>
+                </div>
+                <div class="ui fluid large yellow submit button field" id="button-changepassword"
+                    style="background: rgb(184, 164, 56);">Change
+                    Password</div>
+                <div class="ui error message" id="warnings"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Return Borrowed Book Modal -->
+    <div class="ui tiny scrolling modal" id="modal-borrowedbook">
+        <i class="close icon"></i>
+        <div class="header">
+            Borrowed Book Details
+        </div>
+        <div class="content">
+            <div class="ui two column center aligned stackable grid">
+                <div class="four wide center aligned middle aligned column">
+                    <!-- <h1 class="ui huge center aligned icon container" style="margin-top: 1em;"> -->
+                    <div class="row">
+                        <div class="ui icon container"
+                            style="border-width: 2px; border-color: black; margin-bottom: 4em;">
+                            <i class="massive middle aligned book icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="twelve wide column">
+                    <div class="ui padded container">
+                        <h1 class="ui left aligned header" style="margin-left: auto;">
+                            <a class="booktitle" id="borrowedbookdetails-title" href="">Book Title</a></h1>
+                        <div class="ui two column grid">
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Author/s:</div>
+                                <div class="ten wide left aligned column" id="borrowedbookdetails-author" style="font-weight: bolder;">
+                                    John Doe</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">User:</div>
+                                <div class="ten wide left aligned column" id="borrowedbookdetails-user"
+                                    style="font-weight: bolder;">Jane Doe</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Date Borrowed:</div>
+                                <div class="ten wide left aligned column" id="borrowedbookdetails-dateborrowed"
+                                    style="font-weight: bolder;">04/29/2020</div>
+                            </div>
+                            <div class="left aligned row" style="margin-bottom: -1em;">
+                                <div class="six wide left aligned column">Date Due:</div>
+                                <div class="ten wide left aligned column" id="borrowedbookdetails-datedue"
+                                    style="font-weight: bolder;">05/29/2020</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui grey basic cancel button">
+                <i class="angle left icon"></i>
+                Back
+            </div>
+            <div class="ui primary ok right button" id="button-returnbook">
+                <i class="archive icon"></i>
+                Return
+            </div>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="ui small scrolling modal" id="modal-userdetails">
+        <i class="close icon"></i>
+        <div class="header">
+            Account Details
+        </div>
+        <div class="content">
+            <div class="ui padded container" style="margin-bottom: 2em;">
+                <h4>Here you can see your account details.</h4>
+                {{#with user}}
+                <div class="ui two column grid">
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Full Name:</div>
+                        <div class="ten wide left aligned column" id="userdetails-name" style="font-weight: bolder;">
+                            {{firstname}} {{lastname}}</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Username:</div>
+                        <div class="ten wide left aligned column" id="userdetails-username"
+                            style="font-weight: bolder;">{{username}}</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Email:</div>
+                        <div class="ten wide left aligned column" id="userdetails-email"
+                            style="font-weight: bolder;">{{email}}</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">ID Number:</div>
+                        <div class="ten wide left aligned column" id="userdetails-idnum"
+                            style="font-weight: bolder;">{{idNum}}</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Account Type:</div>
+                        <div class="ten wide left aligned column" id="userdetails-accounttype"
+                            style="font-weight: bolder;">{{accountType}}</div>
+                    </div>
+                    <div class="left aligned row" style="margin-bottom: -1em;">
+                        <div class="six wide left aligned column">Last Login:</div>
+                        <div class="ten wide left aligned column" id="userdetails-lastlogin"
+                            style="font-weight: bolder;">{{lastLogin}}</div>
+                    </div>
+                </div>
+                {{/with}}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

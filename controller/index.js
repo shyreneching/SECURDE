@@ -192,13 +192,22 @@ router.get("/profile", async (req, res) => {
         })
         SystemLogs.addLogs(syslog)
 
-        res.render("student-teacher_profile.hbs", {
-            user: user,
-            prevHistory: prevHistory,
-            currHistory: currHistory,
-            reviews: reviews,
-            timeout: '/js/timeout.js'
-        })
+        if(user.accountType == 'Book manager') {
+            res.render("bm_profile.hbs", {
+                user: user,
+                timeout: '/js/timeout.js'
+            })
+        } else {
+            res.render("student-teacher_profile.hbs", {
+                user: user,
+                prevHistory: prevHistory,
+                currHistory: currHistory,
+                reviews: reviews,
+                timeout: '/js/timeout.js'
+            })
+        }
+
+        
     } else {
         let syslog = new SystemLogs({
             action: "Unauthorized Access to Profile Page",
