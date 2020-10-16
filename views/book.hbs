@@ -97,7 +97,7 @@
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Author/s:</div>
                                 <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">John Doe</div>
-                                {#each author}}
+                                {{#each author}}
                                 {{#if @index}}, {{/if}}
                                 <div class="ten wide left aligned column" id="book-author" style="font-weight: bolder;">{{firstname}} {{lastname}}</div>
                                 {{/each}}

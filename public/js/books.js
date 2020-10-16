@@ -19,7 +19,22 @@ $(document)
         //datatable
         $('#data-table').DataTable();
 
-        // $("#data-table tr").on('click', ()=>{
-        //     console.log("yehey")
-        // })
+        var id
+        $("#data-table").on('click', 'tbody > tr', function(){
+            console.log("Clicking here")
+            console.log(" $(this).data('id') " +  $(this).data('id'))
+
+            id = $(this).data('id')
+
+            var url = "/book";
+            $.ajax({
+                async : false,
+                url : url,
+                type : "POST",
+                data : {
+                    data_id : id
+                },
+                success: "success"
+            })
+        })
     });

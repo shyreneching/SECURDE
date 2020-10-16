@@ -1363,8 +1363,9 @@ router.get("/session-timeout", async (req, res) => {
     // res.send(template);
 })
 
-router.get("/book", async (req, res) => {
-    let bookID = req.body.book_id
+router.post("/book", async (req, res) => {
+    console.log("Should be passing the book id" + req.body.data_id)
+    let bookID = req.body.data_id
     let userID = req.session.username
 
     let user = await User.getUserByID(userID)
@@ -1383,6 +1384,10 @@ router.get("/book", async (req, res) => {
     book.reviews = rev
 
     let instanceList = await BookInstance.getInstancesOfBooks(bookID)
+    console.log("user " + user)
+    console.log("book " + book)
+    console.log("instanceList " + instanceList)
+    console.log("rendering book.hbs")
     res.render("book.hbs", {
         user: user,
         book: book,
