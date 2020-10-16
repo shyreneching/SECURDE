@@ -105,7 +105,87 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
     })
 });
 
+router.post("/addReview", urlencoder, async (req, res) => {
+    let userID = req.session.username;
+    let bookID = req.body.bookID;
+    let review = req.body.review;
+    
+    let datetime = moment().format('YYYY-MM-DD HH:mm')
 
+    let book = await Book.getBookByID(bookID);
+    let user = await User.getUserByID(userID);
+
+    temp = await Author.getAuthorByID(book.author[0]);
+    let authorDisplay = temp.firstname + " " + temp.lastname
+    for (var i = 1; i < book.author.length; i++) {
+        temp = await Author.getAuthorByID(book.author[i]);
+        authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+    }
+
+    let username = user.username;
+    let item = book.title + " By " + authorDisplay
+    let action = 'Added Review to a book';
+    
+    let newreview = new Review({
+        bookID,
+        userID,
+        review,
+        datetime
+        
+    });
+
+    Review.addReview(newreview, async function (doc) {
+        if (doc) {
+            let sysLogs = new SystemLogs({
+                action,
+                actor: username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                            req.connection.remoteAddress || 
+                            req.socket.remoteAddress || 
+                            req.connection.socket.remoteAddress,
+                item,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            });
+
+            SystemLogs.addLogs(sysLogs);
+    
+            let reviews = book.reviews;
+            reviews.push(doc._id);
+            await Book.updateBookReview(bookID, reviews);
+
+            res.redirect("/");
+        } else {
+            let syslog = new SystemLogs({
+                action: "Failed to Add Review",
+                actor: user.username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: item,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            console.log("Failed to Create Book")
+            res.redirect("/error");
+        }
+    }, (error) => {
+        let syslog = new SystemLogs({
+            action: "Error",
+            actor: null,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress || 
+                req.connection.socket.remoteAddress,
+            item: error.message,
+            datetime: moment().format('YYYY-MM-DD HH:mm')
+        })
+        SystemLogs.addLogs(syslog)
+
+        res.redirect("/error");
+    })
+})
 
 
 module.exports = router;

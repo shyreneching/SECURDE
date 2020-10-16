@@ -1329,6 +1329,24 @@ router.get("/session-timeout", async (req, res) => {
     // res.send(template);
 })
 
+router.get("/book", async (req, res) => {
+    let bookID = req.body.book_id
+    let userID = req.session.username
+
+    let user = await User.getUserByID(userID)
+
+    let book = await Book.getBookByID(bookID)
+    book = await book.populateAuthorandReviews();
+
+    let instanceList = await BookInstance.getInstancesOfBooks(bookID)
+    res.render("book.hbs", {
+        user: user,
+        book: book,
+        instanceList: instanceList,
+        timeout: "/js/timeout.js"
+    })
+})
+
 router.get("/error", async (req, res) => {
     let syslog = new SystemLogs({
         action: "Entered Error Page",
