@@ -1153,7 +1153,7 @@ router.post('/authExists', function(req, res) {
         if(err) {
             let syslog = new SystemLogs({
                 action: "Error",
-                actor: user.username,
+                actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
@@ -1185,7 +1185,7 @@ router.post('/ISBNExists', function(req, res) {
         if(err) {
             let syslog = new SystemLogs({
                 action: "Error",
-                actor: user.username,
+                actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
                 ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
                     req.connection.remoteAddress || 
                     req.socket.remoteAddress || 
@@ -1198,7 +1198,7 @@ router.post('/ISBNExists', function(req, res) {
             res.redirect("/error");
         }
         var message;
-        if(user) {
+        if(book) {
         //   console.log(user)
             message = "book exists";
             // console.log(message)
