@@ -242,8 +242,8 @@ router.post("/addReview", urlencoder, async (req, res) => {
 
 router.post("/editReview", urlencoder, async (req, res) => {
     let reviewID = req.body.reviewID;
-    let userID = req.sessoon.username;
-    let new_review = req.body.new_review;
+    let userID = req.session.username;
+    let new_review = req.body.review_text;
     
     let datetime = moment().format('YYYY-MM-DD HH:mm')
 
