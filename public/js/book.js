@@ -123,10 +123,10 @@ $(document)
                 //Book Instances datatable initialisation
                 $('#table-bookinstances').DataTable({
                     "columnDefs": [
-                        { "width": "40%", "targets": 0 },
+                        { "width": "35%", "targets": 0 },
                         { "width": "20%", "targets": 1 },
                         { "width": "25%", "targets": 2 },
-                        { "width": "15%", "targets": 3 }
+                        { "width": "20%", "targets": 3 }
                     ],
                     "fixedColumns": true,
                 })
@@ -187,4 +187,26 @@ $(document)
                         },
                     }
                 })
+
+                //calendar
+                $('#editdate_picker').calendar();
+
+                //dropdown initialisation
+                $('.ui.dropdown').dropdown();
+
+                //Edit Book Instance show modal
+                $('.edit.instance.button').on('click', function() {
+                    //Resets form input fields from data values
+                    $('.ui.form').trigger("reset");
+                    $('.ui.form .field.error').removeClass( "error" );
+                    $('.ui.form.error').removeClass( "error" );
+                    $('#modal-editbookinstance').modal('setting', 'transition', 'vertical flip')
+                    $('#modal-editbookinstance').modal('show')
+                });
+
+                //Delete Book Instance show modal
+                $('.delete.instance.button').on('click', function() {
+                    $('#modal-deletebookinstance').modal('setting', 'transition', 'vertical flip')
+                    $('#modal-deletebookinstance').modal('show')
+                });
             });
