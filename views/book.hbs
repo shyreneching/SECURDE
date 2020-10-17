@@ -95,12 +95,12 @@
                             <i class="massive middle aligned book icon"></i>
                         </div>
                     </div>
-                    <div class="center aligned middle aligned row" style="text-align: center;">
+                    {{!-- <div class="center aligned middle aligned row" style="text-align: center;">
                         <div class="ui center aligned container" style="width: 80%;">
                             <div class="ui fluid large yellow button" id="button-addbookinstance"
                                 style="background: rgb(184, 164, 56);" action="/manager/addBookInstance" method="POST">Add Book Instance</div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="eight wide column">
                     {{#with book}}
@@ -166,7 +166,9 @@
                             <th class="sorted ascending" id="table-header">Book Instance Title</th>
                             <th id="table-header">Status</th>
                             <th id="table-header">Date Available</th>
+                            {{#each temp}}
                             <th id="table-header">Borrow</th>
+                            {{/each}}
                             {{!-- <th class="" id="table-header">Status</th> --}}
                         </tr>
                     </thead>
@@ -178,11 +180,13 @@
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
+                            {{#each temp}}
                             <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
                                 <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow" data-id="{{_id}}"><i class="book icon"></i>
                                     Borrow
                                 </div>
                             </td>
+                            {{/each}}
                         </tr>
                         {{/if}}
                         {{/each}}
@@ -212,11 +216,13 @@
                     </div>
                     {{/each}}
                 </div>
+                {{#each temp}}
                 <div class="row">
                     <div class="ui right floated small labeled icon button" id="button-review">
                         <i class="pencil icon"></i> Write Book Review
                     </div>
                 </div>
+                {{/each}}
             </div>
         </div>
     </div>

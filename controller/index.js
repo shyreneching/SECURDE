@@ -1439,7 +1439,8 @@ router.get("/book", async (req, res) => {
                 user: user,
                 book: book,
                 instances: instances,
-                rev:rev
+                rev:rev,
+                temp: []
                 // timeout: "/js/timeout.js"
             })
         } else {
@@ -1455,6 +1456,7 @@ router.get("/book", async (req, res) => {
                 book: book,
                 instances: instances,
                 rev: rev,
+                temp: [{}],
                 timeout: "/js/timeout.js"
             })
         }
