@@ -173,4 +173,18 @@ $(document)
                     console.log("Submit!")
                     $("#form-writereview").submit()
                 })
+
+                $("#form-writereview").form({
+                    fields: {
+                        review_text : {
+                            identifier: 'review_text',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: 'Please enter a book review'
+                                }
+                            ]
+                        },
+                    }
+                })
             });
