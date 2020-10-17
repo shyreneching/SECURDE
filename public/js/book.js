@@ -17,6 +17,7 @@ $(document)
                 $('.ui.sidebar')
                     .sidebar('attach events', '.toc.item');
 
+               
                 // tab functionality
                 $('.tabular.menu .item').tab();
                 $('.tabular.menu .item').click(function () {
@@ -53,10 +54,9 @@ $(document)
                         else {
                             //Borrow Book show modal
                             //$('.borrow.button').on('click', function() {
-                            $('#button-bookinstanceborrow').on('click', function() {
+                            $(this).find('#button-bookinstanceborrow').on('click', function() {
                                 console.log(" $(this).data('id') " +  $(this).data('id'))
-                                console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
-                                console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
+                                
                                 id =  $(this).data('id')
                                 
                                 $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
@@ -64,8 +64,6 @@ $(document)
                                 $('#button-borrowbook').attr("data-id",id)
                                 $("#button-borrowbook").on("click", () =>{
                                     console.log(" $(this).data('id') " +  $(this).data('id'))
-                                    console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
-                                    console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
                                     id =  $(this).data('id')
                 
                                     var url = "/user/borrowBookInstance";
@@ -79,10 +77,6 @@ $(document)
                                         success: function(data){
                                             var instance = data["message"]
                                             console.log("yehey")
-                                            
-                                            $("#td-bookinstance_dateavailable").val("Reserved")
-                                            $("#button-bookinstanceborrow").removeClass("blue")
-                                            $("#button-bookinstanceborrow").addClass("grey disabled")
                                             location.reload(true);
                                         }
                                     })

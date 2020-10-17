@@ -173,28 +173,17 @@
                     <tbody>
                         {{#each instances}}
                         <tr>
-                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{book.title}}</a>
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
                             <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
-                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow"><i class="book icon"></i>
+                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow" data-id="{{_id}}"><i class="book icon"></i>
                                     Borrow
                                 </div>
                             </td>
                         </tr>
                         {{/each}}
-                        <tr>
-                            <td class="selectable"><a href="http://" id="td-bookinstance_title1">Savor the Moment</a>
-                            </td>
-                            <td class="positive" id="td-bookinstance_status">Available</td>
-                            <td id="td-bookinstance_dateavailable">Oct 19, 2020</td>
-                            <td class="ui computer only" id="td-bookinstanceborrow1" style="max-width: 150px;">
-                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow1"><i class="book icon"></i>
-                                    Borrow
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -220,20 +209,6 @@
                         </div>
                     </div>
                     {{/each}}
-
-                    <div class="ui container padded segment">
-                        <div class="ui divided two column stackable grid">
-                            <div class="four wide center aligned middle aligned column">
-                                <h4 id="review-user">User</h4>
-                            </div>
-                            <div class="twelve wide column">
-                                <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">
-                                    04/29/2020</div>
-                                <div class="row" id="book-review">Why am I such a procrastinator...</div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="row">
                     <div class="ui right floated small labeled icon button" id="button-review">
@@ -279,10 +254,8 @@
                      <input type="hidden" name="bookID" value="{{_id}}"> 
                     {{/with}}
                 </div>
-                <div class="actions">
-                    <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
-                        <i class="save icon"></i> Save Review
-                    </div>
+                <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
+                    <i class="save icon"></i> Save Review
                 </div>
             </form>
         </div>
