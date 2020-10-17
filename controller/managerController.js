@@ -351,11 +351,12 @@ router.post("/addBookInstance", urlencoder, async (req, res) => {
 })
 
 router.post("/deleteBookInstance", urlencoder, async (req, res) => {
+    console.log("req.session.username " + req.session.username)
+    console.log("req.body.data_id " + req.body.data_id)
     let userID = req.session.username;
     let instanceID = req.body.data_id;
 
     let instance = await BookInstance.getBookInstanceByID(instanceID);
-
     let book = await Book.getBookByID(instance.book);
 
 
@@ -384,7 +385,7 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
     
     SystemLogs.addLogs(sysLogs);
 
-    await BookInstance.delete(instanceID);
+    await BookInstance.deleteInstance(instanceID);
 
     res.json({message : "Success"});
 })

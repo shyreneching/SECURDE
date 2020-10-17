@@ -173,7 +173,7 @@
                     <tbody>
                           {{#each instances}}
                         {{#if @index}}
-                        <tr>
+                        <tr data-id="{{_id}}">
                             <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
@@ -300,7 +300,7 @@
                 <i class="remove icon"></i>
                 No
             </div>
-            <div class="ui green ok right inverted button" id="button-deletebookinstance">
+            <div class="ui green ok right inverted button" id="button-deleteinstance">
                 <i class="checkmark icon"></i>
                 Yes
             </div>

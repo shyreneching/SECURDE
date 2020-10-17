@@ -210,6 +210,26 @@ $(document)
                 $('.delete.instance.button').on('click', function() {
                     $('#modal-deletebookinstance').modal('setting', 'transition', 'vertical flip')
                     $('#modal-deletebookinstance').modal('show')
+
+                    console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
+                    id =  $(this).parent().parent().data('id')
+                    $("#button-deleteinstance").on("click", () =>{
+                        console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
+                        var url = "/manager/deleteBookInstance";
+                        $.ajax({
+                            async : false,
+                            url : url,
+                            type : "POST",
+                            data : {
+                                data_id : id
+                            },
+                            success: function(data){
+                                //var instance = data["message"]
+                                $('.book-row[data-id="'+id+'"]').remove()
+                                console.log("yehey")
+                            }
+                        })
+                    })
                 });
 
                 //Edit Book Instance form validation
