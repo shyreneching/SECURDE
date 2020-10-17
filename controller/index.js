@@ -1408,7 +1408,7 @@ router.get("/book", async (req, res) => {
             rev.push(temp);
         }
         let instanceList = await BookInstance.getInstancesOfBooks(book._id)
-        let instances = [];
+        let instances = [{}];
         for (var l = 0; l < instanceList.length; l++) {
             let temp = instanceList[l];
             //populate necessary info

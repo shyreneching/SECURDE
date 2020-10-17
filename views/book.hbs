@@ -172,6 +172,7 @@
                     </thead>
                     <tbody>
                         {{#each instances}}
+                        {{#if @index}}
                         <tr>
                             <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
                             </td>           
@@ -183,6 +184,7 @@
                                 </div>
                             </td>
                         </tr>
+                        {{/if}}
                         {{/each}}
                     </tbody>
                 </table>
