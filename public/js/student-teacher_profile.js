@@ -164,6 +164,9 @@ $(document)
                 $('.ui.form.error').removeClass( "error" );
                 $('#modal-editreview').modal('setting', 'transition', 'vertical flip')
                 $('#modal-editreview').modal('show')
+
+                $("#textarea-review").val($(this).parent().parent().find('#book-review').text())
+                $('input[name="reviewID"]').val($(this).parent().data('id'))
             });
 
             //Delete Review show modal
