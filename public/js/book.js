@@ -200,7 +200,7 @@ $(document)
                     //Resets form input fields from data values
                     $('.ui.form').trigger("reset");
                     $('.ui.form .field.error').removeClass( "error" );
-                    $('.dropdown').dropdown('clear');
+                    $('#dropdown-status').dropdown('clear');
                     $('.ui.form.error').removeClass( "error" );
                     $('#modal-editbookinstance').modal('setting', 'transition', 'vertical flip')
                     $('#modal-editbookinstance').modal('show')
