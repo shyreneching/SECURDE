@@ -173,8 +173,8 @@
                     <tbody>
                           {{#each instances}}
                         {{#if @index}}
-                        <tr>
-                            <td class="selectable"><a id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
+                        <tr class="instance-row" data-id="{{_id}}">
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
@@ -231,7 +231,7 @@
                     <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
                         <div class="two fields">
                             <div class="field">
-                                <div class="ui selection dropdown" id="dropdown-status" style="disable">
+                                <div class="ui selection dropdown" id="dropdown-status">
                                     <input type="hidden" name="status">
                                     <i class="dropdown icon"></i>
                                     <div class="default text">Status</div>
@@ -300,7 +300,7 @@
                 <i class="remove icon"></i>
                 No
             </div>
-            <div class="ui green ok right inverted button" id="button-confirmdeletebookinstance">
+            <div class="ui green ok right inverted button" id="button-deleteinstance">
                 <i class="checkmark icon"></i>
                 Yes
             </div>
