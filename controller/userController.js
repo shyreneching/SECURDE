@@ -113,17 +113,20 @@ router.post("/returnBook", urlencoder, async (req, res) => {
     let userID = req.session.username;
     let hisID = req.body._id;
 
-    let history = await BorrowedHistory.getBorrowHistoryByID(hisID)
+    let history = await BorrowHistory.getBorrowHistoryByID(hisID)
+    history = await history.populate()
 
     let datetime = moment().format('YYYY-MM-DD HH:mm')
 
-    let book = await Book.getBookByID(history.book);
+    let instance = await BookInstance.getBookInstanceByID(history.book);
+    instance = await instance.populate()
+    let book = instance.book
     let user = await User.getUserByID(userID);
 
-    temp = await Author.getAuthorByID(book.author[0]);
+    temp = await Author.getAuthorByID(history.author[0]);
     let authorDisplay = temp.firstname + " " + temp.lastname
-    for (var i = 1; i < book.author.length; i++) {
-        temp = await Author.getAuthorByID(book.author[i]);
+    for (var i = 1; i < history.author.length; i++) {
+        temp = await Author.getAuthorByID(history.author[i]);
         authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
     }
 
@@ -143,10 +146,10 @@ router.post("/returnBook", urlencoder, async (req, res) => {
     });
     SystemLogs.addLogs(sysLogs);
 
-    await BookInstance.updateInstance(bookID, "Available", "")
+    await BookInstance.updateInstance(instance._id, "Available", "")
     await BorrowHistory.updateTimeReturnedByID(hisID, datetime);
 
-    res.send("/profile");
+    res.redirect("/profile");
 })
 
 router.post("/addReview", urlencoder, async (req, res) => {

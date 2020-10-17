@@ -152,6 +152,7 @@ $(document)
                 $('#modal-userdetails').modal('show')
             });
 
-            var id
-            $()
+            $("#button-returnbook").on('click', () =>{
+                $("#form-returnbook").submit()
+            })
     });

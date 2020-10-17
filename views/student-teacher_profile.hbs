@@ -205,7 +205,7 @@
                                                 style="font-weight: lighter; font-size: smaller; margin-bottom: 0.5em;">
                                                 {{time_barrow}} - {{actual_returned}}</div>
                                             <div class="row">
-                                                <h4 class="borrowed_booktitle" id="borrowed-booktitle">{{book}}</h4>
+                                                <h4 class="borrowed_booktitle" id="borrowed-booktitle">{{title}}</h4>
                                             </div>
                                         </div>
                                         <div class="six wide center aligned middle aligned column" id="borrowed-bookauthor">
@@ -370,13 +370,13 @@
             </div>
         </div>
         <div class="actions">
-            <div class="ui grey basic cancel button">
-                <i class="angle left icon"></i>
-                Back
-            </div>
             <form id="form-returnbook" action="/user/returnBook" method="POST">
+                <div class="ui grey basic cancel button">
+                    <i class="angle left icon"></i>
+                    Back
+                </div>
                 <input name="_id" type="hidden">
-                <div class="ui primary ok right submit button" id="button-returnbook">
+                <div class="ui primary right submit button" id="button-returnbook">
                     <i class="archive icon"></i>
                     Return
                 </div>
