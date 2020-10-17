@@ -199,6 +199,7 @@ $(document)
                     //Resets form input fields from data values
                     $('.ui.form').trigger("reset");
                     $('.ui.form .field.error').removeClass( "error" );
+                    $('.dropdown').dropdown('clear');
                     $('.ui.form.error').removeClass( "error" );
                     $('#modal-editbookinstance').modal('setting', 'transition', 'vertical flip')
                     $('#modal-editbookinstance').modal('show')
@@ -209,4 +210,28 @@ $(document)
                     $('#modal-deletebookinstance').modal('setting', 'transition', 'vertical flip')
                     $('#modal-deletebookinstance').modal('show')
                 });
+
+                //Edit Book Instance form validation
+                $('#form-editbookinstance').form({
+                    fields : {
+                        status : {
+                            identifier: 'status',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: 'Please choose a status'
+                                }
+                            ]
+                        },
+                        editbookinstance_dateavailable : {
+                            identifier: 'editbookinstance_dateavailable',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: 'Please choose a date'
+                                }
+                            ]
+                        }
+                    }
+                })
             });
