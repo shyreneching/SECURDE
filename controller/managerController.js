@@ -394,12 +394,16 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
     console.log("req.body.editbookinstance_id " + req.body.editbookinstance_id)
     let userID = req.session.username;
     let instanceID = req.body.editbookinstance_id;
-    let status = req.body.status;
-    let date_available = req.body.date_available;
-
-    let instance = await BookInstance.getBookInstanceByID(instanceID);
-    console.log(instance)
+    let status = "Available";
+    if(req.body.status == "status_reserved"){
+        status = "Reserved"
+    } 
+    
+    let date_available = moment(req.body.editbookinstance_dateavailable, 'MMMM DD, YYYY H:mm A').format('YYYY-MM-DD HH:mm')
+ 
+    let instance = await BookInstance.getBookInstanceByID(instanceID)
     let book = await Book.getBookByID(instance.book);
+    let datetime = moment().format('YYYY-MM-DD HH:mm')
     
     temp = await Author.getAuthorByID(book.author[0]);
     let authorDisplay = temp.firstname + " " + temp.lastname
@@ -426,7 +430,6 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
         });
         SystemLogs.addLogs(sysLogs);
 
-
         await BorrowHistory.updateTimeReturnedByID(history._id, moment().format('YYYY-MM-DD HH:mm'));
     }
 
@@ -442,15 +445,10 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
     });
     SystemLogs.addLogs(sysLogs);
 
-    let updateInstance= new BookInstance({
-        status,
-        date_available
-    });
-
-    let newInstance = await BookInstance.updateInstance(instanceID, updateInstance);
+    let newInstance = await BookInstance.updateInstance(instanceID, status, date_available);
 
     // res.json({message : "Success"});
-    res.redirect("/")
+    res.redirect("/book?data_id=" + book._id)
 })
 
 router.post('/returnBook', function(req, res) {
