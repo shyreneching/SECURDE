@@ -173,8 +173,13 @@
                     <tbody>
                           {{#each instances}}
                         {{#if @index}}
+<<<<<<< HEAD
                         <tr data-id="{{_id}}">
                             <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
+=======
+                        <tr>
+                            <td class="selectable"><a id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
+>>>>>>> 2b418560e87be5f77f7699528c4f5ac143b9377b
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
@@ -231,7 +236,7 @@
                     <div class="field" style="padding-left: 0.5em; padding-right: 0.5em;">
                         <div class="two fields">
                             <div class="field">
-                                <div class="ui selection dropdown">
+                                <div class="ui selection dropdown" id="dropdown-status" style="disable">
                                     <input type="hidden" name="status">
                                     <i class="dropdown icon"></i>
                                     <div class="default text">Status</div>
