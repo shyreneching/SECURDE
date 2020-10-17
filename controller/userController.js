@@ -280,12 +280,14 @@ router.post("/editReview", urlencoder, async (req, res) => {
 })
 
 router.post("/deleteReview", urlencoder, async (req, res) => {
-    let reviewID = req.body.reviewID;
+    console.log("req.body.data_id " + req.body.data_id)
+
+    let reviewID = req.body.data_id;
     let rev = await Review.getReviewByID(reviewID);
 
     let datetime = moment().format('YYYY-MM-DD HH:mm')
-    let book = await Book.getBookByID(rev.bookID);
-    let user = await User.getUserByID(rev.userID);
+    let book = await Book.getBookByID(rev.book);
+    let user = await User.getUserByID(rev.user);
 
     temp = await Author.getAuthorByID(book.author[0]);
     let authorDisplay = temp.firstname + " " + temp.lastname
@@ -313,8 +315,10 @@ router.post("/deleteReview", urlencoder, async (req, res) => {
     SystemLogs.addLogs(sysLogs);
 
     var ary = book.reviews;
-    ary.pull(reviewID);    
-    await Reiview.delete(reviewID);
+    ary.pull(reviewID);  
+    book.review = ary
+    await Book.updateBookReview(book.review)  
+    await Review.delete(reviewID);
 
     res.redirect("/profile");
 })

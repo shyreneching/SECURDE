@@ -239,7 +239,7 @@
                     <h3 class="ui large left aligned header">My Reviews</h3>
                     <div class="ui container padded segment" style="height: 300px; overflow-y: scroll;">
                         {{#each reviews}}
-                            <div class="ui container padded segment">
+                            <div class="ui container padded segment" data-id="{{_id}}">
                                 <div class="ui divided two column stackable grid">
                                     <div class="row">
                                         <div class="four wide center aligned middle aligned column">
@@ -252,7 +252,7 @@
                                             <div class="row" id="book-review">{{review_text}}</div>
                                         </div>  
                                     </div>
-                                    <div class="row" style="width: 50%; justify-content: right; margin-right: 1em">
+                                    <div class="row" style="width: 50%; justify-content: right; margin-right: 1em" data-id="{{_id}}">
                                         <div class="ui right floated tiny yellow labeled icon edit button" id="button-editreview" style="margin-right: 1em;"><i class="edit icon"></i>
                                             Edit
                                         </div>
@@ -476,7 +476,7 @@
                 <i class="remove icon"></i>
                 No
             </div>
-            <div class="ui green ok right inverted button" id="button-deletereview">
+            <div class="ui green ok right inverted button" id="button-confirmdeletereview">
                 <i class="checkmark icon"></i>
                 Yes
             </div>

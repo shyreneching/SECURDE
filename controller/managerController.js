@@ -391,9 +391,9 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
 
 router.post("/editBookInstance", urlencoder, async (req, res) => {
     console.log("req.session.username " + req.session.username)
-    console.log("req.body.instanceID " + req.body.instanceID)
+    console.log("req.body.editbookinstance_id " + req.body.editbookinstance_id)
     let userID = req.session.username;
-    let instanceID = req.body.instanceID;
+    let instanceID = req.body.editbookinstance_id;
     let status = req.body.status;
     let date_available = req.body.date_available;
 
@@ -409,7 +409,7 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
     }
     
     let user = await User.getUserByID(userID);
-    let item = title + " by " + authorDisplay
+    let item = book.title + " by " + authorDisplay
     let action = 'Successfully Edited a Book Instance';
 
     if(instance.status == "Reserved" && status == "Available"){

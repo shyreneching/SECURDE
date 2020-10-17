@@ -170,7 +170,33 @@ $(document)
             $('.delete.button').on('click', function() {
                 $('#modal-deletereview').modal('setting', 'transition', 'vertical flip')
                 $('#modal-deletereview').modal('show')
+
+                console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
+                id =  $(this).parent().data('id')
+                $("#button-confirmdeletereview").on("click", () =>{
+                    console.log(" $(this).parent().parent().data('id') " +  $(this).parent().data('id'))
+                    var url = "/user/deleteReview";
+                    $.ajax({
+                        async : false,
+                        url : url,
+                        type : "POST",
+                        data : {
+                            data_id : id
+                        },
+                        dataType: "json",
+                        success: function(data){
+                            console.log("yehey")
+                            //var instance = data["message"]
+                            location.reload(true);
+                            // $('.ui container padded segment[data-id="'+id+'"]').remove()
+                            
+                        }
+                    })
+                })
+
             });
+
+
 
             //Edit Review form validation
             $('#form-editreview').form({

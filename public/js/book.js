@@ -233,26 +233,9 @@ $(document)
                             // }
                             $('#dropdown-status').dropdown('set selected', instance.status)
                             $('input[name="editbookinstance_dateavailable"]').val(instance.date_available)
+                            $('input[name="editbookinstance_id"]').val(instance._id)
                         }
                     })
-
-                    $("#button-confirmeditbook").on('click', function(){
-                        console.log("id " +  id)
-                        var url = "/manager/editInstance";
-                        $.ajax({
-                            async : false,
-                            url : url,
-                            type : "POST",
-                            data : {
-                                instanceID : id
-                            },
-                            success: function(data){
-                                $('#td-bookinstance_status').val(data['message'].status)
-                                $('#td-bookinstance_dateavailable').val(data['message'].date_available)
-                            }
-                        })
-                    })
-
                 })
 
 
