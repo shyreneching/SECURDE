@@ -175,14 +175,14 @@
                     <tbody>
                         {{#each instances}}
                         {{#if @index}}
-                        <tr>
+                        <tr data-id="{{_id}}">
                             <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
                             {{#each ../temp}}
                             <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
-                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow" data-id="{{_id}}"><i class="book icon"></i>
+                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow"><i class="book icon"></i>
                                     Borrow
                                 </div>
                             </td>

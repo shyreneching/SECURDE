@@ -1414,7 +1414,7 @@ router.get("/book", async (req, res) => {
             let temp = instanceList[l];
             //populate necessary info
             temp = await temp.populate();
-            if (temp.date_available != ""){
+            if (temp.date_available != null){
                 temp.date_available = moment(temp.date_available).format('MMM DD, YYYY  HH:mm')
             }
             instances.push(temp);

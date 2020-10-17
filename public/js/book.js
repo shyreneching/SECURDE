@@ -56,15 +56,16 @@ $(document)
                             //$('.borrow.button').on('click', function() {
                             $(this).find('#button-bookinstanceborrow').on('click', function() {
                                 console.log(" $(this).data('id') " +  $(this).data('id'))
+                                console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
+                                console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
                                 
-                                id =  $(this).data('id')
+                                id =  $(this).parent().parent().data('id')
                                 
                                 $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
                                 $('#modal-borrowbook').modal('show')
                                 $('#button-borrowbook').attr("data-id",id)
                                 $("#button-borrowbook").on("click", () =>{
-                                    console.log(" $(this).data('id') " +  $(this).data('id'))
-                                    id =  $(this).data('id')
+                                    id = $(this).parent().parent().data('id')
                 
                                     var url = "/user/borrowBookInstance";
                                     $.ajax({
@@ -234,4 +235,6 @@ $(document)
                         }
                     }
                 })
+
+
             });
