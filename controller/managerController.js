@@ -294,7 +294,7 @@ router.post("/addBookInstance", urlencoder, async (req, res) => {
     }
     
     let user = await User.getUserByID(userID);
-    let item = title + " by " + authorDisplay
+    let item = book.title + " by " + authorDisplay
     let action = 'Successfully Added a Book Instance';
     
     let instance = new BookInstance({
@@ -316,7 +316,7 @@ router.post("/addBookInstance", urlencoder, async (req, res) => {
             });
             SystemLogs.addLogs(sysLogs);
 
-            res.redirect("/book");
+            res.redirect("/book?data_id=" + book._id);
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Create Book Instance",

@@ -241,14 +241,24 @@
                         {{#each reviews}}
                             <div class="ui container padded segment">
                                 <div class="ui divided two column stackable grid">
-                                    <div class="four wide center aligned middle aligned column">
-                                        {{#with book}}
-                                        <h4><a class="booktitle" id="reviewlink-booktitle" href="/book?data_id={{_id}}">{{title}}</a></h4>
-                                        {{/with}}
+                                    <div class="row">
+                                        <div class="four wide center aligned middle aligned column">
+                                            {{#with book}}
+                                                <h4><a class="booktitle" id="reviewlink-booktitle" href="/book?data_id={{_id}}">{{title}}</a></h4>
+                                            {{/with}}
+                                        </div>
+                                        <div class="twelve wide column">
+                                            <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">{{create_date}}</div>
+                                            <div class="row" id="book-review">{{review_text}}</div>
+                                        </div>  
                                     </div>
-                                    <div class="twelve wide column">
-                                        <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">{{create_date}}</div>
-                                        <div class="row" id="book-review">{{review_text}}</div>
+                                    <div class="row" style="width: 50%; justify-content: right; margin-right: 1em">
+                                        <div class="ui right floated tiny yellow labeled icon edit button" id="button-editreview" style="margin-right: 1em;"><i class="edit icon"></i>
+                                            Edit
+                                        </div>
+                                        <div class="ui right floated tiny labeled icon delete button" id="button-deletereview"><i class="trash icon"></i>
+                                            Delete
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -427,6 +437,48 @@
                     </div>
                 </div>
                 {{/with}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Book Review Modal -->
+    <div class="ui small scrolling modal" id="modal-editreview">
+        <i class="close icon"></i>
+        <div class="header">
+            Edit Book Review
+        </div>
+        <div class="content">
+            <form class="ui reply form" id="form-editreview" action="/user/editReview" method="POST">
+                <div class="field" style="margin-bottom: 1em;">
+                    <textarea id="textarea-review" name="review_text"></textarea>
+                    {{!-- {{#with book}}
+                     <input type="hidden" name="bookID" value="{{_id}}"> 
+                    {{/with}} --}}
+                </div>
+                <div class="ui blue labeled submit icon button"  id="button-confirmeditreview">
+                    <i class="save icon"></i> Edit Review
+                </div>
+                <div class="ui error message" id="warnings"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Review Modal -->
+    <div class="ui small basic modal" id="modal-deletereview">
+        <div class="header">
+            Delete Review
+        </div>
+        <div class="content">
+            Are you sure you want to delete this review?
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <div class="ui green ok right inverted button" id="button-deletereview">
+                <i class="checkmark icon"></i>
+                Yes
             </div>
         </div>
     </div>
