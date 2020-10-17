@@ -173,7 +173,7 @@
                     <tbody>
                           {{#each instances}}
                         {{#if @index}}
-                        <tr data-id="{{_id}}">
+                        <tr class="instance-row" data-id="{{_id}}">
                             <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>

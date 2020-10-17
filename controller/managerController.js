@@ -351,8 +351,6 @@ router.post("/addBookInstance", urlencoder, async (req, res) => {
 })
 
 router.post("/deleteBookInstance", urlencoder, async (req, res) => {
-    console.log("req.session.username " + req.session.username)
-    console.log("req.body.data_id " + req.body.data_id)
     let userID = req.session.username;
     let instanceID = req.body.data_id;
 
@@ -392,12 +390,15 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
 
 
 router.post("/editBookInstance", urlencoder, async (req, res) => {
+    console.log("req.session.username " + req.session.username)
+    console.log("req.body.instanceID " + req.body.instanceID)
     let userID = req.session.username;
-    let instanceID = req.body.data_id;
+    let instanceID = req.body.instanceID;
     let status = req.body.status;
     let date_available = req.body.date_available;
 
     let instance = await BookInstance.getBookInstanceByID(instanceID);
+    console.log(instance)
     let book = await Book.getBookByID(instance.book);
     
     temp = await Author.getAuthorByID(book.author[0]);
@@ -479,6 +480,54 @@ router.post('/returnBook', function(req, res) {
                 // title = book.title,
                 // a
                 message: book
+            })
+            // console.log(message)
+        } else {
+            let syslog = new SystemLogs({
+                action: "Book Doesn't Exist",
+                actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: null,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        // res.json({message: message});
+    });
+});
+
+router.post('/returnInstance', function(req, res) {
+    // console.log(req.body.data_id)
+    BookInstance.findOne({
+        _id: req.body.data_id
+    }, function(err, instance){
+        if(err) {
+            let syslog = new SystemLogs({
+                action: "Error",
+                actor: (req.session.username == null || User.getUserByID(req.session.username) == undefined) ? null : User.getUserByID(req.session.username).username,
+                ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+                item: err.message,
+                datetime: moment().format('YYYY-MM-DD HH:mm')
+            })
+            SystemLogs.addLogs(syslog)
+
+            res.redirect("/error");
+        }
+        // var message;
+        if(instance) {
+        //   console.log("HERE??")
+            res.json({
+                // title = book.title,
+                // a
+                message: instance
             })
             // console.log(message)
         } else {

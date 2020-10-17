@@ -206,6 +206,56 @@ $(document)
                     $('#modal-editbookinstance').modal('show')
                 });
 
+                
+
+                $(".ui.tiny.yellow.labeled.icon.edit.button").on('click', function(){
+                    var id = $(this).parent().parent().data('id')
+                    // console.log(id)
+
+                    var url = "/manager/returnInstance";
+                    $.ajax({
+                        async : false,
+                        url : url,
+                        type : "POST",
+                        data : {
+                            data_id : id
+                        },
+                        dataType: "json",
+                        success: function(data){
+                            // console.log("hi")
+                            var instance = data["message"]
+                            console.log(instance)
+                            // var temp = [] instance.status
+                            // var temp = [] instance.date_available
+                            // for(var i = 0; i < book.author.length; i++){
+                                // temp.push(book.author[i]._id)
+                                // $('#auth-menu2 div[data-value"'+book.author[i]+'"]').addClass("active filtered")
+                            // }
+                            $('#dropdown-status').dropdown('set selected', instance.status)
+                            $('input[name="editbookinstance_dateavailable"]').val(instance.date_available)
+                        }
+                    })
+
+                    $("#button-confirmeditbook").on('click', function(){
+                        console.log("id " +  id)
+                        var url = "/manager/editInstance";
+                        $.ajax({
+                            async : false,
+                            url : url,
+                            type : "POST",
+                            data : {
+                                instanceID : id
+                            },
+                            success: function(data){
+                                $('#td-bookinstance_status').val(data['message'].status)
+                                $('#td-bookinstance_dateavailable').val(data['message'].date_available)
+                            }
+                        })
+                    })
+
+                })
+
+
                 //Delete Book Instance show modal
                 $('.delete.instance.button').on('click', function() {
                     $('#modal-deletebookinstance').modal('setting', 'transition', 'vertical flip')
@@ -227,7 +277,7 @@ $(document)
                             success: function(data){
                                 console.log("yehey")
                                 //var instance = data["message"]
-                                $('.book-row[data-id="'+id+'"]').remove()
+                                $('.instance-row[data-id="'+id+'"]').remove()
                                 
                             }
                         })
