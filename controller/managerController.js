@@ -356,7 +356,7 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
 
     let instance = await BookInstance.getBookInstanceByID(instanceID);
 
-    let book = await Book.getBookByID(bookID);
+    let book = await Book.getBookByID(instance.book);
 
 
     temp = await Author.getAuthorByID(book.author[0]);
@@ -396,7 +396,8 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
     let status = req.body.status;
     let date_available = req.body.date_available;
 
-    let book = await Book.getBookByID(bookID);
+    let instance = await BookInstance.getBookInstanceByID(instanceID);
+    let book = await Book.getBookByID(instance.book);
     
     temp = await Author.getAuthorByID(book.author[0]);
     let authorDisplay = temp.firstname + " " + temp.lastname
@@ -409,6 +410,24 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
     let item = title + " by " + authorDisplay
     let action = 'Successfully Edited a Book Instance';
 
+    if(instance.status == "Reserved" && status == "Available"){
+        let history =  await BorrowHistory.getUnreturnedBookHistory(instanceID)
+        let sysLogs = new SystemLogs({
+            action: "Returned a book for a user",
+            actor: user.username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+            item,
+            datetime
+        });
+        SystemLogs.addLogs(sysLogs);
+
+
+        await BorrowHistory.updateTimeReturnedByID(history._id, moment().format('YYYY-MM-DD HH:mm'));
+    }
+
     let sysLogs = new SystemLogs({
         action,
         actor: user.username,
@@ -419,8 +438,7 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
         item,
         datetime
     });
-    
-    await SystemLogs.addLogs(sysLogs);
+    SystemLogs.addLogs(sysLogs);
 
     let updateInstance= new BookInstance({
         status,

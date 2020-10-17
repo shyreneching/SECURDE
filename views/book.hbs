@@ -95,12 +95,12 @@
                             <i class="massive middle aligned book icon"></i>
                         </div>
                     </div>
-                    <div class="center aligned middle aligned row" style="text-align: center;">
+                    {{!-- <div class="center aligned middle aligned row" style="text-align: center;">
                         <div class="ui center aligned container" style="width: 80%;">
                             <div class="ui fluid large yellow button" id="button-addbookinstance"
                                 style="background: rgb(184, 164, 56);" action="/manager/addBookInstance" method="POST">Add Book Instance</div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="eight wide column">
                     {{#with book}}
@@ -262,7 +262,7 @@
         </div>
     </div>
 
-    <form class="ui reply form" id="form-addbookinstance" action="/user/addBookInstance" method="POST">
+    {{!-- <form class="ui reply form" id="form-addbookinstance" action="/user/addBookInstance" method="POST">
         <div class="field" style="margin-bottom: 1em;">
             {{#with book}}
                 <input type="hidden" name="bookID" value="{{_id}}"> 
@@ -271,7 +271,7 @@
         <div class="ui blue labeled submit icon button"  id="button-confirmaddreview" style="display:none;">
             <i class="save icon"></i> Add Book Instance
         </div>
-    </form>
+    </form> --}}
 
 </body>
 </html>
