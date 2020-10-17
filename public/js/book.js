@@ -40,15 +40,31 @@ $(document)
 
                 //Book status - changing font colour and showing/hiding Next Available Date div
                 $(function(){
-                    $('#book-status:contains(Available)').css({color: "rgb(154, 224, 153)"});
-                    $('#book-status:contains(Reserved)').css({color: "rgb(255, 122, 112)"});
+                    console.log("Should be changing")
+                    console.log($(".status-of-book").text())
+                    $( ".status-of-book" ).each(function() {
+                        $('#td-bookinstance_status:contains(Reserved)').show(function(){
+                            console.log($("#td-bookinstance_status").text())
+                            $("#td-bookinstance_status").removeClass("positive")
+                            $("#td-bookinstance_status").addClass("negative")
+                            $("#button-bookinstanceborrow").removeClass("blue")
+                            $("#button-bookinstanceborrow").addClass("grey disabled")
+                        })
+                    });
 
-                    $('#book-status:contains(Reserved)').show(function(){
-                        $("#div-nextreservedate").show();
-                    })
-                    $('#book-status:contains(Available)').show(function(){
-                        $("#div-nextreservedate").hide();
-                    })
+                    // $('.status-of-book:contains(Available)').css({color: "rgb(154, 224, 153)"});
+                    // $('.status-of-book:contains(Reserved)').css({color: "rgb(255, 122, 112)"});
+
+                    // $('.status-of-book:contains(Reserved)').show(function(){
+                    //     //$("#div-nextreservedate").show();
+                    //     $(".status-of-book").removeClass("positive")
+                    //     $(".status-of-book").addClass("negative")
+                    //     $("#button-bookinstanceborrow").removeClass("blue")
+                    //     $("#button-bookinstanceborrow").addClass("grey disabled")
+                    // })
+                    // $('#td-bookinstance_status:contains(Available)').show(function(){
+                    //     $("#div-nextreservedate").hide();
+                    // })
                 });
 
                 //Book Review Modal
@@ -83,33 +99,37 @@ $(document)
                     $('#modal-borrowbook').modal('setting', 'transition', 'vertical flip')
                     $('#modal-borrowbook').modal('show')
                     $('#button-borrowbook').attr("data-id",id)
+                    $("#button-borrowbook").on("click", () =>{
+                        console.log(" $(this).data('id') " +  $(this).data('id'))
+                        console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
+                        console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
+                        id =  $(this).data('id')
+    
+                        var url = "/user/borrowBookInstance";
+                        $.ajax({
+                            async : false,
+                            url : url,
+                            type : "POST",
+                            data : {
+                                data_id : id
+                            },
+                            success: function(data){
+                                var instance = data["message"]
+                                console.log("yehey")
+                                
+                                $("#td-bookinstance_dateavailable").val("Reserved")
+                                $("#button-bookinstanceborrow").removeClass("blue")
+                                $("#button-bookinstanceborrow").addClass("grey disabled")
+                                location.reload(true);
+                            }
+                        })
+                    })
                 })
 
                 $("#button-confirmaddreview").on("click", () =>{
                     $("#form-writereview").submit()
                 })
 
-                $("#button-borrowbook").on("click", () =>{
-                    console.log(" $(this).data('id') " +  $(this).data('id'))
-                    console.log(" $(this).parent().data('id') " +  $(this).parent().data('id'))
-                    console.log(" $(this).parent().parent().data('id') " +  $(this).parent().parent().data('id'))
-                    id =  $(this).data('id')
-
-                    var url = "/user/borrowBookInstance";
-                    $.ajax({
-                        async : false,
-                        url : url,
-                        type : "POST",
-                        data : {
-                            data_id : id
-                        },
-                        success: function(){
-                            console.log("yehey")
-                            $("#td-bookinstance_dateavailable").val("Reserved")
-                            $("#button-bookinstanceborrow").removeClass("blue")
-                            $("#button-bookinstanceborrow").addClass("grey disabled")
-                        }
-                    })
-                })
+                
                 
             });

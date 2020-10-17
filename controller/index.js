@@ -158,6 +158,8 @@ router.get("/profile", async (req, res) => {
             let temp = previousHistory[l];
             //populate necessary info
             temp = await temp.populate();
+            temp.book = await temp.book.populate()
+            temp.title = temp.book.book.title
             prevHistory.push(temp);
         }
 
@@ -167,6 +169,8 @@ router.get("/profile", async (req, res) => {
             let temp = currentsHistory[l];
             //populate necessary info
             temp = await temp.populate();
+            temp.book = await temp.book.populate()
+            temp.title = temp.book.book.title
             currHistory.push(temp);
         }
 
@@ -1490,6 +1494,5 @@ router.get('*', (req, res) => {
 
     res.redirect("/error")
 })
-
 
 module.exports = router;

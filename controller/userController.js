@@ -30,7 +30,7 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
     let instance = await BookInstance.getBookInstanceByID(instanceID)
     
     // deadline to return the books is 14 days after borrowing
-    let date_available = moment().add(14, 'days');
+    let date_available = moment().add(14, 'days').format('YYYY-MM-DD HH:mm')
     let actual_returned = '';
     let status = 'borrowed';
 
@@ -49,15 +49,16 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
     let action = 'Borrowed a book';    
 
     let borrowHistory = new BorrowHistory({
-        bookID,
-        userID,
+        book: instanceID,
+        author: book.author,
+        user: userID,
         time_barrow: moment().format('YYYY-MM-DD HH:mm'),
         due_date: date_available,
         actual_returned,
         status
     });
 
-    BorrowHistory.addBorrowHistory(borrowHistory, async function (borrowHistory) {
+    BorrowHistory.addBarrowHistory(borrowHistory, async function (borrowHistory) {
         if (borrowHistory) {
             let sysLogs = new SystemLogs({
                 action,
@@ -73,7 +74,7 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
         
             await BookInstance.updateInstance(instanceID, "Reserved", date_available)
 
-            res.redirect("/book?data_id=" + bookID);
+            res.redirect("/book?data_id=" + book._id)
         } else {
             let syslog = new SystemLogs({
                 action: "Failed to Borrow Book",
@@ -314,5 +315,7 @@ router.post("/deleteReview", urlencoder, async (req, res) => {
 
     res.redirect("/profile");
 })
+
+
 
 module.exports = router;

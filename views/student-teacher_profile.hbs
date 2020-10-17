@@ -103,15 +103,15 @@
                         <div class="ui bottom attached active tab segment" data-tab="current"
                             style="height: 300px; overflow-y: scroll;">
                             <!-- insert for loop here for the books -->
+                            {{#each currHistory}}
                             <div class="ui container padded segment" id="tab-content-one">
-                                {{#each currHistory}}
                                     <div class="ui divided two column stackable grid">
                                         <div class="ten wide center aligned middle aligned column">
                                             <div class="row" id="date-borrowed"
                                                 style="font-weight: lighter; font-size: smaller; margin-bottom: 0.5em;">
                                                 {{time_barrow}}</div>
                                             <div class="row">
-                                                <h4 class="borrowed_booktitle" id="borrowed-booktitle">{{book}}</h4>
+                                                <h4 class="borrowed_booktitle" id="borrowed-booktitle">{{title}}</h4>
                                             </div>
                                         </div>
                                         <div class="six wide center aligned middle aligned column" id="borrowed-bookauthor">
@@ -120,20 +120,8 @@
                                                 {{firstname}} {{lastname}}
                                             {{/each}}</div>
                                     </div>
-                                {{/each}}
-                                <div class="ui divided two column stackable grid">
-                                    <div class="ten wide center aligned middle aligned column">
-                                        <div class="row" id="date-borrowed"
-                                            style="font-weight: lighter; font-size: smaller; margin-bottom: 0.5em;">
-                                            04/29/2020</div>
-                                        <div class="row">
-                                            <h4 class="borrowed_booktitle" id="borrowed-booktitle">Book Title</h4>
-                                        </div>
-                                    </div>
-                                    <div class="six wide center aligned middle aligned column" id="borrowed-bookauthor">
-                                        Author</div>
-                                </div>
                             </div>
+                            {{/each}}
                             <div class="ui container padded segment" id="borrowed-book">
                                 <div class="ui divided two column stackable grid" id="borrowed-book">
                                     <div class="ten wide center aligned middle aligned column" id="borrowed-book">

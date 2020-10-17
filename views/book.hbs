@@ -165,10 +165,8 @@
                         <tr>
                             <th class="sorted ascending" id="table-header">Book Instance Title</th>
                             <th id="table-header">Status</th>
-                            <th id="table-header">Date Available</th>
-                            {{#if user}}
+                            <th id="table-header">Date Available</th>              
                             <th id="table-header">Borrow</th>
-                            {{/if}}
                             {{!-- <th class="" id="table-header">Status</th> --}}
                         </tr>
                     </thead>
@@ -202,10 +200,10 @@
                         <tr>
                             <td class="selectable"><a href="http://" id="td-bookinstance_title">{{book.title}}</a>
                             </td>           
-                            <td class="positive" id="td-bookinstance_status">{{status}}</td>
+                            <td class="positive status-of-book" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
                             <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
-                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow" data-id="{{_id}}"><i class="book icon"></i>
+                                <div class="ui tiny blue labeled icon borrow button button-for-borrow" id="button-bookinstanceborrow" data-id="{{_id}}"><i class="book icon"></i>
                                     Borrow
                                 </div>
                             </td>
@@ -214,7 +212,7 @@
                         <tr>
                             <td class="selectable"><a href="http://" id="td-bookinstance_title1">Savor the Moment</a>
                             </td>
-                            <td class="positive" id="td-bookinstance_status">Available</td>
+                            <td class="negative" id="td-bookinstance_status1">Available</td>
                             <td id="td-bookinstance_dateavailable">Oct 19, 2020</td>
                             <td class="ui computer only" id="td-bookinstanceborrow1" style="max-width: 150px;">
                                 <div class="ui tiny grey labeled icon borrow button disabled" id="button-bookinstanceborrow1"><i class="book icon"></i>
