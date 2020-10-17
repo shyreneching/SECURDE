@@ -447,13 +447,13 @@ $(document)
         })
 
         var id
-        $("#data-table").on('click', 'tbody > tr', function(){
-            console.log("Clicking here")
-            console.log(" $(this).data('id') " +  $(this).data('id'))
+        // $("#data-table").on('click', 'tbody > td.author', function(){
+        //     console.log("Clicking here")
+        //     console.log(" $(this).data('id') " +  $(this).data('id'))
 
-            id = $(this).data('id')
+        //     id = $(this).data('id')
 
-            window.location.href = "/book?data_id=" + id;
-        })
+        //     window.location.href = "/book?data_id=" + id;
+        // })
     });
 

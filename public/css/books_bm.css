@@ -3,9 +3,9 @@ body {
     background-color: white;
 }
 
-#data-table tr:hover{
+/* #data-table tr:hover{
     cursor: pointer
-}
+} */
 
 ::-webkit-scrollbar {
     width: 10px;
