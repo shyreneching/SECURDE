@@ -50,8 +50,10 @@ $(document)
                             $(this).find("#td-bookinstance_status").addClass("negative")
                             $(this).find("#button-bookinstanceborrow").removeClass("blue")
                             $(this).find("#button-bookinstanceborrow").addClass("grey disabled")
+                            $(this).find("#button-editbookinstancedateavailable").removeClass("hidden disabled")
                         }
                         else {
+                            $(this).find("#button-editbookinstancedateavailable").addClass("hidden disabled")
                             //Borrow Book show modal
                             //$('.borrow.button').on('click', function() {
                             $(this).find('#button-bookinstanceborrow').on('click', function() {
@@ -125,9 +127,9 @@ $(document)
                 $('#table-bookinstances').DataTable({
                     "columnDefs": [
                         { "width": "35%", "targets": 0 },
-                        { "width": "20%", "targets": 1 },
+                        { "width": "10%", "targets": 1 },
                         { "width": "20%", "targets": 2 },
-                        { "width": "25%", "targets": 3 }
+                        { "width": "35%", "targets": 3 }
                     ],
                     "fixedColumns": true,
                 })
@@ -195,18 +197,56 @@ $(document)
                 //dropdown initialisation
                 $('.ui.dropdown').dropdown();
 
-                //Edit Book Instance show modal
-                $('.edit.instance.button').on('click', function() {
+                //Edit Book Instance Status show modal
+                $('.edit.instance.status.button').on('click', function() {
                     //Resets form input fields from data values
                     $('.ui.form').trigger("reset");
                     $('.ui.form .field.error').removeClass( "error" );
                     $('#dropdown-status').dropdown('clear');
                     $('.ui.form.error').removeClass( "error" );
-                    $('#modal-editbookinstance').modal('setting', 'transition', 'vertical flip')
-                    $('#modal-editbookinstance').modal('show')
+                    $('#modal-editbookinstancestatus').modal('setting', 'transition', 'vertical flip')
+                    $('#modal-editbookinstancestatus').modal('show')
                 });
 
-                
+                //Edit Book Instance Date show modal
+                $('.edit.instance.date.button').on('click', function() {
+                    //Resets form input fields from data values
+                    $('.ui.form').trigger("reset");
+                    $('.ui.form .field.error').removeClass( "error" );
+                    $('.ui.form.error').removeClass( "error" );
+                    $('#modal-editbookinstancedateavailable').modal('setting', 'transition', 'vertical flip')
+                    $('#modal-editbookinstancedateavailable').modal('show')
+                });
+
+                //Edit Book Instance Status form validation
+                $('#form-editbookinstancestatus').form({
+                    fields : {
+                        status : {
+                            identifier: 'status',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: 'Please choose a status'
+                                }
+                            ]
+                        }
+                    }
+                })
+
+                //Edit Book Instance Date form validation
+                $('#form-editbookinstancedateavailable').form({
+                    fields : {
+                        editbookinstance_dateavailable : {
+                            identifier: 'editbookinstance_dateavailable',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: 'Please choose a date'
+                                }
+                            ]
+                        }
+                    }
+                })
 
                 $(".ui.tiny.yellow.labeled.icon.edit.button").on('click', function(){
                     var id = $(this).parent().parent().data('id')
