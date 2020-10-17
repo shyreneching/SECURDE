@@ -155,4 +155,35 @@ $(document)
             $("#button-returnbook").on('click', () =>{
                 $("#form-returnbook").submit()
             })
+
+            //Edit Review show modal
+            $('.edit.button').on('click', function() {
+                //Resets form input fields from data values
+                $('.ui.form').trigger("reset");
+                $('.ui.form .field.error').removeClass( "error" );
+                $('.ui.form.error').removeClass( "error" );
+                $('#modal-editreview').modal('setting', 'transition', 'vertical flip')
+                $('#modal-editreview').modal('show')
+            });
+
+            //Delete Review show modal
+            $('.delete.button').on('click', function() {
+                $('#modal-deletereview').modal('setting', 'transition', 'vertical flip')
+                $('#modal-deletereview').modal('show')
+            });
+
+            //Edit Review form validation
+            $('#form-editreview').form({
+                fields : {
+                    review_text : {
+                        identifier: 'review_text',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please type a review'
+                            }
+                        ]
+                    }
+                }
+            })
     });
