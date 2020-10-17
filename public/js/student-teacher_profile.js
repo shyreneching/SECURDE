@@ -139,10 +139,11 @@ $(document)
             $('#modal-borrowedbook').modal('show')
 
             $("#borrowedbookdetails-title").text($(this).text())
-            $("#borrowedbookdetails-author").text()
-            $("#borrowedbookdetails-user").text()
-            $("#borrowedbookdetails-dateborrowed").text()
-            $("#borrowedbookdetails-datedue").text()
+            $("#borrowedbookdetails-author").text($(this).parent().parent().parent().children("#borrowed-bookauthor").text())
+            $("#borrowedbookdetails-dateborrowed").text($(this).parent().parent().children("#date-borrowed").text())
+            $("#borrowedbookdetails-datedue").text($(this).parent().parent().children("#date-borrowed").data("id"))
+
+            $('#form-returnbook input[name="_id"]').val($(this).parent().parent().parent().parent().data('id'))
             });
     
             //User Details show modal

@@ -122,20 +122,20 @@
                                     </div>
                             </div>
                             {{/each}}
-                            <div class="ui container padded segment" id="borrowed-book">
+                            {{!-- <div class="ui container padded segment" id="borrowed-book">
                                 <div class="ui divided two column stackable grid" id="borrowed-book">
                                     <div class="ten wide center aligned middle aligned column" id="borrowed-book">
                                         <div class="row" id="date-borrowed"
-                                            style="font-weight: lighter; font-size: smaller; margin-bottom: 0.5em;">
-                                            04/29/2020</div>
+                                            style="font-weight: lighter; font-size: smaller; margin-bottom: 0.5em;" data-id="asdhasjk">
+                                            04/99/2020</div>
                                         <div class="row">
                                             <h4 class="borrowed_booktitle" id="borrowed-booktitle">Bookere Title</h4>
                                         </div>
                                     </div>
                                     <div class="six wide center aligned middle aligned column" id="borrowed-bookauthor">
-                                        Author</div>
+                                        Auasdathor</div>
                                 </div>
-                            </div>
+                            </div> --}}
                             {{!-- <div class="ui container padded segment" id="borrowed-book">
                                 <div class="ui divided two column stackable grid">
                                     <div class="ten wide center aligned middle aligned column">
@@ -352,7 +352,7 @@
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">User:</div>
                                 <div class="ten wide left aligned column" id="borrowedbookdetails-user"
-                                    style="font-weight: bolder;">Jane Doe</div>
+                                    style="font-weight: bolder;">{{user.username}}</div>
                             </div>
                             <div class="left aligned row" style="margin-bottom: -1em;">
                                 <div class="six wide left aligned column">Date Borrowed:</div>
@@ -374,7 +374,8 @@
                 <i class="angle left icon"></i>
                 Back
             </div>
-            <form action="/" method="POST">
+            <form id="form-returnbook" action="/user/returnBook" method="POST">
+                <input name="_id" type="hidden">
                 <div class="ui primary ok right submit button" id="button-returnbook">
                     <i class="archive icon"></i>
                     Return

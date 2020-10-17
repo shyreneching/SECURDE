@@ -111,7 +111,7 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
 router.post("/returnBook", urlencoder, async (req, res) => {
     //let bookID = req.body.bookID;
     let userID = req.session.username;
-    let hisID = req.body.hisID;
+    let hisID = req.body._id;
 
     let history = await BorrowedHistory.getBorrowHistoryByID(hisID)
 
