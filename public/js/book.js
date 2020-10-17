@@ -125,8 +125,8 @@ $(document)
                     "columnDefs": [
                         { "width": "35%", "targets": 0 },
                         { "width": "20%", "targets": 1 },
-                        { "width": "25%", "targets": 2 },
-                        { "width": "20%", "targets": 3 }
+                        { "width": "20%", "targets": 2 },
+                        { "width": "25%", "targets": 3 }
                     ],
                     "fixedColumns": true,
                 })

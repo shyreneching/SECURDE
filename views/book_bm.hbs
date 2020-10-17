@@ -171,9 +171,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{#each instances}}
+                          {{#each instances}}
+                        {{#if @index}}
                         <tr>
-                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{book.title}}</a>
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{@index}}. {{book.title}}</a>
                             </td>           
                             <td class="positive" id="td-bookinstance_status">{{status}}</td>
                             <td id="td-bookinstance_dateavailable">{{date_available}}</td>
@@ -186,21 +187,8 @@
                                 </div>
                             </td>
                         </tr>
+                        {{/if}}
                         {{/each}}
-                        <tr>
-                            <td class="selectable"><a href="http://" id="td-bookinstance_title1">Savor the Moment</a>
-                            </td>
-                            <td class="positive" id="td-bookinstance_status">Available</td>
-                            <td id="td-bookinstance_dateavailable">Oct 19, 2020</td>
-                            <td class="ui computer only" id="td-bookinstancemanage1" style="max-width: 150px;">
-                                <div class="ui tiny yellow labeled icon edit instance button" id="button-editbookinstance1"><i class="edit icon"></i>
-                                    Edit
-                                </div>
-                                <div class="ui tiny labeled icon delete instance button" id="button-deletebookinstance1"><i class="trash icon"></i>
-                                    Delete
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -226,20 +214,6 @@
                         </div>
                     </div>
                     {{/each}}
-
-                    <div class="ui container padded segment">
-                        <div class="ui divided two column stackable grid">
-                            <div class="four wide center aligned middle aligned column">
-                                <h4 id="review-user">User</h4>
-                            </div>
-                            <div class="twelve wide column">
-                                <div class="row" id="date-posted" style="font-weight: lighter; margin-bottom: 0.5em;">
-                                    04/29/2020</div>
-                                <div class="row" id="book-review">Why am I such a procrastinator...</div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

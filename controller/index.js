@@ -1405,6 +1405,7 @@ router.get("/book", async (req, res) => {
             let temp = reviewList[l];
             //populate necessary info
             temp = await temp.populate();
+            temp.create_date = moment(temp.create_date).format('MMM DD, YYYY  HH:mm')
             rev.push(temp);
         }
         let instanceList = await BookInstance.getInstancesOfBooks(book._id)
@@ -1413,6 +1414,9 @@ router.get("/book", async (req, res) => {
             let temp = instanceList[l];
             //populate necessary info
             temp = await temp.populate();
+            if (temp.date_available != ""){
+                temp.date_available = moment(temp.date_available).format('MMM DD, YYYY  HH:mm')
+            }
             instances.push(temp);
         }
 
@@ -1443,8 +1447,24 @@ router.get("/book", async (req, res) => {
                 temp: []
                 // timeout: "/js/timeout.js"
             })
-        } else {
+        } else if (user.accountType == "user"){
             res.render("book.hbs", {
+                list : [{
+                    link: "/profile",
+                    text: "Profile",
+                }, {
+                    link: "/logout",
+                    text: "Logout",
+                }],
+                user: user,
+                book: book,
+                instances: instances,
+                rev: rev,
+                temp: [{}],
+                timeout: "/js/timeout.js"
+            })
+        } else {
+            res.render("book_bm.hbs", {
                 list : [{
                     link: "/profile",
                     text: "Profile",
