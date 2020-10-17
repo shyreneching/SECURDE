@@ -111,10 +111,9 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
 router.post("/returnBook", urlencoder, async (req, res) => {
     //let bookID = req.body.bookID;
     let userID = req.session.username;
-    let hisID = req.body.hisID;
+    let hisID = req.body._id;
 
     let history = await BorrowHistory.getBorrowHistoryByID(hisID)
-
     history = await history.populate()
 
     let datetime = moment().format('YYYY-MM-DD HH:mm')
@@ -147,10 +146,10 @@ router.post("/returnBook", urlencoder, async (req, res) => {
     });
     SystemLogs.addLogs(sysLogs);
 
-    await BookInstance.updateInstance(bookID, "Available", "")
+    await BookInstance.updateInstance(instance._id, "Available", "")
     await BorrowHistory.updateTimeReturnedByID(hisID, datetime);
 
-    res.send("/profile");
+    res.redirect("/profile");
 })
 
 router.post("/addReview", urlencoder, async (req, res) => {
