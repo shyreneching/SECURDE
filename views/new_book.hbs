@@ -160,17 +160,18 @@
         <div class="row">
             <div class="ui container" style="margin-top: 5%; width: 70%;">
                 <h3 class="ui large left aligned header" id="reviews">Book Instances</h3>
-                <table class="ui sortable selectable celled table" id="table-bookinstances">
+                <table class="ui sortable selectable celled table" id="table-bookinstances" >
                     <thead class="sticky">
                         <tr>
                             <th class="sorted ascending" id="table-header">Book Instance Title</th>
                             <th id="table-header">Status</th>
-                            <th id="table-header">Date Available</th>
+                            <th id="table-header">Date Available</th>              
                             <th id="table-header">Borrow</th>
                             {{!-- <th class="" id="table-header">Status</th> --}}
                         </tr>
                     </thead>
                     <tbody>
+                        {{!-- {{#if user}}
                         {{#each instances}}
                         <tr>
                             <td class="selectable"><a href="http://" id="td-bookinstance_title">{{book.title}}</a>
@@ -184,13 +185,37 @@
                             </td>
                         </tr>
                         {{/each}}
+                        {{else}}
+                        {{#each instances}}
+                        <tr>
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{book.title}}</a>
+                            </td>           
+                            <td class="positive" id="td-bookinstance_status">{{status}}</td>
+                            <td id="td-bookinstance_dateavailable">{{date_available}}</td>
+                            
+                        </tr>
+                        {{/each}}
+                        {{/if}} --}}
+                        {{#each instances}}
+                        <tr>
+                            <td class="selectable"><a href="http://" id="td-bookinstance_title">{{book.title}}</a>
+                            </td>           
+                            <td class="positive status-of-book" id="td-bookinstance_status">{{status}}</td>
+                            <td id="td-bookinstance_dateavailable">{{date_available}}</td>
+                            <td class="ui computer only" id="td-bookinstanceborrow" style="max-width: 150px;">
+                                <div class="ui tiny blue labeled icon borrow button button-for-borrow" id="button-bookinstanceborrow" data-id="{{_id}}"><i class="book icon"></i>
+                                    Borrow
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
                         <tr>
                             <td class="selectable"><a href="http://" id="td-bookinstance_title1">Savor the Moment</a>
                             </td>
-                            <td class="positive" id="td-bookinstance_status">Available</td>
+                            <td class="negative" id="td-bookinstance_status1">Available</td>
                             <td id="td-bookinstance_dateavailable">Oct 19, 2020</td>
                             <td class="ui computer only" id="td-bookinstanceborrow1" style="max-width: 150px;">
-                                <div class="ui tiny blue labeled icon borrow button" id="button-bookinstanceborrow1"><i class="book icon"></i>
+                                <div class="ui tiny grey labeled icon borrow button disabled" id="button-bookinstanceborrow1"><i class="book icon"></i>
                                     Borrow
                                 </div>
                             </td>
@@ -258,7 +283,19 @@
                 <i class="remove icon"></i>
                 No
             </div>
-            <div class="ui green ok right inverted button" id="button-borrowbook">
+            {{!-- <form class="ui reply form" id="form-addbookinstance" action="/user/addBookInstance" method="POST">
+                <div class="field" style="margin-bottom: 1em;">
+                    {{#with book}}
+                        <input type="hidden" name="bookID" value="{{_id}}"> 
+                    {{/with}}
+                </div>
+                <div class="ui green ok right inverted button" id="button-borrowbook">
+                    <i class="checkmark icon"></i>
+                    Yes
+                </div>
+            </form> --}}
+            
+            <div class="ui green ok right inverted button" id="button-borrowbook" data-id="">
                 <i class="checkmark icon"></i>
                 Yes
             </div>
@@ -279,7 +316,7 @@
                      <input type="hidden" name="bookID" value="{{_id}}"> 
                     {{/with}}
                 </div>
-                <div class="actions">
+                <div>
                     <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
                         <i class="save icon"></i> Save Review
                     </div>
@@ -293,8 +330,8 @@
             {{#with book}}
                 <input type="hidden" name="bookID" value="{{_id}}"> 
             {{/with}}
-        </div>
-        <div class="ui blue labeled submit icon button"  id="button-confirmaddreview" style="display:none;">
+        </div class="actions">
+        <div class="ui blue labeled submit icon button"  id="button-confirmaddreview">
             <i class="save icon"></i> Add Book Instance
         </div>
     </form>
