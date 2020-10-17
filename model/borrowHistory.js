@@ -42,6 +42,13 @@ borrowHistorySchema.statics.getUserHistory= async function(userID){
     }); 
 };
 
+borrowHistorySchema.statics.getUnreturnedBookHistory= async function(bookID){
+    return await this.find({
+        'user': bookID,
+        'status': "borrowed"
+    }); 
+};
+
 borrowHistorySchema.statics.getPreviousUserHistory= async function(userID){
     return await this.find({
         'user': userID,
