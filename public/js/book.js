@@ -236,5 +236,10 @@ $(document)
                     }
                 })
 
+                $("#button-addbookinstance").on("click", () =>{
+                    console.log("Add instance!")
+                    $("#form-addbookinstance").submit()
+                })
+                
 
             });

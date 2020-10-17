@@ -146,7 +146,7 @@ router.post("/returnBook", urlencoder, async (req, res) => {
     });
     SystemLogs.addLogs(sysLogs);
 
-    await BookInstance.updateInstance(instance._id, "Available", "")
+    await BookInstance.updateInstance(instance._id, "Available", null)
     await BorrowHistory.updateTimeReturnedByID(hisID, datetime);
 
     res.redirect("/profile");
