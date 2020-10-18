@@ -51,9 +51,17 @@ $(document)
                             $(this).find("#button-bookinstanceborrow").removeClass("blue")
                             $(this).find("#button-bookinstanceborrow").addClass("grey disabled")
                             $(this).find("#button-editbookinstancedateavailable").removeClass("hidden disabled")
+                            $(this).find('#button-editbookinstancestatus').on('click', function() {
+                                $('#modal-editbookinstancestatus_reserved').modal('setting', 'transition', 'vertical flip')
+                                $('#modal-editbookinstancestatus_reserved').modal('show')
+                            })
                         }
                         else {
                             $(this).find("#button-editbookinstancedateavailable").addClass("hidden disabled")
+                            $(this).find('#button-editbookinstancestatus').on('click', function() {
+                                $('#modal-editbookinstancestatus_available').modal('setting', 'transition', 'vertical flip')
+                                $('#modal-editbookinstancestatus_available').modal('show')
+                            })
                             //Borrow Book show modal
                             //$('.borrow.button').on('click', function() {
                             $(this).find('#button-bookinstanceborrow').on('click', function() {
@@ -197,15 +205,14 @@ $(document)
                 //dropdown initialisation
                 $('.ui.dropdown').dropdown();
 
-                //Edit Book Instance Status show modal
+                //Edit Book Instance Status resetting
                 $('.edit.instance.status.button').on('click', function() {
                     //Resets form input fields from data values
                     $('.ui.form').trigger("reset");
                     $('.ui.form .field.error').removeClass( "error" );
                     $('#dropdown-status').dropdown('clear');
+                    $('#dropdown-addborrowinguser').dropdown('clear');
                     $('.ui.form.error').removeClass( "error" );
-                    $('#modal-editbookinstancestatus').modal('setting', 'transition', 'vertical flip')
-                    $('#modal-editbookinstancestatus').modal('show')
                 });
 
                 //Edit Book Instance Date show modal
@@ -218,8 +225,8 @@ $(document)
                     $('#modal-editbookinstancedateavailable').modal('show')
                 });
 
-                //Edit Book Instance Status form validation
-                $('#form-editbookinstancestatus').form({
+                //Edit Book Instance Status - Reserved form validation
+                $('#form-editbookinstancestatus_reserved').form({
                     fields : {
                         status : {
                             identifier: 'status',
@@ -227,6 +234,21 @@ $(document)
                                 {
                                     type: 'empty',
                                     prompt: 'Please choose a status'
+                                }
+                            ]
+                        }
+                    }
+                })
+
+                //Edit Book Instance Status - Available form validation
+                $('#form-editbookinstancestatus_available').form({
+                    fields : {
+                        borrowing_user : {
+                            identifier: 'borrowing_user',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: 'Please choose a user'
                                 }
                             ]
                         }
