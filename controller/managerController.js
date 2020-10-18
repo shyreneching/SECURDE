@@ -453,17 +453,53 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
 
 router.post("/editBookInstance", urlencoder, async (req, res) => {
     console.log("req.session.username " + req.session.username)
-    console.log("req.body.editbookinstance_id " + req.body.editbookinstance_id)
+    console.log("req.body.user_borrower " + req.body.borrowing_user)
     let userID = req.session.username;
     let instanceID = req.body.editbookinstance_id;
-    let borrowerID = req.body.borrowerID;
+    let borrowerID = req.body.borrowing_user;
 
-    let status = "Available";
-    if(req.body.status == "status_reserved"){
-        status = "Reserved"
-    } 
+    let status = req.body.status;
+    console.log(status)
 
-    if (status == "Reserved"){
+    if (status != null) {
+        let userID = req.session.username;
+        let instanceID = req.body.editbookinstance_id;
+        
+        let instance = await BookInstance.getBookInstanceByID(instanceID)
+        let book = await Book.getBookByID(instance.book);
+        let datetime = moment().format('YYYY-MM-DD HH:mm')
+        
+        temp = await Author.getAuthorByID(book.author[0]);
+        let authorDisplay = temp.firstname + " " + temp.lastname
+        for (var i = 1; i < book.author.length; i++) {
+            temp = await Author.getAuthorByID(book.author[i]);
+            authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
+        }
+        
+        let user = await User.getUserByID(userID);
+        let item = book.title + " by " + authorDisplay
+        let action = 'Successfully Edited a Book Instance';
+
+        let history =  await BorrowHistory.getUnreturnedBookHistory(instanceID)
+        let sysLogs = new SystemLogs({
+            action: "Returned a book for a user",
+            actor: user.username,
+            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress || 
+                    req.connection.socket.remoteAddress,
+            item,
+        })
+
+        SystemLogs.addLogs(sysLogs);
+
+        await BorrowHistory.updateTimeReturnedByID(history._id, moment().format('YYYY-MM-DD HH:mm'));
+
+        let newInstance = await BookInstance.updateInstance(instanceID, "Available", null);
+
+        res.redirect("/book?data_id=" + book._id)
+    } else {
+        console.log("Reserving for someone")
         let instance = await BookInstance.getBookInstanceByID(instanceID)
         let book = await Book.getBookByID(instance.book);
         let datetime = moment().format('YYYY-MM-DD HH:mm')
@@ -557,43 +593,6 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
         // let newInstance = await BookInstance.updateInstance(instanceID, status, date_available);
 
         // res.redirect("/book?data_id=" + book._id)
-    } else {
-        let userID = req.session.username;
-        let instanceID = req.body.editbookinstance_id;
-        
-        let instance = await BookInstance.getBookInstanceByID(instanceID)
-        let book = await Book.getBookByID(instance.book);
-        let datetime = moment().format('YYYY-MM-DD HH:mm')
-        
-        temp = await Author.getAuthorByID(book.author[0]);
-        let authorDisplay = temp.firstname + " " + temp.lastname
-        for (var i = 1; i < book.author.length; i++) {
-            temp = await Author.getAuthorByID(book.author[i]);
-            authorDisplay = authorDisplay + ", " + temp.firstname + " " + temp.lastname
-        }
-        
-        let user = await User.getUserByID(userID);
-        let item = book.title + " by " + authorDisplay
-        let action = 'Successfully Edited a Book Instance';
-
-        let history =  await BorrowHistory.getUnreturnedBookHistory(instanceID)
-        let sysLogs = new SystemLogs({
-            action: "Returned a book for a user",
-            actor: user.username,
-            ip_add: (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress || 
-                    req.connection.socket.remoteAddress,
-            item,
-        })
-
-        SystemLogs.addLogs(sysLogs);
-
-        await BorrowHistory.updateTimeReturnedByID(history._id, moment().format('YYYY-MM-DD HH:mm'));
-
-        let newInstance = await BookInstance.updateInstance(instanceID, "Available", null);
-
-        res.redirect("/book?data_id=" + book._id)
     }
     
     
