@@ -190,7 +190,7 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
 
     let instance = await BookInstance.getInstancesOfBooks(bookID);
     for (var l = 0; l < instance.length; l++) {
-        await BookInstance.delete(instance[l]);
+        await BookInstance.deleteInstance(instance[l]);
     }
 
     temp = await Author.getAuthorByID(book.author[0]);
@@ -494,8 +494,12 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
         SystemLogs.addLogs(sysLogs);
 
         await BorrowHistory.updateTimeReturnedByID(history._id, moment().format('YYYY-MM-DD HH:mm'));
+        let date = null
+        if (status == "Reserved"){
+            date = instance.date_available;
+        }
 
-        let newInstance = await BookInstance.updateInstance(instanceID, "Available", null);
+        let newInstance = await BookInstance.updateInstance(instanceID, status, date);
 
         res.redirect("/book?data_id=" + book._id)
     } else {
