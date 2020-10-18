@@ -495,8 +495,10 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
 
         await BorrowHistory.updateTimeReturnedByID(history._id, moment().format('YYYY-MM-DD HH:mm'));
         let date = null
-        if (status == "Reserved"){
+        status = "Available"
+        if (status == "status_reserved"){
             date = instance.date_available;
+            status = "Reserved"
         }
 
         let newInstance = await BookInstance.updateInstance(instanceID, status, date);
