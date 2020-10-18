@@ -66,6 +66,12 @@ userSchema.statics.getAllUser = async function(){
     return await this.find({}).sort({'lastname': 1});
 }
 
+userSchema.statics.getAllUserUser = async function(){
+    return await this.find({
+        accountType: 'user'
+    }).sort({'username': 1});
+}
+
 userSchema.statics.delete = async function(userID){
     return await this.deleteOne({
         _id : userID

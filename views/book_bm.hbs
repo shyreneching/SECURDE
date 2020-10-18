@@ -228,7 +228,7 @@
             Edit Book Instance Status
         </div>
         <div class="content">
-            <h4 id="bookinstance-title">Book Instance Title</h4>
+            <h4 class="bookinstance-title">{{book.title}}</h4>
             <form class="ui small form" id="form-editbookinstancestatus_reserved" action="/manager/editBookInstance" method="POST">
                 <div class="ui stacked segment">
                     <div class="field">
@@ -284,7 +284,7 @@
             Change To Reserved
         </div>
         <div class="content">
-            <h4 id="bookinstance-title">Book Instance Title</h4>
+            <h4 id="bookinstance-title">{{book.title}}</h4>
             <h5>Please choose the user reserving the book instance.</h5>
             <form class="ui small form" id="form-editbookinstancestatus_available" action="/manager/editBookInstance" method="POST">
                 <div class="ui stacked segment">
@@ -296,7 +296,7 @@
                             <div class="menu" id="user-menu">
                                 {{!-- <div class="item" data-value="{{author.name}}" index="{{something}}" ng-repeat="char in chars">{{author.name}}</div> --}}
                                 {{#each users}}
-                                <div class="item" data-value="{{_id}}">{{firstname}} {{lastname}}</div>
+                                <div class="item" data-value="{{_id}}">{{username}} - {{firstname}} {{lastname}}</div>
                                 {{/each}}
                             </div>
                             </div>
@@ -343,7 +343,7 @@
             Edit Date Available
         </div>
         <div class="content">
-            <h4 id="bookinstance-title">Book Instance Title</h4>
+            <h4 class="bookinstance-title">{{book.title}}</h4>
             <form class="ui small form" id="form-editbookinstancedateavailable" action="/manager/changeDueDateInstance" method="POST">
                 <div class="ui stacked segment">
                     <div class="field">

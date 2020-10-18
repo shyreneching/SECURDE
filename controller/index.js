@@ -1464,6 +1464,7 @@ router.get("/book", async (req, res) => {
                 timeout: "/js/timeout.js"
             })
         } else {
+            let users = await User.getAllUserUser();
             res.render("book_bm.hbs", {
                 list : [{
                     link: "/profile",
@@ -1472,6 +1473,7 @@ router.get("/book", async (req, res) => {
                     link: "/logout",
                     text: "Logout",
                 }],
+                users: users,
                 user: user,
                 book: book,
                 instances: instances,
