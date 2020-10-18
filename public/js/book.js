@@ -212,6 +212,7 @@ $(document)
                     $('.ui.form .field.error').removeClass( "error" );
                     $('#dropdown-status').dropdown('clear');
                     $('#dropdown-addborrowinguser').dropdown('clear');
+                    $('#editdate_picker').calendar("refresh");
                     $('.ui.form.error').removeClass( "error" );
                 });
 
