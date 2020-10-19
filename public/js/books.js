@@ -14,7 +14,7 @@ $(document)
             });
 
         //table sorting functionality
-        $('table').tablesort()
+        //$('table').tablesort()
         
         //datatable
         $('#data-table').DataTable();

@@ -95,7 +95,7 @@ $(document)
             });
 
         //table sorting functionality
-        $('table').tablesort()
+        //$('table').tablesort()
 
         //system logs datatables initialisation and sorting
         $('#table-systemlogs').DataTable({

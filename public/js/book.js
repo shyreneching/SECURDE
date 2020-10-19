@@ -129,7 +129,7 @@ $(document)
                 });
 
                 //table sorting functionality
-                $('table').tablesort()
+                //$('table').tablesort()
 
                 //Book Instances datatable initialisation
                 $('#table-bookinstances').DataTable({
