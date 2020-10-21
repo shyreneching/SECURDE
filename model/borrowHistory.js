@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 var borrowHistorySchema = new Schema({
-    // title: String,
     book: {
         type: Schema.Types.ObjectId,
         ref: "BookInstance"
@@ -15,6 +14,7 @@ var borrowHistorySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
+    title: String,
     time_barrow: String,
     due_date: String,
     actual_returned: String,
@@ -63,6 +63,19 @@ borrowHistorySchema.statics.getCurrentUserHistory= async function(userID){
     }); 
 };
 
+borrowHistorySchema.statics.getBorrowedInstanceHistory= async function(bookID){
+    return await this.findOne({
+        'book': bookID,
+        'status': "borrowed"
+    }); 
+};
+
+borrowHistorySchema.statics.getInstanceHistory= async function(bookID){
+    return await this.find({
+        'book': bookID,
+    }); 
+};
+
 borrowHistorySchema.statics.delete = async function(hisID){
     return await this.deleteOne({
         _id : hisID
@@ -80,11 +93,30 @@ borrowHistorySchema.statics.updateTimeReturnedByID = async function(hisID, actua
     }); 
 };
 
+borrowHistorySchema.statics.updateDeletedBook = async function(hisID, title){
+    return await this.updateOne({
+        _id: hisID
+    }, {
+        'title': title,
+        // 'book': null,
+        // 'author': author
+    }, {
+        new: true
+    }); 
+};
+
 borrowHistorySchema.methods.populate= async function(){
     return await BorrowHistory.findOne({
         _id: this._id
     }).populate("user book author");
 };
+
+borrowHistorySchema.methods.populateUserandAuthor= async function(){
+    return await BorrowHistory.findOne({
+        _id: this._id
+    }).populate("user author");
+};
+
 
 var BorrowHistory = mongoose.model("BorrowHistory", borrowHistorySchema)
 

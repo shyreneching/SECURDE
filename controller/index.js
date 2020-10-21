@@ -21,6 +21,7 @@ router.use("/admin", require("./adminController"));
 router.use("/manager", require("./managerController"));
 
 router.get("/", async (req, res) => {
+    //await SystemLogs.deleteSepcificAction("Entered Book Manager Page")
     let bookslist = await Book.getAllBook();
     let books = [];
     for (var l = 0; l < bookslist.length; l++) {
@@ -157,9 +158,13 @@ router.get("/profile", async (req, res) => {
         for (var l = 0; l < previousHistory.length; l++) {
             let temp = previousHistory[l];
             //populate necessary info
-            temp = await temp.populate();
-            temp.book = await temp.book.populate()
-            temp.title = temp.book.book.title
+            if (temp.title == null  || temp.title == undefined || temp.title == ""){
+                temp = await temp.populate();
+                temp.book = await temp.book.populate()
+                temp.title = temp.book.book.title
+            } else {
+                temp = await temp.populateUserandAuthor()
+            }          
             prevHistory.push(temp);
         }
 
@@ -168,9 +173,13 @@ router.get("/profile", async (req, res) => {
         for (var l = 0; l < currentsHistory.length; l++) {
             let temp = currentsHistory[l];
             //populate necessary info
-            temp = await temp.populate();
-            temp.book = await temp.book.populate()
-            temp.title = temp.book.book.title
+            if (temp.title == null || temp.title == undefined || temp.title == ""){
+                temp = await temp.populate();
+                temp.book = await temp.book.populate()
+                temp.title = temp.book.book.title
+            } else {
+                temp = await temp.populateUserandAuthor()
+            }            
             currHistory.push(temp);
         }
 
@@ -285,7 +294,7 @@ router.post("/changepassword", urlencoder, async function (req, res) {
                 } else {
                     if(user && password == confirm_password){
                         let changepw = await User.updateUserPassword(user._id, hash)
-                        console.log(changepw)
+                        // console.log(changepw)
                         let syslog = new SystemLogs({
                             action: "Successfully Changed Password",
                             actor: user.username,
@@ -490,7 +499,7 @@ router.get("/invalidlogin", async (req, res) => {
 
 router.post("/validLogin", async (req, res) => {
     var user = await User.getUserByUsername(req.body.username.trim());
-    console.log(user)
+    // console.log(user)
     if (user == undefined) {
         let syslog = new SystemLogs({
             action: "Invalid Credentials",
@@ -940,12 +949,12 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
 })
 
 router.post("/resetpassword", urlencoder, async function (req, res) {
-    console.log("Enter Here")
-    console.log(req.session.temp)
+    // console.log("Enter Here")
+    // console.log(req.session.temp)
     var user = await User.getUserByID(req.session.temp)
     let password = req.body.new_password
     let confirm_password = req.body.confirm_new_password
-    console.log(user)
+    // console.log(user)
     bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
         if (err){
             let syslog = new SystemLogs({
@@ -962,14 +971,14 @@ router.post("/resetpassword", urlencoder, async function (req, res) {
 
             res.redirect("/error");
         } else {
-            console.log(user.salt)
-            console.log(hash)
+            // console.log(user.salt)
+            // console.log(hash)
             if(user && password == confirm_password){
-                console.log(user._id)
-                console.log(password)
-                console.log(confirm_password)
+                // console.log(user._id)
+                // console.log(password)
+                // console.log(confirm_password)
                 let changepw = await User.updateUserPassword(user._id, hash)
-                console.log(changepw)
+                // console.log(changepw)
                 let syslog = new SystemLogs({
                     action: "Successfully Reset Password",
                     actor: user.username,

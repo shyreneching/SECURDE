@@ -22,8 +22,8 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/borrowBookInstance", urlencoder, async function (req, res) {
-    console.log(req.session.username)
-    console.log("instance id " + req.body.data_id)
+    // console.log(req.session.username)
+    // console.log("instance id " + req.body.data_id)
     let userID = req.session.username;
     let instanceID = req.body.data_id;
 
@@ -49,6 +49,7 @@ router.post("/borrowBookInstance", urlencoder, async function (req, res) {
     let action = 'Borrowed a book';    
 
     let borrowHistory = new BorrowHistory({
+        title: "",
         book: instanceID,
         author: book.author,
         user: userID,
@@ -153,10 +154,10 @@ router.post("/returnBook", urlencoder, async (req, res) => {
 })
 
 router.post("/addReview", urlencoder, async (req, res) => {
-    console.log("Entering addReview")
-    console.log("req.session.username " + req.session.username)
-    console.log("req.body.bookID " + req.body.bookID)
-    console.log("req.body.review_text"  +  req.body.review_text)
+    // console.log("Entering addReview")
+    // console.log("req.session.username " + req.session.username)
+    // console.log("req.body.bookID " + req.body.bookID)
+    // console.log("req.body.review_text"  +  req.body.review_text)
     let userID = req.session.username;
     let bookID = req.body.bookID;
     let review = req.body.review_text;
@@ -185,7 +186,7 @@ router.post("/addReview", urlencoder, async (req, res) => {
         
     });
 
-    console.log("newreview"  +  newreview)
+    // console.log("newreview"  +  newreview)
 
     Review.addReview(newreview, async function (doc) {
         if (doc) {
@@ -205,7 +206,7 @@ router.post("/addReview", urlencoder, async (req, res) => {
             let reviews = book.reviews;
             reviews.push(doc._id);
             let update = await Book.updateBookReview(bookID, reviews);
-            console.log(update)
+            // console.log(update)
             res.redirect("/book?data_id=" + bookID);
         } else {
             let syslog = new SystemLogs({
@@ -280,7 +281,7 @@ router.post("/editReview", urlencoder, async (req, res) => {
 })
 
 router.post("/deleteReview", urlencoder, async (req, res) => {
-    console.log("req.body.data_id " + req.body.data_id)
+    // console.log("req.body.data_id " + req.body.data_id)
 
     let reviewID = req.body.data_id;
     let rev = await Review.getReviewByID(reviewID);

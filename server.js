@@ -27,7 +27,7 @@ app.use(session({
     saveUninitialized: true, 
     secret: "encrypt-pass",
     cookie: {
-        expires: 1000 * 300
+        expires: 1000 * 30
     }
 }))
 app.use(cookieparser())

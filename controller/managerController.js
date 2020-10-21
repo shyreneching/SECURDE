@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/addBook", urlencoder, async (req, res) => {
-    console.log(req.session.username)
+    // console.log(req.session.username)
     let userID = req.session.username;
     let title = req.body.book_title;
     //let author = req.body["author[]"];
@@ -190,6 +190,13 @@ router.post("/deleteBook", urlencoder, async (req, res) => {
 
     let instance = await BookInstance.getInstancesOfBooks(bookID);
     for (var l = 0; l < instance.length; l++) {
+        let borrow = await BorrowHistory.getBorrowedInstanceHistory(instance[l]._id)
+        await BorrowHistory.updateTimeReturnedByID(borrow._id, moment().format('YYYY-MM-DD HH:mm'));
+
+        let hist = await BorrowHistory.getInstanceHistory(instance[l]._id);
+        for (var k = 0; k < hist.length; k++) {
+            await BorrowHistory.updateDeletedBook(hist[k]._id, book.title)
+        }
         await BookInstance.deleteInstance(instance[l]);
     }
 
@@ -237,7 +244,7 @@ router.post("/editBook", urlencoder, async (req, res) => {
     let year_of_publication = req.body.editbook_yearofpublication;
     // let isbn = req.body.edibook_isbn;
     let callNumber = req.body.editbook_callnumber;
-    console.log(callNumber)
+    // console.log(callNumber)
     
     //let reviews = req.body["reviews[]"];
     temp = await Author.getAuthorByID(author[0]);
@@ -272,7 +279,7 @@ router.post("/editBook", urlencoder, async (req, res) => {
         isbn,
         callNumber,
     });
-    console.log(callNumber)
+    // console.log(callNumber)
 
     let newBook = await Book.updateBook(bookID, updateBook);
 
@@ -357,6 +364,13 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
     let instance = await BookInstance.getBookInstanceByID(instanceID);
     let book = await Book.getBookByID(instance.book);
 
+    let borrow = await BorrowHistory.getBorrowedInstanceHistory(instanceID)
+    await BorrowHistory.updateTimeReturnedByID(borrow._id, moment().format('YYYY-MM-DD HH:mm'));
+
+    let hist = await BorrowHistory.getInstanceHistory(instanceID);
+    for (var k = 0; k < hist.length; k++) {
+        await BorrowHistory.updateDeletedBook(hist[k]._id, book.title)
+    }
 
     temp = await Author.getAuthorByID(book.author[0]);
     let authorDisplay = temp.firstname + " " + temp.lastname
@@ -452,14 +466,14 @@ router.post("/deleteBookInstance", urlencoder, async (req, res) => {
 // })
 
 router.post("/editBookInstance", urlencoder, async (req, res) => {
-    console.log("req.session.username " + req.session.username)
-    console.log("req.body.user_borrower " + req.body.borrowing_user)
+    // console.log("req.session.username " + req.session.username)
+    // console.log("req.body.user_borrower " + req.body.borrowing_user)
     let userID = req.session.username;
     let instanceID = req.body.editbookinstance_id;
     let borrowerID = req.body.borrowing_user;
 
     let status = req.body.status;
-    console.log(status)
+    // console.log(status)
 
     if (status != null) {
         let userID = req.session.username;
@@ -505,7 +519,7 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
 
         res.redirect("/book?data_id=" + book._id)
     } else {
-        console.log("Reserving for someone")
+        // console.log("Reserving for someone")
         let instance = await BookInstance.getBookInstanceByID(instanceID)
         let book = await Book.getBookByID(instance.book);
         let datetime = moment().format('YYYY-MM-DD HH:mm')
@@ -605,8 +619,8 @@ router.post("/editBookInstance", urlencoder, async (req, res) => {
 })
 
 router.post("/changeDueDateInstance", urlencoder, async (req, res) => {
-    console.log("req.session.username " + req.session.username)
-    console.log("req.body.editbookinstance_id " + req.body.editbookinstance_id)
+    // console.log("req.session.username " + req.session.username)
+    // console.log("req.body.editbookinstance_id " + req.body.editbookinstance_id)
     let userID = req.session.username;
     let instanceID = req.body.editbookinstance_id;
     let status = "Available";

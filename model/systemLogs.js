@@ -32,6 +32,12 @@ systemLogsSchema.statics.delete = async function(logID){
     });
 }
 
+systemLogsSchema.statics.deleteSepcificAction = async function(action){
+    return await this.deleteMany({
+        action : action
+    });
+}
+
 systemLogsSchema.statics.getInvalidLoginByIP = async function(IPAddress){
     return await this.find({
         ip_add : IPAddress,
