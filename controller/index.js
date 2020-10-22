@@ -855,7 +855,7 @@ router.post("/forgot-password/2", urlencoder, async function (req, res) {
 })
 
 router.post("/forgot-password/3", urlencoder, async function (req, res) {
-    var user = await User.getUserByID(req.session.temp)
+    var user = await User.getUserByEmail(req.body.email)
     let answer = req.body.security_answer
     let syslog = new SystemLogs({
         action: "Entered Security Answer for Forget Password",
@@ -892,7 +892,9 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
                 //     // sameSite: 'none',
                 //     // secure: true
                 // });
-                res.render("forgot_password_page3.hbs")
+                res.render("forgot_password_page3.hbs", {
+                    email: req.body.email
+                })
             } else {
                 let syslog = new SystemLogs({
                     action: "Security Answer Not match",
@@ -951,10 +953,11 @@ router.post("/forgot-password/3", urlencoder, async function (req, res) {
 router.post("/resetpassword", urlencoder, async function (req, res) {
     // console.log("Enter Here")
     // console.log(req.session.temp)
-    var user = await User.getUserByID(req.session.temp)
+    var user = await User.getUserByEmail(req.body.email)
     let password = req.body.new_password
     let confirm_password = req.body.confirm_new_password
-    // console.log(user)
+    console.log(req.body.email)
+    console.log(user.salt + " " + user.username)
     bcrypt.hash(req.body.new_password, user.salt, async function(err, hash) { 
         if (err){
             let syslog = new SystemLogs({
@@ -1240,8 +1243,8 @@ function changeAns(param){
     ansC = param
 }
 
-router.post('/isAnsCorrect', function(req, res) {
-    User.findOne({email: req.body.email}, function(err, user){
+router.post('/isAnsCorrect', async function(req, res) {
+    await User.findOne({email: req.body.email}, function(err, user){
         if(err) {
             let syslog = new SystemLogs({
                 action: "Error",

@@ -1,7 +1,7 @@
 $(document)
     .ready(function () {
 
-        var res_ans = true
+        var res_ans = false
 
         function changeAns(param){
             res_ans = param
