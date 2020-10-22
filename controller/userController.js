@@ -321,7 +321,7 @@ router.post("/deleteReview", urlencoder, async (req, res) => {
     await Book.updateBookReview(book.review)  
     await Review.delete(reviewID);
 
-    res.redirect("/profile");
+    res.json({message : "Success"});
 })
 
 
